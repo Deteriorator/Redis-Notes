@@ -152,7 +152,7 @@ dup 、 free 和 match ：
 1.7 aeEventLoop 结构体
 ==============================================================================
 
-.. code-block: c
+.. code-block:: c 
 
     /* State of an event based program */
     typedef struct aeEventLoop {
@@ -175,7 +175,7 @@ dup 、 free 和 match ：
 1.8 aeFileEvent 结构体
 ==============================================================================
 
-.. code-block: c
+.. code-block:: c 
 
     /* File event structure */
     typedef struct aeFileEvent {
