@@ -70,5 +70,5 @@ main 函数的流程图可以参考下图：
 
 也就是说 server 就是 redisServer_ 结构体
 
-.. _redisServer: /beta-1-structures.rst
+.. _redisServer: beta-1-structures.rst#redisServer-结构体
 
