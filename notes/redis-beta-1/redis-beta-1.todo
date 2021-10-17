@@ -4,13 +4,13 @@ Structures (22):
 	☐ aeEventLoop
 	☐ aeFileEvent
 	☐ aeTimeEvent
-	☐ dict
-	☐ dictEntry
+	✔ dict @done(21-10-17 15:56)
+	✔ dictEntry @done(21-10-17 15:47)
 	☐ dictIterator
-	☐ dictType
-	☐ list
+	✔ dictType @done(21-10-17 15:56)
+	✔ list @done(21-10-17 16:14)
 	☐ listIter
-	☐ listNode
+	✔ listNode @done(21-10-17 16:14)
 	☐ picolCallFrame
 	☐ picolCmd
 	☐ picolInterp

@@ -62,3 +62,13 @@ main 函数的流程图可以参考下图：
 
 此图参考 UML 代码： redis-main.puml 
 
+在继续分析之前， 需要先看一下 ``server`` 这个全局变量。 
+
+.. code-block:: C 
+
+    static struct redisServer server;
+
+也就是说 server 就是 redisServer_ 结构体
+
+.. _redisServer: /beta-1-structures.rst
+
