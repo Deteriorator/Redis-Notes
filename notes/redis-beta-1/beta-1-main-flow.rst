@@ -70,5 +70,13 @@ main 函数的流程图可以参考下图：
 
 也就是说 server 就是 redisServer_ 结构体
 
-.. _redisServer: beta-1-structures.rst#redisServer-结构体
+.. _redisServer: beta-1-structures.rst#redisServer-structure
+
+分析 redisServer_ 结构体发现其内部含有 4 个结构体， 分别是 dict_， list_， \
+aeEventLoop_ 和 saveparam_。
+
+.. _dict: beta-1-structures.rst#dict-structure
+.. _list: beta-1-structures.rst#list-structure
+.. _aeEventLoop: beta-1-structures.rst#aeEventLoop-structure
+.. _saveparam: beta-1-structures.rst#saveparam-structure
 
