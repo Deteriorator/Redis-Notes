@@ -60,7 +60,9 @@ main 函数的流程图可以参考下图：
     :name: main
     :target: none
 
-此图参考 UML 代码： redis-main.puml 
+此图参考 UML 代码： redis-main.puml_
+
+.. _redis-main.puml: uml/redis-main.puml
 
 在继续分析之前， 需要先看一下 ``server`` 这个全局变量。 
 

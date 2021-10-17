@@ -146,5 +146,54 @@ dup 、 free 和 match ：
 双向链表的节点， 含有 3 个元素， 分别是上一个节点地址， 下一个节点地址以及当前结点的\
 值。 
 
+.. _aeEventLoop-structure:
+.. aeEventLoop-structure
+
+1.7 aeEventLoop 结构体
+==============================================================================
+
+.. code-block: c
+
+    /* State of an event based program */
+    typedef struct aeEventLoop {
+        long long timeEventNextId;
+        aeFileEvent *fileEventHead;
+        aeTimeEvent *timeEventHead;
+        int stop;
+    } aeEventLoop;
+
+事件循环结构体
+
+- ``timeEventNextId``: 用于生成时间事件的唯一标识 id
+- ``fileEventHead``:  注册的事件链表头指针
+- ``timeEventHead``: 注册的时间事件链表头指针
+- ``stop``: 停止标志， 1 表示停止
+
+.. _aeFileEvent-structure:
+.. aeFileEvent-structure
+
+1.8 aeFileEvent 结构体
+==============================================================================
+
+.. code-block: c
+
+    /* File event structure */
+    typedef struct aeFileEvent {
+        int fd;
+        int mask; /* one of AE_(READABLE|WRITABLE|EXCEPTION) */
+        aeFileProc *fileProc;
+        aeEventFinalizerProc *finalizerProc;
+        void *clientData;
+        struct aeFileEvent *next;
+    } aeFileEvent;
+
+aeFileEvent 文件事件结构体， 实际上是一个链表
+
+- ``fd``: 文件描述符
+- ``mask``: 标识这是一个读事件或写事件还是一个异常
+- ``fileProc``: 事件处理函数
+- ``finalizerProc``: 事件从链表中删除是执行的函数
+- ``clientData``: 传递给事件处理函数的数据
+- ``next``: 下一个事件的地址
 
 
