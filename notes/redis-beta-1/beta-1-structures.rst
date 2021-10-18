@@ -5,13 +5,13 @@ Redis Beta 1 源码阅读笔记 - Structures
 .. contents::
 
 ******************************************************************************
-第 1 部分  Structures
+Structures
 ******************************************************************************
 
 .. _redisServer-structure:
 .. redisServer-structure
 
-1.1 redisServer 结构体
+01 redisServer 结构体
 ==============================================================================
 
 redisServer 结构体一共由 17 个子元素构成
@@ -42,7 +42,7 @@ redisServer 结构体一共由 17 个子元素构成
 .. _dict-structure:
 .. dict-structure
 
-1.2 dict 结构体
+02 dict 结构体
 ==============================================================================
 
 .. code-block:: c 
@@ -64,7 +64,7 @@ sizemask 进行与操作后得出下标才是最终使用的下标， 这是一�
 .. _dictEntry-structure:
 .. dictEntry-structure
 
-1.3 dictEntry 结构体
+03 dictEntry 结构体
 ==============================================================================
 
 .. code-block:: c 
@@ -81,7 +81,7 @@ dictEntry 就是 Dict (Hash Table) 的节点或条目， 每个条目都有 key�
 .. _dictType-structure:
 .. dictType-structure
 
-1.4 dictType 结构体
+04 dictType 结构体
 ==============================================================================
 
 .. code-block:: c
@@ -108,7 +108,7 @@ dictType 结构包含若干函数指针， 用于 dict 的调用者对涉及 key
 .. _list-structure:
 .. list-structure
 
-1.5 list 结构体
+05 list 结构体
 ==============================================================================
 
 .. code-block:: c 
@@ -132,7 +132,7 @@ dup 、 free 和 match ：
 .. _listNode-structure:
 .. listNode-structure
 
-1.6 listNode 结构体
+06 listNode 结构体
 ==============================================================================
 
 .. code-block:: c 
@@ -149,7 +149,7 @@ dup 、 free 和 match ：
 .. _aeEventLoop-structure:
 .. aeEventLoop-structure
 
-1.7 aeEventLoop 结构体
+07 aeEventLoop 结构体
 ==============================================================================
 
 .. code-block:: c 
@@ -172,7 +172,7 @@ dup 、 free 和 match ：
 .. _aeFileEvent-structure:
 .. aeFileEvent-structure
 
-1.8 aeFileEvent 结构体
+08 aeFileEvent 结构体
 ==============================================================================
 
 .. code-block:: c 
@@ -192,8 +192,36 @@ aeFileEvent 文件事件结构体， 实际上是一个链表
 - ``fd``: 文件描述符
 - ``mask``: 标识这是一个读事件或写事件还是一个异常
 - ``fileProc``: 事件处理函数
-- ``finalizerProc``: 事件从链表中删除是执行的函数
+- ``finalizerProc``: 事件最后一次处理程序， 若设置则删除时间事件时调用
 - ``clientData``: 传递给事件处理函数的数据
 - ``next``: 下一个事件的地址
 
+.. _aeTimeEvent-structure:
+.. aeTimeEvent-structure
+
+09 aeTimeEvent 结构体
+==============================================================================
+
+.. code-block:: c 
+
+    /* Time event structure */
+    typedef struct aeTimeEvent {
+        long long id; /* time event identifier. */
+        long when_sec; /* seconds */
+        long when_ms; /* milliseconds */
+        aeTimeProc *timeProc;
+        aeEventFinalizerProc *finalizerProc;
+        void *clientData;
+        struct aeTimeEvent *next;
+    } aeTimeEvent;
+
+aeTimeEvent 时间事件结构体， 实际上也是一个链表
+
+- ``id``: 时间事件标识 ID， 而且用于删除时间事件
+- ``when_sec``: 秒
+- ``when_ms``: 毫秒
+- ``timeProc``: 时间事件处理函数
+- ``finalizerProc``: 时间事件最后一次处理程序， 若设置则删除时间事件时调用
+- ``clientData``: 传递给事件处理函数的数据
+- ``next``: 下一个时间事件的地址
 

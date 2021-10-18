@@ -1,9 +1,9 @@
 Redis Beta 1 Read:
 
 Structures (22):
-	☐ aeEventLoop
-	☐ aeFileEvent
-	☐ aeTimeEvent
+	✔ aeEventLoop @done(21-10-18 21:56)
+	✔ aeFileEvent @done(21-10-18 21:56)
+	✔ aeTimeEvent @done(21-10-18 21:56)
 	✔ dict @done(21-10-17 15:56)
 	✔ dictEntry @done(21-10-17 15:47)
 	☐ dictIterator
@@ -19,7 +19,7 @@ Structures (22):
 	☐ redisClient
 	☐ redisCommand
 	☐ redisObject
-	☐ redisServer
+	✔ redisServer @done(21-10-18 21:56)
 	☐ saveparam
 	☐ sdshdr
 	☐ sharedObjectsStruct
@@ -28,7 +28,7 @@ Type Definitions (18):
 	☐ aeEventFinalizerProc
 	☐ aeEventLoop
 	☐ aeFileEvent
-	☐ aeFileProc
+	✔ aeFileProc @done(21-10-18 21:55)
 	☐ aeTimeEvent
 	☐ aeTimeProc
 	☐ dict
