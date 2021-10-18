@@ -20,24 +20,24 @@ Structures (22):
 	☐ redisCommand
 	☐ redisObject
 	✔ redisServer @done(21-10-18 21:56)
-	☐ saveparam
+	✔ saveparam @done(21-10-18 22:03)
 	☐ sdshdr
 	☐ sharedObjectsStruct
 
 Type Definitions (18):
-	☐ aeEventFinalizerProc
-	☐ aeEventLoop
-	☐ aeFileEvent
+	✔ aeEventFinalizerProc @done(21-10-18 22:00)
+	✔ aeEventLoop @done(21-10-18 22:00)
+	✔ aeFileEvent @done(21-10-18 22:00)
 	✔ aeFileProc @done(21-10-18 21:55)
-	☐ aeTimeEvent
-	☐ aeTimeProc
-	☐ dict
-	☐ dictEntry
+	✔ aeTimeEvent @done(21-10-18 22:00)
+	✔ aeTimeProc @done(21-10-18 22:00)
+	✔ dict @done(21-10-18 22:00)
+	✔ dictEntry @done(21-10-18 22:00)
 	☐ dictIterator
-	☐ dictType
-	☐ list
+	✔ dictType @done(21-10-18 22:00)
+	✔ list @done(21-10-18 22:00)
 	☐ listIter
-	☐ listNode
+	✔ listNode @done(21-10-18 22:00)
 	☐ picolCmdFunc
 	☐ redisClient
 	☐ redisCommandProc
@@ -211,7 +211,7 @@ Functions (188):
 	☐ incrDecrCommand
 	☐ incrRefCount
 	☐ initServer
-	☐ initServerConfig
+	✔ initServerConfig @done(21-10-18 22:12)
 	☐ keysCommand
 	☐ lastsaveCommand
 	☐ lindexCommand

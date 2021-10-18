@@ -225,3 +225,16 @@ aeTimeEvent 时间事件结构体， 实际上也是一个链表
 - ``clientData``: 传递给事件处理函数的数据
 - ``next``: 下一个时间事件的地址
 
+.. _saveparam-structure:
+.. saveparam-structure
+
+10 saveparam 结构体
+==============================================================================
+
+.. code-block:: c 
+
+    struct saveparam {
+        time_t seconds;  // 变更的时间戳
+        int changes;     // 改变
+    };
+

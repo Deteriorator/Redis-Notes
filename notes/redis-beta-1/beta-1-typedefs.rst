@@ -24,3 +24,29 @@ Type Definitions
 用函数里， 把 aeFileProc 实现函数的地址传进来。 其实相当于定义一种接口， 由调用方来\
 实现该接口。
 
+.. _aeEventFinalizerProc-typedef:
+.. aeEventFinalizerProc-typedef
+
+02 aeEventFinalizerProc 定义
+==============================================================================
+
+.. code-block:: c 
+
+    /* Types and data structures */
+    typedef void aeEventFinalizerProc(struct aeEventLoop *eventLoop, void *clientData);
+
+同 aeFileProc， 也是一个函数函数指针
+
+.. _aeTimeProc-typedef:
+.. aeTimeProc-typedef
+
+03 aeTimeProc 定义
+==============================================================================
+
+.. code-block:: c 
+
+    /* Types and data structures */
+    typedef int aeTimeProc(struct aeEventLoop *eventLoop, long long id, void *clientData);
+
+同 aeFileProc， 也是一个函数函数指针
+

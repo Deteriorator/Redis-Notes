@@ -22,6 +22,9 @@ Redis 在 beta 1 版本时使用的单进程单线程的事件驱动技术 (even
 
 redis 项目是一个纯 C 项目， 我们从 main 函数开始看起。
 
+.. _main-func:
+.. main-func
+
 2.1 main 函数
 ==============================================================================
 
@@ -81,4 +84,35 @@ aeEventLoop_ 和 saveparam_。
 .. _list: beta-1-structures.rst#list-structure
 .. _aeEventLoop: beta-1-structures.rst#aeEventLoop-structure
 .. _saveparam: beta-1-structures.rst#saveparam-structure
+
+顾名思义， dict_ 就是字典 (哈希表)， list_ 是 (双向) 链表， aeEventLoop_ 是事件循\
+环， saveparam_ 是保存参数， 其内容是变更及做变更时的时间戳。
+
+2.2 initServerConfig 函数
+==============================================================================
+
+在上一节中了解了 redisServer_ 相关的内容， 现在正式进入 main_ 函数内的第一个函数: \
+``initServerConfig`` 函数。 
+
+.. _main: #main-func
+
+.. code-block:: c 
+
+    static void initServerConfig() {
+        server.dbnum = REDIS_DEFAULT_DBNUM;
+        server.port = REDIS_SERVERPORT;
+        server.verbosity = REDIS_DEBUG;
+        server.maxidletime = REDIS_MAXIDLETIME;
+        server.saveparams = NULL;
+        server.logfile = NULL; /* NULL = log on standard output */
+        ResetServerSaveParams();
+
+        appendServerSaveParams(60*60,1);  /* save after 1 hour and 1 change */
+        appendServerSaveParams(300,100);  /* save after 5 minutes and 100 changes */
+        appendServerSaveParams(60,10000); /* save after 1 minute and 10000 changes */
+    }
+
+首先对 server 全局变量进行设置。 然后执行 ``ResetServerSaveParams`` 函数和 \
+``appendServerSaveParams`` 函数。 总而言之就是对 redis server 进行设置， 为后续运\
+行做出铺垫作用。 
 
