@@ -116,60 +116,84 @@ aeEventLoop_ 和 saveparam_。
     }
 
 首先对 server 全局变量进行设置。 然后执行 ``ResetServerSaveParams`` 函数和 \
-``appendServerSaveParams`` 函数。 总而言之就是对 redis server 进行设置， 为后续运\
-行做出铺垫作用。 
+``appendServerSaveParams`` 函数。 
 
-.. _ResetServerSaveParams-func:
-.. ResetServerSaveParams-func
+ResetServerSaveParams_ 清空了 server 全局变量中的 ``saveparams`` 字段和 \
+``saveparamslen`` 字段； appendServerSaveParams_ 则为 redis 持久化功能做铺垫， \
+后续的 serverCron_ 函数将会使用 appendServerSaveParams_ 函数所做的设置。
 
-2.3 ResetServerSaveParams 函数
+.. _ResetServerSaveParams: beta-1-functions.rst#ResetServerSaveParams-func
+.. _appendServerSaveParams: beta-1-functions.rst#appendServerSaveParams-func
+.. _serverCron: beta-1-functions.rst#serverCron-func
+
+总而言之就是对 redis server 进行设置， 为后续运行做出铺垫作用。 但并不牵扯到运行服务\
+器。
+
+.. _initServer-func:
+.. initServer-func
+
+2.5 initServer 函数
 ==============================================================================
 
-.. code-block:: c
+.. code-block:: c 
 
-    static void ResetServerSaveParams() {
-        free(server.saveparams);
-        server.saveparams = NULL;
-        server.saveparamslen = 0;
+    static void initServer() {
+        int j;
+
+        signal(SIGHUP, SIG_IGN);
+        signal(SIGPIPE, SIG_IGN);
+
+        server.clients = listCreate();
+        server.objfreelist = listCreate();
+        createSharedObjects();
+        server.el = aeCreateEventLoop();
+        server.dict = malloc(sizeof(dict*)*server.dbnum);
+        if (!server.dict || !server.clients || !server.el || !server.objfreelist)
+            oom("server initialization"); /* Fatal OOM */
+        server.fd = anetTcpServer(server.neterr, server.port, NULL);
+        if (server.fd == -1) {
+            redisLog(REDIS_WARNING, "Opening TCP port: %s", server.neterr);
+            exit(1);
+        }
+        for (j = 0; j < server.dbnum; j++) {
+            server.dict[j] = dictCreate(&sdsDictType,NULL);
+            if (!server.dict[j])
+                oom("server initialization"); /* Fatal OOM */
+        }
+        server.cronloops = 0;
+        server.bgsaveinprogress = 0;
+        server.lastsave = time(NULL);
+        server.dirty = 0;
+        aeCreateTimeEvent(server.el, 1000, serverCron, NULL, NULL);
     }
 
-static 关键字表示该函数只能在本文件中使用。 ``ResetServerSaveParams`` 函数的功能是\
-清空 server 全局变量中的 ``saveparams`` 字段和 ``saveparamslen`` 字段。 
+signal 信号函数， 第一个参数表示需要处理的信号值 （SIGHUP）， 第二个参数为处理函数或\
+者是一个标识， 这里 SIG_IGN 表示忽略 SIGHUP 那个注册的信号。
 
-首先释放掉 ``server.saveparams`` 字段的内存， 然后将该字段置为 NULL， 同时将 \
-``saveparamslen`` 置为 0， ``saveparamslen`` 顾名思义就是 ``server.saveparams`` \
-的长度。
+SIGHUP 和控制台操作有关， 当控制台被关闭时系统会向拥有控制台 sessionID 的所有进程发\
+送 HUP 信号， 默认 HUP 信号的 action 是 exit， 如果远程登陆启动某个服务进程并在程序\
+运行时关闭连接的话会导致服务进程退出， 所以一般服务进程都会用 nohup 工具启动或写成一\
+个 daemon。
 
-.. _appendServerSaveParams-func:
-.. appendServerSaveParams-func
+TCP 是全双工的信道， 可以看作两条单工信道， TCP 连接两端的两个端点各负责一条。 当对\
+端调用 close 时， 虽然本意是关闭整个两条信道， 但本端只是收到 FIN 包。 按照 TCP 协\
+议的语义， 表示对端只是关闭了其所负责的那一条单工信道， 仍然可以继续接收数据。 也就是\
+说， 因为 TCP 协议的限制， 一个端点无法获知对端的 socket 是调用了 close 还是 \
+shutdown。
 
-2.4 appendServerSaveParams 函数
-==============================================================================
+对一个已经收到 FIN 包的 socket 调用 read 方法， 如果接收缓冲已空， 则返回 0， 这就\
+是常说的表示连接关闭。 但第一次对其调用 write 方法时， 如果发送缓冲没问题， 会返回正\
+确写入(发送)。 但发送的报文会导致对端发送 RST 报文， 因为对端的 socket 已经调用了 \
+close， 完全关闭， 既不发送， 也不接收数据。 所以， 第二次调用 write 方法(假设在收\
+到 RST 之后)， 会生成 SIGPIPE 信号， 导致进程退出。 
 
-.. code-block:: c
+为了避免进程退出， 可以捕获 SIGPIPE 信号， 或者忽略它， 给它设置 SIG_IGN 信号处理函\
+数: ``signal(SIGPIPE, SIG_IGN);`` 这样第二次调用 write 方法时， 会返回 -1， 同时 \
+errno 置为 SIGPIPE。 程序便能知道对端已经关闭。
 
-    static void appendServerSaveParams(time_t seconds, int changes) {
-        server.saveparams = realloc(server.saveparams,sizeof(struct saveparam)*(server.saveparamslen+1));
-        if (server.saveparams == NULL) oom("appendServerSaveParams");
-        server.saveparams[server.saveparamslen].seconds = seconds;
-        server.saveparams[server.saveparamslen].changes = changes;
-        server.saveparamslen++;
-    }
+然后将 server 的 ``clients`` 字段和 ``objfreelist`` 字段通过 listCreate_ 函数初始\
+为空的双端链表。
 
-该函数用于 redis 持久化功能。 ``server.saveparamslen`` 初始为 0， \
-initServerConfig_ 函数中连续执行了 3 次 ``appendServerSaveParams`` 函数， 注册了 \
-3 次 redis 持久化检查任务， 分别是一小时内有 1 次改变、 5 分钟内有 100 次改变和 1 \
-分钟内 10000 次改变。 
-
-.. _initServerConfig: #initServerConfig-func
-
-``appendServerSaveParams`` 函数每次执行， 都会先分配内存， 然后将 saveparams 字段\
-填上， 例如 ``appendServerSaveParams(60*60,1);`` 步骤会将 3600 添加到 \
-server.saveparams[0].seconds， 将 1 填到 server.saveparams[0].changes， 同时将 \
-``server.saveparamslen`` 字段进行自增。
-
-这个函数会为后来的数据文件保存做铺垫。
-
-回到 initServerConfig_ 函数中， 到此 initServerConfig_ 函数是完成了分析。
+.. _listCreate: beta-1-functions.rst#listCreate-func
 
 
