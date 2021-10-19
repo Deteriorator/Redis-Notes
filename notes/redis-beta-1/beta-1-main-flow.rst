@@ -86,7 +86,10 @@ aeEventLoop_ 和 saveparam_。
 .. _saveparam: beta-1-structures.rst#saveparam-structure
 
 顾名思义， dict_ 就是字典 (哈希表)， list_ 是 (双向) 链表， aeEventLoop_ 是事件循\
-环， saveparam_ 是保存参数， 其内容是变更及做变更时的时间戳。
+环， saveparam_ 是保存参数， 其内容是变更次数及做变更时的时间戳。
+
+.. _initServerConfig-func:
+.. initServerConfig-func
 
 2.2 initServerConfig 函数
 ==============================================================================
@@ -115,4 +118,58 @@ aeEventLoop_ 和 saveparam_。
 首先对 server 全局变量进行设置。 然后执行 ``ResetServerSaveParams`` 函数和 \
 ``appendServerSaveParams`` 函数。 总而言之就是对 redis server 进行设置， 为后续运\
 行做出铺垫作用。 
+
+.. _ResetServerSaveParams-func:
+.. ResetServerSaveParams-func
+
+2.3 ResetServerSaveParams 函数
+==============================================================================
+
+.. code-block:: c
+
+    static void ResetServerSaveParams() {
+        free(server.saveparams);
+        server.saveparams = NULL;
+        server.saveparamslen = 0;
+    }
+
+static 关键字表示该函数只能在本文件中使用。 ``ResetServerSaveParams`` 函数的功能是\
+清空 server 全局变量中的 ``saveparams`` 字段和 ``saveparamslen`` 字段。 
+
+首先释放掉 ``server.saveparams`` 字段的内存， 然后将该字段置为 NULL， 同时将 \
+``saveparamslen`` 置为 0， ``saveparamslen`` 顾名思义就是 ``server.saveparams`` \
+的长度。
+
+.. _appendServerSaveParams-func:
+.. appendServerSaveParams-func
+
+2.4 appendServerSaveParams 函数
+==============================================================================
+
+.. code-block:: c
+
+    static void appendServerSaveParams(time_t seconds, int changes) {
+        server.saveparams = realloc(server.saveparams,sizeof(struct saveparam)*(server.saveparamslen+1));
+        if (server.saveparams == NULL) oom("appendServerSaveParams");
+        server.saveparams[server.saveparamslen].seconds = seconds;
+        server.saveparams[server.saveparamslen].changes = changes;
+        server.saveparamslen++;
+    }
+
+该函数用于 redis 持久化功能。 ``server.saveparamslen`` 初始为 0， \
+initServerConfig_ 函数中连续执行了 3 次 ``appendServerSaveParams`` 函数， 注册了 \
+3 次 redis 持久化检查任务， 分别是一小时内有 1 次改变、 5 分钟内有 100 次改变和 1 \
+分钟内 10000 次改变。 
+
+.. _initServerConfig: #initServerConfig-func
+
+``appendServerSaveParams`` 函数每次执行， 都会先分配内存， 然后将 saveparams 字段\
+填上， 例如 ``appendServerSaveParams(60*60,1);`` 步骤会将 3600 添加到 \
+server.saveparams[0].seconds， 将 1 填到 server.saveparams[0].changes， 同时将 \
+``server.saveparamslen`` 字段进行自增。
+
+这个函数会为后来的数据文件保存做铺垫。
+
+回到 initServerConfig_ 函数中， 到此 initServerConfig_ 函数是完成了分析。
+
 

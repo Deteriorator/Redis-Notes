@@ -155,7 +155,7 @@ Functions (188):
 	☐ anetTcpNoDelay
 	☐ anetTcpServer
 	☐ anetWrite
-	☐ appendServerSaveParams
+	✔ appendServerSaveParams @done(21-10-19 22:01)
 	☐ bgsaveCommand
 	☐ closeTimedoutClients
 	☐ createClient
@@ -277,7 +277,7 @@ Functions (188):
 	☐ renameGenericCommand
 	☐ renamenxCommand
 	☐ resetClient
-	☐ ResetServerSaveParams
+	✔ ResetServerSaveParams @done(21-10-19 22:01)
 	☐ rpopCommand
 	☐ rpushCommand
 	☐ saveCommand
