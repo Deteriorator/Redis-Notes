@@ -218,7 +218,7 @@ Functions (188):
 	☐ listAddNodeHead
 	☐ listAddNodeTail
 	✔ listCreate @done(21-10-19 22:36)
-	☐ listDelNode
+	✔ listDelNode @done(21-10-20 22:12)
 	☐ listDup
 	☐ listGetIterator
 	☐ listIndex
@@ -331,14 +331,14 @@ Macros (26):
 	☐ dictSetHashKey
 	☐ dictSetHashVal
 	☐ DICT_NOTUSED
-	☐ listFirst
+	✔ listFirst @done(21-10-20 22:02)
 	☐ listGetDupMethod
 	☐ listGetFree
 	☐ listGetMatchMethod
 	☐ listLast
-	☐ listLength
+	✔ listLength @done(21-10-20 22:02)
 	☐ listNextNode
-	☐ listNodeValue
+	✔ listNodeValue @done(21-10-20 22:06)
 	☐ listPrevNode
 	☐ listSetDupMethod
 	☐ listSetFreeMethod

@@ -144,7 +144,7 @@ dup 、 free 和 match ：
     typedef struct listNode {
         struct listNode *prev; // 上一个节点地址
         struct listNode *next; // 下一个节点地址
-        void *value;           // 当前结点的值
+        void *value;           // 当前结点的值的地址
     } listNode;
 
 双向链表的节点， 含有 3 个元素， 分别是上一个节点地址， 下一个节点地址以及当前结点的\

@@ -150,9 +150,66 @@ shared 全局变量是一个 sharedObjectsStruct_ 结构体。
 .. _createSharedObjects: #createSharedObjects-func
 .. _createObject: #createObject-func
 
+listLength_ 宏定义的作用是返回 list_ 的 len 的值， 即链表的长度。
+
+.. _listLength: beta-1-macros.rst#listLength-macro
+.. _list: beta-1-structures.rst#list-structure
+
+listFirst_ 宏定义的作用是返回 list_ 的 head 的值， 即链表的头节点的指针。
+
+.. _listFirst: beta-1-macros.rst#listFirst-macro
+
+listNodeValue_ 宏定义的作用是返回 listNode_ 的 value 的值， 即链表节点的值指针。
+
+.. _listNodeValue: beta-1-macros.rst#listNodeValue-macro
+
+listDelNode_ 函数用于删除链表中指定的节点。 在此处就是删除链表的头节点， 因为释放的\
+是头节点。
+
+.. _listDelNode: #listDelNode-func
+
 当 ``server`` 的 ``objfreelist`` 字段不为 0 时， 说明当前的 server 中有可以释放的 \
-redis 对象， 那么直接从 ``objfreelist`` 链表中拿一个对象作为新建的 redis 对象， 否\
-则就需要重新分配内存来新建 redis 对象。 此举是为了节省内存。
+redis 对象， 那么直接从 ``objfreelist`` 链表中拿第一个对象作为新建的 redis 对象， \
+否则就需要重新分配内存来新建 redis 对象。 此举是为了节省内存。 这就是第一个 if 语句的\
+作用。 
 
 最终将创建的 redis 对象地址返回。 
+
+.. _listDelNode-func:
+.. listDelNode-func
+
+05 listDelNode 函数
+==============================================================================
+
+.. code-block:: c
+
+    void listDelNode(list *list, listNode *node)
+    {
+        if (node->prev)
+            node->prev->next = node->next;
+        else
+            list->head = node->next;
+        if (node->next)
+            node->next->prev = node->prev;
+        else
+            list->tail = node->prev;
+        if (list->free) list->free(node->value);
+        free(node);
+        list->len--;
+    }
+
+删除节点函数有两个参数： ``list`` 是需要删除节点的链表； ``node`` 是被删的节点。
+
+当当前节点 node 有前节点时， 说明不是链表的头节点， 删除节点时需要将前节点的 next 节\
+点指向 node 的 next 节点， 略过自己； 否则的话说明 node 是头节点， 只需将头节点指向 \
+node 的 next 节点。
+
+当当前节点 node 有 next 节点时， 说明不是链表的尾节点， 删除节点时需要将 next 节点的 \
+prev 节点指向当前节点 node 的 prev 节点， 也是要略过自己， 毕竟当前节点 node 是要删\
+除的； 否则的话说明 node 是尾节点， 只需要将尾节点指向当前节点的 prev 节点。
+
+如果 list 的 free 设置了某个函数， 将会对这个 node 执行该函数。
+
+然后释放 node 的内存， 同时将 list 的 len 长度进行减 1。
+
 
