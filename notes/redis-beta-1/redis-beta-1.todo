@@ -18,11 +18,11 @@ Structures (22):
 	☐ picolVar
 	☐ redisClient
 	☐ redisCommand
-	☐ redisObject
+	✔ redisObject @done(21-10-20 21:35)
 	✔ redisServer @done(21-10-18 21:56)
 	✔ saveparam @done(21-10-18 22:03)
 	☐ sdshdr
-	☐ sharedObjectsStruct
+	✔ sharedObjectsStruct @done(21-10-20 21:35)
 
 Type Definitions (18):
 	✔ aeEventFinalizerProc @done(21-10-18 22:00)
@@ -41,7 +41,7 @@ Type Definitions (18):
 	☐ picolCmdFunc
 	☐ redisClient
 	☐ redisCommandProc
-	☐ robj
+	✔ robj @done(21-10-20 21:35)
 	☐ sds
 
 Enumerations (2):
@@ -92,7 +92,7 @@ Constants (47):
 	☐ REDIS_SELECTDB
 	☐ REDIS_SERVERPORT
 	☐ REDIS_SET
-	☐ REDIS_STRING
+	✔ REDIS_STRING @done(21-10-20 21:40)
 	☐ REDIS_TAIL
 	☐ REDIS_WARNING
 	☐ __SDS_H
@@ -120,8 +120,8 @@ Variables (10):
 	☐ OBJ
 	☐ PRGNAME
 	☐ sdsDictType
-	☐ server
-	☐ shared
+	✔ server @done(21-10-20 21:03)
+	✔ shared @done(21-10-20 21:03)
 
 External Variables (3):
 	☐ dictTypeHeapStringCopyKey
@@ -160,7 +160,7 @@ Functions (188):
 	☐ closeTimedoutClients
 	☐ createClient
 	☐ createListObject
-	☐ createObject
+	✔ createObject @done(21-10-20 21:31)
 	☐ createSharedObjects
 	☐ dbsizeCommand
 	☐ decrCommand
@@ -368,7 +368,7 @@ Function Prototypes (111):
 	☐ anetTcpServer
 	☐ anetWrite
 	☐ bgsaveCommand
-	☐ createObject
+	✔ createObject @done(21-10-20 21:41)
 	☐ dbsizeCommand
 	☐ decrCommand
 	☐ decrRefCount
@@ -477,15 +477,15 @@ Data Members (111):
 	☐ aeTimeEvent::timeProc
 	☐ aeTimeEvent::when_ms
 	☐ aeTimeEvent::when_sec
-	☐ dict::privdata
-	☐ dict::size
-	☐ dict::sizemask
-	☐ dict::table
-	☐ dict::type
-	☐ dict::used
-	☐ dictEntry::key
-	☐ dictEntry::next
-	☐ dictEntry::val
+	✔ dict::privdata @done(21-10-20 21:42)
+	✔ dict::size @done(21-10-20 21:42)
+	✔ dict::sizemask @done(21-10-20 21:42)
+	✔ dict::table @done(21-10-20 21:42)
+	✔ dict::type @done(21-10-20 21:42)
+	✔ dict::used @done(21-10-20 21:42)
+	✔ dictEntry::key @done(21-10-20 21:41)
+	✔ dictEntry::next @done(21-10-20 21:41)
+	✔ dictEntry::val @done(21-10-20 21:41)
 	☐ dictIterator::entry
 	☐ dictIterator::ht
 	☐ dictIterator::index
@@ -538,9 +538,9 @@ Data Members (111):
 	☐ redisCommand::name
 	☐ redisCommand::proc
 	☐ redisCommand::type
-	☐ redisObject::ptr
-	☐ redisObject::refcount
-	☐ redisObject::type
+	✔ redisObject::ptr @done(21-10-20 21:42)
+	✔ redisObject::refcount @done(21-10-20 21:42)
+	✔ redisObject::type @done(21-10-20 21:42)
 	☐ redisServer::bgsaveinprogress
 	☐ redisServer::clients
 	☐ redisServer::cronloops

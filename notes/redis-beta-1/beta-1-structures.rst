@@ -56,6 +56,8 @@ redisServer 结构体一共由 17 个子元素构成
         void *privdata;        // 字典的私有数据
     } dict;
 
+dict 类型是一个 dict 结构体。
+
 sizemask 字段的作用是当使用下标访问数据时， 确保下标不越界。
 
 例如当前 size 为 8 时， sizemask 为 7 (0x111)。 当给定一个下标N时， 将 N 与 \
@@ -74,6 +76,8 @@ sizemask 进行与操作后得出下标才是最终使用的下标， 这是一�
         void *val;              // 值
         struct dictEntry *next; // 下一个结点
     } dictEntry;
+
+dictEntry 类型是一个 dictEntry 结构体。
 
 dictEntry 就是 Dict (Hash Table) 的节点或条目， 每个条目都有 key， value 和下一个\
 条目的地址
@@ -235,6 +239,45 @@ aeTimeEvent 时间事件结构体， 实际上也是一个链表
 
     struct saveparam {
         time_t seconds;  // 变更的时间戳
-        int changes;     // 改变
+        int changes;     // 改变数量
     };
+
+.. _sharedObjectsStruct-structure:
+.. sharedObjectsStruct-structure
+
+11 sharedObjectsStruct 结构体
+==============================================================================
+
+.. code-block:: c 
+
+    struct sharedObjectsStruct {
+        robj *crlf, *ok, *err, *zerobulk, *nil, *zero, *one, *pong;
+    } shared;
+
+为了操作方便， 同时为了节省内存， redis 定义了一组全局的共享对象 "shared"， 其中的 \
+crlf 代表一个 "\r\n" 字符串对象， ok 代表一个 "ok" 字符串对象等。 
+
+其中 robj 类型是 redisObject_ 结构体。
+
+.. _redisObject: #redisObject-structure
+
+.. _redisObject-structure:
+.. redisObject-structure
+
+11 redisObject 结构体
+==============================================================================
+
+.. code-block:: c 
+
+    typedef struct redisObject {
+        int type;
+        void *ptr;
+        int refcount;
+    } robj;
+
+redis 对象结构体， 包含了 3 个元素
+
+- type: 对象类型
+- ptr: 对象指针
+- refcount: 对象引用计数
 

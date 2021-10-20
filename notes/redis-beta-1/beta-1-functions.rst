@@ -62,7 +62,7 @@ server.saveparams[0].seconds， 将 1 填到 server.saveparams[0].changes， 同
 .. _listCreate-func:
 .. listCreate-func
 
-02 listCreate 函数
+03 listCreate 函数
 ==============================================================================
 
 .. code-block:: c
@@ -83,4 +83,76 @@ server.saveparams[0].seconds， 将 1 填到 server.saveparams[0].changes， 同
 
 该函数用于新建一个空的双端链表， 分配好内存后， 将值置为 NULL， 长度置为 0， 最终返\
 回这个新建的链表。
+
+.. _createSharedObjects-func:
+.. createSharedObjects-func
+
+04 createSharedObjects 函数
+==============================================================================
+
+.. code-block:: c
+
+    #define REDIS_STRING 0
+
+    static void createSharedObjects(void) {
+        shared.crlf = createObject(REDIS_STRING,sdsnew("\r\n"));
+        shared.ok = createObject(REDIS_STRING,sdsnew("+OK\r\n"));
+        shared.err = createObject(REDIS_STRING,sdsnew("-ERR\r\n"));
+        shared.zerobulk = createObject(REDIS_STRING,sdsnew("0\r\n\r\n"));
+        shared.nil = createObject(REDIS_STRING,sdsnew("nil\r\n"));
+        shared.zero = createObject(REDIS_STRING,sdsnew("0\r\n"));
+        shared.one = createObject(REDIS_STRING,sdsnew("1\r\n"));
+        shared.pong = createObject(REDIS_STRING,sdsnew("+PONG\r\n"));
+    }
+
+这个函数主要是创建一些共享的全局对象， 我们平时在跟 redis 服务交互的时候， 如果有遇到\
+错误， 会收到一些固定的错误信息或者字符串比如： -ERR syntax error， -ERR no such \
+key。 这些字符串对象都是在这个函数里面进行初始化的。 
+
+shared 全局变量是一个 sharedObjectsStruct_ 结构体。 
+
+.. _sharedObjectsStruct: beta-1-structures.rst#sharedObjectsStruct-structure
+
+``REDIS_STRING`` 常量被设置为 0， sdsnew_ 函数是字符串对象创建函数， 最终会返回字\
+符串的地址
+
+.. _sdsnew: #sdsnew-func
+
+.. _createObject-func:
+.. createObject-func
+
+05 createObject 函数
+==============================================================================
+
+.. code-block:: c
+
+    static robj *createObject(int type, void *ptr) {
+        robj *o;
+
+        if (listLength(server.objfreelist)) {
+            listNode *head = listFirst(server.objfreelist);
+            o = listNodeValue(head);
+            listDelNode(server.objfreelist,head);
+        } else {
+            o = malloc(sizeof(*o));
+        }
+        if (!o) oom("createObject");
+        o->type = type;
+        o->ptr = ptr;
+        o->refcount = 1;
+        return o;
+    }
+
+在 createSharedObjects_ 函数中有使用到 createObject_ 函数， createObject_ 函数用\
+于创建 redis 对象， 其参数有两个： ``type`` 为 redis 对象的类型； ``ptr`` 为 redis \
+对象的地址指针。
+
+.. _createSharedObjects: #createSharedObjects-func
+.. _createObject: #createObject-func
+
+当 ``server`` 的 ``objfreelist`` 字段不为 0 时， 说明当前的 server 中有可以释放的 \
+redis 对象， 那么直接从 ``objfreelist`` 链表中拿一个对象作为新建的 redis 对象， 否\
+则就需要重新分配内存来新建 redis 对象。 此举是为了节省内存。
+
+最终将创建的 redis 对象地址返回。 
 
