@@ -47,5 +47,5 @@ Macros
 此宏定义是获取 listNode_ 的 value 属性， 即节点值的地址。 代码中的 n 的类型是 \
 listNode_。
 
-.. _listNode: beta-1-structures.rst#listNode-structure
+.. _listNode: beta-1-structures.rst#listNode-struct
 

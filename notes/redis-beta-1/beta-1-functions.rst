@@ -111,7 +111,7 @@ key。 这些字符串对象都是在这个函数里面进行初始化的。
 
 shared 全局变量是一个 sharedObjectsStruct_ 结构体。 
 
-.. _sharedObjectsStruct: beta-1-structures.rst#sharedObjectsStruct-structure
+.. _sharedObjectsStruct: beta-1-structures.rst#sharedObjectsStruct-struct
 
 ``REDIS_STRING`` 常量被设置为 0， sdsnew_ 函数是字符串对象创建函数， 最终会返回字\
 符串的地址
@@ -153,7 +153,7 @@ shared 全局变量是一个 sharedObjectsStruct_ 结构体。
 listLength_ 宏定义的作用是返回 list_ 的 len 的值， 即链表的长度。
 
 .. _listLength: beta-1-macros.rst#listLength-macro
-.. _list: beta-1-structures.rst#list-structure
+.. _list: beta-1-structures.rst#list-struct
 
 listFirst_ 宏定义的作用是返回 list_ 的 head 的值， 即链表的头节点的指针。
 
@@ -178,7 +178,7 @@ redis 对象， 那么直接从 ``objfreelist`` 链表中拿第一个对象作�
 .. _listDelNode-func:
 .. listDelNode-func
 
-05 listDelNode 函数
+06 listDelNode 函数
 ==============================================================================
 
 .. code-block:: c
@@ -215,7 +215,7 @@ prev 节点指向当前节点 node 的 prev 节点， 也是要略过自己， �
 .. _sdsnew-func:
 .. sdsnew-func
 
-06 sdsnew 函数
+07 sdsnew 函数
 ==============================================================================
 
 .. code-block:: C 
@@ -235,5 +235,53 @@ dynamic strings 简单动态字符串的缩写
 
 .. _sdsnewlen: #sdsnewlen-func
 
+.. _sdsnewlen-func:
+.. sdsnewlen-func
+
+08 sdsnewlen 函数
+==============================================================================
+
+.. code-block:: C 
+
+    sds sdsnewlen(const void *init, size_t initlen) {
+        struct sdshdr *sh;
+
+        sh = malloc(sizeof(struct sdshdr)+initlen+1);
+    #ifdef SDS_ABORT_ON_OOM
+        if (sh == NULL) sdsOomAbort();
+    #else
+        if (sh == NULL) return NULL;
+    #endif
+        sh->len = initlen;
+        sh->free = 0;
+        if (initlen) {
+            if (init) memcpy(sh->buf, init, initlen);
+            else memset(sh->buf,0,initlen);
+        }
+        sh->buf[initlen] = '\0';
+        return (char*)sh->buf;
+    }
+
+在这个函数中首先遇到了 sdshdr_ 结构体， 它的全称是 Simple Dynamic Strings Header。 \
+这个结构体包含了字符串的长度、 剩余空间和字符串本身。
+
+.. _sdshdr: beta-1-structures.rst#sdshar-struct
+
+然后根据指定的字符串长度 ``initlen`` 分配内存大小， 首先是字符串头部大小 sdshdr 大\
+小加上指定的长度 ``initlen``， 用于存放字符串， 而最后的 1 则表示字符串结束符 ``\0`` \
+。 
+
+如果定义了 ``SDS_ABORT_ON_OOM``， 当 ``sh`` 为 NULL 时， 执行 sdsOomAbort_ 函数， \
+打印内存不足信息并中止程序执行， 直接从调用的地方跳出。 如果没有定义， 则直接返回 \
+NULL。 
+
+.. _sdsOomAbort: #sdsOomAbort-func
+
+然后将字符串头部的 len 置为要创建的字符串的长度 initlen， 将 free 置为 0； 当 \
+initlen 不为 0 时， 且字符串 init 不为空时， 将字符串 init 复制到 sh->buf 指向的地\
+址中， 长度为 initlen， 如果字符串 init 为空， 则将字符 0 复制到 sh->buf 指向的地址\
+中， 长度也是 initlen。 最后在向字符串结尾添加结束符 ``\0``。 
+
+最终返回创建的字符串的地址。
 
 

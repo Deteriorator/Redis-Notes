@@ -8,8 +8,8 @@ Redis Beta 1 源码阅读笔记 - Structures
 Structures
 ******************************************************************************
 
-.. _redisServer-structure:
-.. redisServer-structure
+.. _redisServer-struct:
+.. redisServer-struct
 
 01 redisServer 结构体
 ==============================================================================
@@ -39,8 +39,8 @@ redisServer 结构体一共由 17 个子元素构成
         char *logfile;                // 日志文件
     };
 
-.. _dict-structure:
-.. dict-structure
+.. _dict-struct:
+.. dict-struct
 
 02 dict 结构体
 ==============================================================================
@@ -63,8 +63,8 @@ sizemask 字段的作用是当使用下标访问数据时， 确保下标不越�
 例如当前 size 为 8 时， sizemask 为 7 (0x111)。 当给定一个下标N时， 将 N 与 \
 sizemask 进行与操作后得出下标才是最终使用的下标， 这是一个绝对不会越界的下标。 
 
-.. _dictEntry-structure:
-.. dictEntry-structure
+.. _dictEntry-struct:
+.. dictEntry-struct
 
 03 dictEntry 结构体
 ==============================================================================
@@ -82,8 +82,8 @@ dictEntry 类型是一个 dictEntry 结构体。
 dictEntry 就是 Dict (Hash Table) 的节点或条目， 每个条目都有 key， value 和下一个\
 条目的地址
 
-.. _dictType-structure:
-.. dictType-structure
+.. _dictType-struct:
+.. dictType-struct
 
 04 dictType 结构体
 ==============================================================================
@@ -109,8 +109,8 @@ dictType 结构包含若干函数指针， 用于 dict 的调用者对涉及 key
 - keyDestructor 和 valDestructor， 分别定义对 key 和 value 的销毁函数。 私有数据\
   指针 （privdata） 就是在 dictType 的某些操作被调用时会传回给调用者。
 
-.. _list-structure:
-.. list-structure
+.. _list-struct:
+.. list-struct
 
 05 list 结构体
 ==============================================================================
@@ -133,8 +133,8 @@ dup 、 free 和 match ：
 - free: 节点释放函数
 - match: 节点匹配函数
 
-.. _listNode-structure:
-.. listNode-structure
+.. _listNode-struct:
+.. listNode-struct
 
 06 listNode 结构体
 ==============================================================================
@@ -150,8 +150,8 @@ dup 、 free 和 match ：
 双向链表的节点， 含有 3 个元素， 分别是上一个节点地址， 下一个节点地址以及当前结点的\
 值。 
 
-.. _aeEventLoop-structure:
-.. aeEventLoop-structure
+.. _aeEventLoop-struct:
+.. aeEventLoop-struct
 
 07 aeEventLoop 结构体
 ==============================================================================
@@ -173,8 +173,8 @@ dup 、 free 和 match ：
 - ``timeEventHead``: 注册的时间事件链表头指针
 - ``stop``: 停止标志， 1 表示停止
 
-.. _aeFileEvent-structure:
-.. aeFileEvent-structure
+.. _aeFileEvent-struct:
+.. aeFileEvent-struct
 
 08 aeFileEvent 结构体
 ==============================================================================
@@ -200,8 +200,8 @@ aeFileEvent 文件事件结构体， 实际上是一个链表
 - ``clientData``: 传递给事件处理函数的数据
 - ``next``: 下一个事件的地址
 
-.. _aeTimeEvent-structure:
-.. aeTimeEvent-structure
+.. _aeTimeEvent-struct:
+.. aeTimeEvent-struct
 
 09 aeTimeEvent 结构体
 ==============================================================================
@@ -229,8 +229,8 @@ aeTimeEvent 时间事件结构体， 实际上也是一个链表
 - ``clientData``: 传递给事件处理函数的数据
 - ``next``: 下一个时间事件的地址
 
-.. _saveparam-structure:
-.. saveparam-structure
+.. _saveparam-struct:
+.. saveparam-struct
 
 10 saveparam 结构体
 ==============================================================================
@@ -242,8 +242,8 @@ aeTimeEvent 时间事件结构体， 实际上也是一个链表
         int changes;     // 改变数量
     };
 
-.. _sharedObjectsStruct-structure:
-.. sharedObjectsStruct-structure
+.. _sharedObjectsStruct-struct:
+.. sharedObjectsStruct-struct
 
 11 sharedObjectsStruct 结构体
 ==============================================================================
@@ -259,12 +259,12 @@ crlf 代表一个 "\r\n" 字符串对象， ok 代表一个 "ok" 字符串对象
 
 其中 robj 类型是 redisObject_ 结构体。
 
-.. _redisObject: #redisObject-structure
+.. _redisObject: #redisObject-struct
 
-.. _redisObject-structure:
-.. redisObject-structure
+.. _redisObject-struct:
+.. redisObject-struct
 
-11 redisObject 结构体
+12 redisObject 结构体
 ==============================================================================
 
 .. code-block:: c 
@@ -280,4 +280,24 @@ redis 对象结构体， 包含了 3 个元素
 - type: 对象类型
 - ptr: 对象指针
 - refcount: 对象引用计数
+
+.. _sdshdr-struct:
+.. sdshdr-struct
+
+13 sdshdr 结构体
+==============================================================================
+
+.. code-block:: c 
+
+    struct sdshdr {
+        long len;
+        long free;
+        char buf[0];
+    };
+
+``sdshdr`` 全称是 Simple Dynamic Strings Header， 包含了 3 个元素：
+
+- len: 记录 buf 数组中已使用字节的数量， 等于 sds 保存字符串的长度
+- free: 记录 buf 数组中未使用字节的数量
+- buf: 字节数组， 用于保存字符串
 

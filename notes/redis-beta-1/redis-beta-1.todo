@@ -21,7 +21,7 @@ Structures (22):
 	✔ redisObject @done(21-10-20 21:35)
 	✔ redisServer @done(21-10-18 21:56)
 	✔ saveparam @done(21-10-18 22:03)
-	☐ sdshdr
+	✔ sdshdr @done(21-10-22 23:21)
 	✔ sharedObjectsStruct @done(21-10-20 21:35)
 
 Type Definitions (18):
@@ -300,7 +300,7 @@ Functions (188):
 	☐ sdslen
 	☐ sdsMakeRoomFor
 	✔ sdsnew @done(21-10-22 22:50)
-	☐ sdsnewlen
+	✔ sdsnewlen @done(21-10-22 23:21)
 	☐ sdsOomAbort
 	☐ sdsrange
 	☐ sdssplitlen
@@ -448,7 +448,7 @@ Function Prototypes (111):
 	☐ sdsfree
 	☐ sdslen
 	✔ sdsnew @done(21-10-22 22:50)
-	☐ sdsnewlen
+	✔ sdsnewlen @done(21-10-22 23:21)
 	☐ sdsrange
 	☐ sdssplitlen
 	☐ sdstolower
@@ -560,9 +560,9 @@ Data Members (111):
 	☐ redisServer::verbosity
 	☐ saveparam::changes
 	☐ saveparam::seconds
-	☐ sdshdr::buf
-	☐ sdshdr::free
-	☐ sdshdr::len
+	✔ sdshdr::buf @done(21-10-22 23:22)
+	✔ sdshdr::free @done(21-10-22 23:22)
+	✔ sdshdr::len @done(21-10-22 23:22)
 	☐ sharedObjectsStruct::crlf
 	☐ sharedObjectsStruct::err
 	☐ sharedObjectsStruct::nil
