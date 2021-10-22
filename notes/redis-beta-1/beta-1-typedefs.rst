@@ -50,3 +50,16 @@ Type Definitions
 
 同 aeFileProc， 也是一个函数函数指针
 
+.. _sds-typedef:
+.. sds-typedef
+
+04 sds 定义
+==============================================================================
+
+.. code-block:: c 
+
+    typedef char *sds;
+
+sds 就是一个 char 指针， sds 就是一个别名而已。 ``char*`` 表示字符指针类型， 当其指\
+向一个字符串的第一个元素时， 它就可以表示这个字符串。
+

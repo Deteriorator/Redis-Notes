@@ -196,4 +196,6 @@ errno 置为 SIGPIPE。 程序便能知道对端已经关闭。
 
 .. _listCreate: beta-1-functions.rst#listCreate-func
 
+然后使用 createSharedObjects_ 函数创建共享对象
 
+.. _createSharedObjects: beta-1-functions.rst#createSharedObjects-func

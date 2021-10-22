@@ -212,4 +212,28 @@ prev 节点指向当前节点 node 的 prev 节点， 也是要略过自己， �
 
 然后释放 node 的内存， 同时将 list 的 len 长度进行减 1。
 
+.. _sdsnew-func:
+.. sdsnew-func
+
+06 sdsnew 函数
+==============================================================================
+
+.. code-block:: C 
+
+    sds sdsnew(const char *init) {
+        size_t initlen = (init == NULL) ? 0 : strlen(init);
+        return sdsnewlen(init, initlen);
+    }
+
+sds_ 类型实际上是字符指针类型， redis 中实现了 sds_， 实际上可以看做 simple \
+dynamic strings 简单动态字符串的缩写
+
+.. _sds: beta-1-typedefs.rst#sds-typedef
+
+当字符指针 (也可以看做是字符串) ``init`` 为 NULL 时， initlen 取 0， 否则取字符串 \
+``init`` 的长度； 然后执行 sdsnewlen_ 函数创建一个给定长度的字符串。
+
+.. _sdsnewlen: #sdsnewlen-func
+
+
 

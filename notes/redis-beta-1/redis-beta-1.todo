@@ -42,7 +42,7 @@ Type Definitions (18):
 	☐ redisClient
 	☐ redisCommandProc
 	✔ robj @done(21-10-20 21:35)
-	☐ sds
+	✔ sds @done(21-10-22 22:49)
 
 Enumerations (2):
 	☐ {anon_enum}
@@ -299,7 +299,7 @@ Functions (188):
 	☐ sdsfree
 	☐ sdslen
 	☐ sdsMakeRoomFor
-	☐ sdsnew
+	✔ sdsnew @done(21-10-22 22:50)
 	☐ sdsnewlen
 	☐ sdsOomAbort
 	☐ sdsrange
@@ -447,7 +447,7 @@ Function Prototypes (111):
 	☐ sdsempty
 	☐ sdsfree
 	☐ sdslen
-	☐ sdsnew
+	✔ sdsnew @done(21-10-22 22:50)
 	☐ sdsnewlen
 	☐ sdsrange
 	☐ sdssplitlen
