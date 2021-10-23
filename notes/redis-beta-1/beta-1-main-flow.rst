@@ -205,3 +205,13 @@ errno 置为 SIGPIPE。 程序便能知道对端已经关闭。
 然后将 ``server.el`` 置为 aeCreateEventLoop_， aeCreateEventLoop_ 函数用于创建事\
 件循环。 
 
+.. _aeCreateEventLoop: beta-1-functions.rst#aeCreateEventLoop-func
+
+``server.dict`` 被设置为 ``dbnum * sizeof(dict*)``。 
+
+注意 if 语句， 当 ``server.dict``、 ``server.clients``、 ``server.el`` 和 \
+``server.objfreelist`` 其中任意一个为空时， 都会执行 oom_ 函数， 用于打印内存不足\
+错误和中止程序运行。 它们是取非之后 ``!`` 又进行或运算 ``||`` 的。 
+
+.. _oom: beta-1-functions.rst#oom-func
+
