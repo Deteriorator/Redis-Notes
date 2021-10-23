@@ -199,3 +199,9 @@ errno 置为 SIGPIPE。 程序便能知道对端已经关闭。
 然后使用 createSharedObjects_ 函数创建共享对象
 
 .. _createSharedObjects: beta-1-functions.rst#createSharedObjects-func
+
+实际上就创建了一下字符串相关的共享对象。
+
+然后将 ``server.el`` 置为 aeCreateEventLoop_， aeCreateEventLoop_ 函数用于创建事\
+件循环。 
+

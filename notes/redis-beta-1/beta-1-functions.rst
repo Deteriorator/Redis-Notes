@@ -284,4 +284,45 @@ initlen 不为 0 时， 且字符串 init 不为空时， 将字符串 init 复�
 
 最终返回创建的字符串的地址。
 
+.. _sdsOomAbort-func:
+.. sdsOomAbort-func
+
+09 sdsOomAbort 函数
+==============================================================================
+
+.. code-block:: C 
+
+    static void sdsOomAbort(void) {
+        fprintf(stderr,"SDS: Out Of Memory (SDS_ABORT_ON_OOM defined)\n");
+        abort();
+    }
+
+执行这个函数的原因是内存不足了， 将错误信息向标准错误 stderr 传输， 同时终止程序执行。 
+
+.. _aeCreateEventLoop-func:
+.. aeCreateEventLoop-func
+
+10 aeCreateEventLoop 函数
+==============================================================================
+
+.. code-block:: C 
+
+    aeEventLoop *aeCreateEventLoop(void) {
+        aeEventLoop *eventLoop;
+
+        eventLoop = malloc(sizeof(*eventLoop));
+        if (!eventLoop) return NULL;
+        eventLoop->fileEventHead = NULL;
+        eventLoop->timeEventHead = NULL;
+        eventLoop->timeEventNextId = 0;
+        eventLoop->stop = 0;
+        return eventLoop;
+    }
+
+aeEventLoop_ 类型之前已经解析过了。
+
+.. _aeEventLoop: beta-1-structures.rst#aeEventLoop-struct
+
+先分配内存， 当 eventLoop 不为 NULL 时， 初始化 eventLoop 各个字段的值， 最终返回 \
+eventLoop。 
 
