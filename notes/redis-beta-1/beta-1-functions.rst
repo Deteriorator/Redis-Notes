@@ -161,6 +161,7 @@ listFirst_ 宏定义的作用是返回 list_ 的 head 的值， 即链表的头�
 
 listNodeValue_ 宏定义的作用是返回 listNode_ 的 value 的值， 即链表节点的值指针。
 
+.. _listNode: beta-1-structures.rst#listNode-struct
 .. _listNodeValue: beta-1-macros.rst#listNodeValue-macro
 
 listDelNode_ 函数用于删除链表中指定的节点。 在此处就是删除链表的头节点， 因为释放的\
@@ -346,3 +347,62 @@ stderr 缓存， 休息 1 秒钟后中止程序执行
 
 .. _sdsOomAbort: #sdsOomAbort-func
 
+.. _anetTcpServer-func:
+.. anetTcpServer-func
+
+10 anetTcpServer 函数
+==============================================================================
+
+.. code-block:: C 
+
+    int anetTcpServer(char *err, int port, char *bindaddr)
+    {
+        int s, on = 1;
+        struct sockaddr_in sa;
+        
+        // 1
+        if ((s = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+            anetSetError(err, "socket: %s\n", strerror(errno));
+            return ANET_ERR;
+        }
+
+        // 2
+        if (setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) == -1) {
+            anetSetError(err, "setsockopt SO_REUSEADDR: %s\n", strerror(errno));
+            close(s);
+            return ANET_ERR;
+        }
+        sa.sin_family = AF_INET;
+        sa.sin_port = htons(port);
+        sa.sin_addr.s_addr = htonl(INADDR_ANY);
+        
+        // 3
+        if (bindaddr) inet_aton(bindaddr, &sa.sin_addr);
+
+        // 4
+        if (bind(s, (struct sockaddr*)&sa, sizeof(sa)) == -1) {
+            anetSetError(err, "bind: %s\n", strerror(errno));
+            close(s);
+            return ANET_ERR;
+        }
+
+        // 5
+        if (listen(s, 5) == -1) {
+            anetSetError(err, "listen: %s\n", strerror(errno));
+            close(s);
+            return ANET_ERR;
+        }
+        return s;
+    }
+
+此函数的核心代码就是调用系统 socket 库的 ``listen`` 函数建立起了一个 TCP Server。 
+
+此函数可以拆分成 5 个主要步骤：
+
+1. ``socket`` 函数用于创建一个新的通信端 (socket)， 如果创建成功将返回一个新的文件\
+   描述符， 否则返回 -1， 同时将错误代码写入 errno。 如果等于 -1， 说明创建失败， 然\
+   后执行 anetSetError_ 函数并返回错误信息
+
+.. _anetSetError: #anetSetError-func
+
+#. ``setsockopt`` 函数用于操作文件描述符引用的 socket， 
