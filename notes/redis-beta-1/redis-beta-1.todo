@@ -64,7 +64,7 @@ Constants (47):
 	☐ AL_START_HEAD
 	☐ AL_START_TAIL
 	☐ ANET_ERR
-	☐ ANET_ERR_LEN
+	✔ ANET_ERR_LEN @done(21-10-25 21:55)
 	☐ ANET_H
 	☐ ANET_OK
 	☐ DICT_ERR
@@ -148,7 +148,7 @@ Functions (188):
 	☐ anetNonBlock
 	☐ anetRead
 	☐ anetResolve
-	☐ anetSetError
+	✔ anetSetError @done(21-10-25 21:55)
 	☐ anetSetSendBuffer
 	☐ anetTcpConnect
 	☐ anetTcpKeepAlive

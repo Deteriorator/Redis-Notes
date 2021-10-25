@@ -423,3 +423,36 @@ stderr 缓存， 休息 1 秒钟后中止程序执行
 #. 如果以上步骤都没有问题， 将返回这个可以正常接收数据的套接字文件描述符。
 
 .. _anetSetError: #anetSetError-func
+
+.. _anetSetError-func:
+.. anetSetError-func
+
+12 anetSetError 函数
+==============================================================================
+
+.. code-block:: C 
+
+    #define ANET_ERR_LEN 256
+
+    static void anetSetError(char *err, const char *fmt, ...)
+    {
+        va_list ap;
+
+        if (!err) return;
+        va_start(ap, fmt);
+        vsnprintf(err, ANET_ERR_LEN, fmt, ap);
+        va_end(ap);
+    }
+
+该函数使用了可变参数， ``void va_start(va_list ap, last);`` 从该函数的的声明可以看\
+出: 最后一个确定参数是 last， 可变参数是从 last 开始的， 一直到最后， 一旦 va_end \
+函数执行， ap 将变成 undefined 状态；  
+
+.. code-block:: C 
+
+    int vsnprintf(char *str, size_t size, const char *format, va_list ap);
+
+格式化字符串， 最多写入 size 字节 (包含字符串结束符 "\\0") 到 str 中。
+
+此函数中的 size 被设定为 ``ANET_ERR_LEN`` 也就是 256。
+
