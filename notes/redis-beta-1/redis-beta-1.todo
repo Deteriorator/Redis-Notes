@@ -272,7 +272,7 @@ Functions (188):
 	☐ pushGenericCommand
 	☐ randomkeyCommand
 	☐ readQueryFromClient
-	☐ redisLog
+	✔ redisLog @done(21-10-25 22:44)
 	☐ renameCommand
 	☐ renameGenericCommand
 	☐ renamenxCommand

@@ -427,7 +427,7 @@ stderr 缓存， 休息 1 秒钟后中止程序执行
 .. _anetSetError-func:
 .. anetSetError-func
 
-12 anetSetError 函数
+13 anetSetError 函数
 ==============================================================================
 
 .. code-block:: C 
@@ -455,4 +455,63 @@ stderr 缓存， 休息 1 秒钟后中止程序执行
 格式化字符串， 最多写入 size 字节 (包含字符串结束符 "\\0") 到 str 中。
 
 此函数中的 size 被设定为 ``ANET_ERR_LEN`` 也就是 256。
+
+.. _redisLog-func:
+.. redisLog-func
+
+14 redisLog 函数
+==============================================================================
+
+.. code-block:: C 
+
+    void redisLog(int level, const char *fmt, ...)
+    {
+        va_list ap;
+        FILE *fp;
+
+        fp = (server.logfile == NULL) ? stdout : fopen(server.logfile,"a");
+        if (!fp) return;
+
+        va_start(ap, fmt);
+        if (level >= server.verbosity) {
+            char *c = ".-*";
+            fprintf(fp,"%c ",c[level]);
+            vfprintf(fp, fmt, ap);
+            fprintf(fp,"\n");
+            fflush(fp);
+        }
+        va_end(ap);
+
+        if (server.logfile) fclose(fp);
+    }
+
+redis 日志记录函数， 参数是可变参数， 有两个固定参数： 
+
+#. level： 表示的是日志等级
+#. fmt： 日志格式
+#. 其他： 为可变参数
+
+可变参数是从 fmt 开始的， 之后都是可变参数。 
+
+首先判断 server.logfile 是否为 NULL， 若是将 fp 置为 stdout， 否则以追加的形式打\
+开文件流， 然后判断文件流是否正常， 不正常直接返回空
+
+当 level 大于或等于 ``server.verbosity``， 即 server 的信息复杂度， 也就是日志级\
+别了， 在 initServerConfig_ 函数中被定义为 ``REDIS_DEBUG``
+
+.. code-block:: c
+
+    ...
+    server.verbosity = REDIS_DEBUG;
+    ...
+
+    /* Log levels */
+    #define REDIS_DEBUG 0
+    #define REDIS_NOTICE 1
+    #define REDIS_WARNING 2
+
+因此函数中的 ``c[level]`` 为 ``.``
+
+然后将可变参数以 fmt 格式写入到 fp 中， 最后换行。 函数的结尾判断是否有日志文件， 如\
+果有， 还需要关闭 fp 文件流。
 
