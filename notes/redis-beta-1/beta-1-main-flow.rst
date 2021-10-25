@@ -59,8 +59,8 @@ main 函数的流程图可以参考下图：
 
 .. image:: https://planttext.com/api/plantuml/img/VP7DJWCn38JlVWeVjrUEkq9KTE5K94IV8EnEYaL-LecxWhSdIQbGLOb397io_ZHnjbbDqfDtH2hgmDv88A8c4_KIH0z8Az8k1Yl7WUbARRrOxamwJdpFTmyRrWy4xhwHDyJSlo7ZrtmmArvDCZuFzSP5Cr-ngvWmIzx7qi1bS1TYezWbIL3RBFWIhGN2JEM8BOd-nbgQYXxVEP-c2JdVPBguUNpaQiNCDaNFHVqSBipsAkmIZE9P79vM16LhIZdV46Fq_qJg3LxANi_L20Szq_OnBaDTTbo8jcMmVCGF
     :align: center
-    :alt: main
-    :name: main
+    :alt: main-flow
+    :name: main-flow
     :target: none
 
 此图参考 UML 代码： redis-main.puml_
@@ -132,7 +132,7 @@ ResetServerSaveParams_ 清空了 server 全局变量中的 ``saveparams`` 字段
 .. _initServer-func:
 .. initServer-func
 
-2.5 initServer 函数
+2.3 initServer 函数
 ==============================================================================
 
 .. code-block:: c 
@@ -214,4 +214,18 @@ errno 置为 SIGPIPE。 程序便能知道对端已经关闭。
 错误和中止程序运行。 它们是取非之后 ``!`` 又进行或运算 ``||`` 的。 
 
 .. _oom: beta-1-functions.rst#oom-func
+
+``server.fd`` 被用来存放可以正常接收数据的套接字文件描述符， 也就是说如果正常的话， \
+TCP server 可以正常使用了。 正常情况下的 fd 为非负整数。 当 fd 为 -1 时， 执行 \
+redisLog_ 函数并退出程序。
+
+.. _redisLog: beta-1-functions.rst#redisLog-func
+
+之后循环迭代创建 dict 哈希表， dbnum 为多少就创建多少个 dict。 使用 dictCreate_ 函\
+数创建， 创建类型是 sdsDictType_， 私有数据为空 NULL。 创建完成后需要判断创建结果是\
+否正常， 不正常的话 oom_ 函数进行报错。
+
+.. _dictCreate: beta-1-functions.rst#dictCreate-func
+.. _sdsDictType: beta-1-others.rst#sdsDictType-var
+
 
