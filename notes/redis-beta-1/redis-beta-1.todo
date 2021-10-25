@@ -153,7 +153,7 @@ Functions (188):
 	☐ anetTcpConnect
 	☐ anetTcpKeepAlive
 	☐ anetTcpNoDelay
-	☐ anetTcpServer
+	✔ anetTcpServer @done(21-10-25 21:42)
 	☐ anetWrite
 	✔ appendServerSaveParams @done(21-10-19 22:01)
 	☐ bgsaveCommand
