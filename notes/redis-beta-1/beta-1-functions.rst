@@ -516,9 +516,8 @@ redis 日志记录函数， 参数是可变参数， 有两个固定参数：
 果有， 还需要关闭 fp 文件流。
 
 .. _dictCreate-func:
-.. dictCreate-func
 
-14 dictCreate 函数
+15 dictCreate 函数
 ===============================================================================
 
 .. code-block:: C 
@@ -543,4 +542,17 @@ redis 日志记录函数， 参数是可变参数， 有两个固定参数：
 
 最后返回这个新建的哈希表。 函数中的 ht 就是 hash table 的首字母缩写。
 
+.. _`_dictAlloc-func`:
 
+16 _dictAlloc 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static void *_dictAlloc(int size)
+    {
+        void *p = malloc(size);
+        if (p == NULL)
+            _dictPanic("Out of memory");
+        return p;
+    }
