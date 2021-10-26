@@ -558,3 +558,34 @@ redis 日志记录函数， 参数是可变参数， 有两个固定参数：
             _dictPanic("Out of memory");
         return p;
     }
+
+首先用 ``malloc`` 函数分配内存空间， 如果 p 为空， 则说明内存分配失败了， 因此会执行 \
+`_dictPanic`_ 函数打印错误信息。 
+
+.. _`_dictPanic`: #_dictPanic-func
+
+如果内存分配成功， 直接返回分配的内存的地址。
+
+.. _`_dictPanic-func`:
+.. `_dictPanic-func`
+
+17 _dictPanic 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static void _dictPanic(const char *fmt, ...)
+    {
+        va_list ap;
+
+        va_start(ap, fmt);
+        fprintf(stderr, "\nDICT LIBRARY PANIC: ");
+        vfprintf(stderr, fmt, ap);
+        fprintf(stderr, "\n\n");
+        va_end(ap);
+    }
+
+该函数是一个可变参数函数， 有一个固定参数 fmt， 表示的是格式； 然后将 \
+"\nDICT LIBRARY PANIC: " 字符串传输到标准错误输出 stderr， 然后对可变参数列表进行格\
+式化输出， 最后换行。 总而言之就是用来打印 dict 模块错误信息的函数。
+

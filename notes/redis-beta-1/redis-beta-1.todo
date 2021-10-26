@@ -167,7 +167,7 @@ Functions (188):
 	☐ decrRefCount
 	☐ delCommand
 	☐ dictAdd
-	☐ _dictAlloc
+	✔ _dictAlloc @done(21-10-26 23:28)
 	☐ _dictClear
 	✔ dictCreate @done(21-10-25 23:06)
 	☐ dictDelete
@@ -186,7 +186,7 @@ Functions (188):
 	☐ _dictKeyIndex
 	☐ dictNext
 	☐ _dictNextPower
-	☐ _dictPanic
+	✔ _dictPanic @done(21-10-26 23:32)
 	☐ dictPrintStats
 	☐ dictRelease
 	☐ dictReleaseIterator
