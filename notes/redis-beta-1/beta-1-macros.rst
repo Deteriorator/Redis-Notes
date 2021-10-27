@@ -49,3 +49,40 @@ listNode_。
 
 .. _listNode: beta-1-structures.rst#listNode-struct
 
+.. _`REDIS_NOTUSED-macro`:
+.. REDIS_NOTUSED-macro
+
+04 REDIS_NOTUSED 宏定义
+===============================================================================
+
+.. code-block:: c 
+
+    /* Anti-warning macro... */
+    #define REDIS_NOTUSED(V) ((void) V)
+
+为了避免警告， 将 V 的类型强制转换为 void。 
+
+.. _`dictGetHashTableSize-macro`:
+.. dictGetHashTableSize-macro
+
+05 dictGetHashTableSize 宏定义
+===============================================================================
+
+.. code-block:: c
+
+    #define dictGetHashTableSize(ht) ((ht)->size)
+
+获取哈希表的大小。
+
+.. _`dictGetHashTableUsed-macro`:
+.. dictGetHashTableUsed-macro
+
+06 dictGetHashTableUsed 宏定义
+===============================================================================
+
+.. code-block:: c
+
+    #define dictGetHashTableUsed(ht) ((ht)->used)
+
+获取哈希表已经使用的大小。
+

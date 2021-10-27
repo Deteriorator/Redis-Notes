@@ -139,7 +139,7 @@ Functions (188):
 	☐ aeDeleteEventLoop
 	☐ aeDeleteFileEvent
 	☐ aeDeleteTimeEvent
-	☐ aeGetTime
+	✔ aeGetTime @done(21-10-27 22:44)
 	☐ aeMain
 	☐ aeProcessEvents
 	☐ aeSearchNearestTimer
@@ -325,8 +325,8 @@ Macros (26):
 	☐ dictFreeEntryVal
 	☐ dictGetEntryKey
 	☐ dictGetEntryVal
-	☐ dictGetHashTableSize
-	☐ dictGetHashTableUsed
+	✔ dictGetHashTableSize @done(21-10-27 22:55)
+	✔ dictGetHashTableUsed @done(21-10-27 22:55)
 	☐ dictHashKey
 	☐ dictSetHashKey
 	☐ dictSetHashVal
@@ -344,7 +344,7 @@ Macros (26):
 	☐ listSetFreeMethod
 	☐ listSetMatchMethod
 	☐ PICOL_NOTUSED
-	☐ REDIS_NOTUSED
+	✔ REDIS_NOTUSED @done(21-10-27 22:44)
 
 Function Prototypes (111):
 	☐ addReply

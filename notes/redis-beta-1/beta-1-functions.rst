@@ -693,7 +693,7 @@ te 是一个指向定时器 aeTimeEvent_ 的指针。
 .. _`aeAddMillisecondsToNow-func`:
 .. `aeAddMillisecondsToNow-func`
 
-20 aeAddMillisecondsToNow 函数
+21 aeAddMillisecondsToNow 函数
 ===============================================================================
 
 .. code-block:: C 
@@ -724,4 +724,113 @@ aeGetTime_ 函数用于获取当前的秒和毫秒。
 大于等于 1000， 可以对秒进行加一， 同时将毫秒减去 1000， 最终将计算后的秒和毫秒赋值给\
 参数 sec 和参数 ms。
 
+.. _`aeGetTime-func`:
+.. `aeGetTime-func`
 
+22 aeGetTime 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static void aeGetTime(long *seconds, long *milliseconds)
+    {
+        struct timeval tv;
+
+        gettimeofday(&tv, NULL);
+        *seconds = tv.tv_sec;
+        *milliseconds = tv.tv_usec/1000;
+    }
+
+该函数调用 gettimeofday 函数获取当前的时间， tv_sec 表示的是秒， tv_usec 表示的是微\
+秒， 因此将其除以 1000 转换为毫秒。
+
+.. _`serverCron-func`:
+.. `serverCron-func`
+
+23 serverCron 函数
+===============================================================================
+
+.. code-block:: C 
+
+    int serverCron(struct aeEventLoop *eventLoop, long long id, void *clientData) {
+        // 1
+        int j, size, used, loops = server.cronloops++;
+        REDIS_NOTUSED(eventLoop);
+        REDIS_NOTUSED(id);
+        REDIS_NOTUSED(clientData);
+
+        // 2
+        /* If the percentage of used slots in the HT reaches REDIS_HT_MINFILL
+        * we resize the hash table to save memory */
+        for (j = 0; j < server.dbnum; j++) {
+            size = dictGetHashTableSize(server.dict[j]);
+            used = dictGetHashTableUsed(server.dict[j]);
+            if (!(loops % 5) && used > 0) {
+                redisLog(REDIS_DEBUG,"DB %d: %d keys in %d slots HT.",j,used,size);
+                // dictPrintStats(server.dict);
+            }
+            if (size && used && size > REDIS_HT_MINSLOTS &&
+                (used*100/size < REDIS_HT_MINFILL)) {
+                redisLog(REDIS_NOTICE,"The hash table %d is too sparse, resize it...",j);
+                dictResize(server.dict[j]);
+                redisLog(REDIS_NOTICE,"Hash table %d resized.",j);
+            }
+        }
+
+        // 3
+        /* Show information about connected clients */
+        if (!(loops % 5)) redisLog(REDIS_DEBUG,"%d clients connected",listLength(server.clients));
+
+        // 4
+        /* Close connections of timedout clients */
+        if (!(loops % 10))
+            closeTimedoutClients();
+
+        // 5
+        /* Check if a background saving in progress terminated */
+        if (server.bgsaveinprogress) {
+            int statloc;
+            if (wait4(-1,&statloc,WNOHANG,NULL)) {
+                int exitcode = WEXITSTATUS(statloc);
+                if (exitcode == 0) {
+                    redisLog(REDIS_NOTICE,
+                        "Background saving terminated with success");
+                    server.dirty = 0;
+                    server.lastsave = time(NULL);
+                } else {
+                    redisLog(REDIS_WARNING,
+                        "Background saving error");
+                }
+                server.bgsaveinprogress = 0;
+            }
+        } else {
+            /* If there is not a background saving in progress check if
+            * we have to save now */
+            time_t now = time(NULL);
+            for (j = 0; j < server.saveparamslen; j++) {
+                struct saveparam *sp = server.saveparams+j;
+
+                if (server.dirty >= sp->changes &&
+                    now-server.lastsave > sp->seconds) {
+                    redisLog(REDIS_NOTICE,"%d changes in %d seconds. Saving...",
+                        sp->changes, sp->seconds);
+                    saveDbBackground("dump.rdb");
+                    break;
+                }
+            }
+        }
+        return 1000;
+    }
+
+server 的 cronloops 字典根据我目前的理解应该是自动循环的次数， 初始的时候为 0。 将这\
+个大函数根据注释分成 6 部分。
+
+#. 新建局部变量 j， size， used 和 loops， 其中 loops 被初始化为 server.cronloops \
+   + 1； 同时将三个参数 eventLoop， id 和 clientData 的类型强制转换为 void， 因为\
+   在这个函数中， 这三个参数并没有使用。
+#. 当哈希表中已经使用的空间达到 redis 哈希表最小填充， 即 REDIS_HT_MINFILL， 重新设\
+   置哈希表的尺寸以达到节省内存的目的
+#. 
+#. 
+#. 
+#. 
