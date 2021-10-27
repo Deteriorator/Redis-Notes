@@ -181,7 +181,7 @@ Functions (188):
 	☐ dictGetIterator
 	☐ dictGetRandomKey
 	☐ dictIdentityHashFunction
-	☐ _dictInit
+	✔ _dictInit @done(21-10-27 21:39)
 	☐ dictIntHashFunction
 	☐ _dictKeyIndex
 	☐ dictNext
@@ -191,7 +191,7 @@ Functions (188):
 	☐ dictRelease
 	☐ dictReleaseIterator
 	☐ dictReplace
-	☐ _dictReset
+	✔ _dictReset @done(21-10-27 21:46)
 	☐ dictResize
 	☐ _dictStringCopyHTHashFunction
 	☐ _dictStringCopyHTKeyCompare
@@ -365,7 +365,7 @@ Function Prototypes (111):
 	☐ anetTcpConnect
 	☐ anetTcpKeepAlive
 	☐ anetTcpNoDelay
-	☐ anetTcpServer
+	✔ anetTcpServer @done(21-10-27 21:39)
 	☐ anetWrite
 	☐ bgsaveCommand
 	✔ createObject @done(21-10-20 21:41)
@@ -374,7 +374,7 @@ Function Prototypes (111):
 	☐ decrRefCount
 	☐ delCommand
 	☐ dictAdd
-	☐ dictCreate
+	✔ dictCreate @done(21-10-27 21:39)
 	☐ dictDelete
 	☐ dictDeleteNoFree
 	☐ dictExpand
@@ -383,7 +383,7 @@ Function Prototypes (111):
 	☐ dictGenHashFunction
 	☐ dictGetIterator
 	☐ dictGetRandomKey
-	☐ _dictInit
+	✔ _dictInit @done(21-10-27 21:39)
 	☐ _dictKeyIndex
 	☐ dictNext
 	☐ _dictNextPower

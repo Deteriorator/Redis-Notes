@@ -589,3 +589,53 @@ redis 日志记录函数， 参数是可变参数， 有两个固定参数：
 "\nDICT LIBRARY PANIC: " 字符串传输到标准错误输出 stderr， 然后对可变参数列表进行格\
 式化输出， 最后换行。 总而言之就是用来打印 dict 模块错误信息的函数。
 
+.. _`_dictInit-func`:
+.. `_dictInit-func`
+
+18 _dictInit 函数
+===============================================================================
+
+.. code-block:: C 
+
+    #define DICT_OK 0
+
+    /* Initialize the hash table */
+    int _dictInit(dict *ht, dictType *type, void *privDataPtr)
+    {
+        _dictReset(ht);
+        ht->type = type;
+        ht->privdata = privDataPtr;
+        return DICT_OK;
+    }
+
+初始化 dict 哈希表的函数拥有 3 个参数， 分别是需要初始化的哈希表 ht， 初始化的类型 \
+type 以及私有数据 privDataPtr。 
+
+首先会执行 `_dictReset`_ 函数将哈希表重置， 然后将重置后的哈希表 ht 的 type 字段设置\
+为参数 type， privdata 字段设置为 privDataPtr 参数。 一切 OK 的话， 返回 DICT_OK， \
+也就是 0。
+
+.. _`_dictReset`: #_dictReset-func
+
+.. _`_dictReset-func`:
+.. `_dictReset-func`
+
+19 _dictReset 函数
+===============================================================================
+
+.. code-block:: C 
+
+    /* Reset an hashtable already initialized with ht_init().
+    * NOTE: This function should only called by ht_destroy(). */
+    static void _dictReset(dict *ht)
+    {
+        ht->table = NULL;
+        ht->size = 0;
+        ht->sizemask = 0;
+        ht->used = 0;
+    }
+
+顾名思义， 重置哈希表， 但是根据代码注释， 这个方法只能被 ``ht_destroy`` 调用。
+
+将 table 字段置为 NULL， 其他字段被置为 0。
+
