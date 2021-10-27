@@ -639,3 +639,89 @@ type 以及私有数据 privDataPtr。
 
 将 table 字段置为 NULL， 其他字段被置为 0。
 
+.. _`aeCreateTimeEvent-func`:
+.. `aeCreateTimeEvent-func`
+
+20 aeCreateTimeEvent 函数
+===============================================================================
+
+.. code-block:: C 
+
+    #define AE_ERR -1
+
+    long long aeCreateTimeEvent(aeEventLoop *eventLoop, long long milliseconds,
+            aeTimeProc *proc, void *clientData,
+            aeEventFinalizerProc *finalizerProc)
+    {
+        long long id = eventLoop->timeEventNextId++;
+        aeTimeEvent *te;
+
+        te = malloc(sizeof(*te));
+        if (te == NULL) return AE_ERR;
+        te->id = id;
+        aeAddMillisecondsToNow(milliseconds,&te->when_sec,&te->when_ms);
+        te->timeProc = proc;
+        te->finalizerProc = finalizerProc;
+        te->clientData = clientData;
+        te->next = eventLoop->timeEventHead;
+        eventLoop->timeEventHead = te;
+        return id;
+    }
+
+该函数用于创建定时器， 首先将当前事件循环的下一个定时器的 ID 自增加一存到 id 里面， \
+te 是一个指向定时器 aeTimeEvent_ 的指针。
+
+.. _aeTimeEvent: beta-1-structures.rst#aeTimeEvent-struct
+
+然后对定时器分配内存， 并将内存地址赋值给 te， 如果 te 为 NULL， 说明内存分配失败了， \
+直接返回 ``AE_ERR`` 即 -1。 
+
+然后将 id 赋值个定时的 id 字段； 然后对当前定时器的时间进行操作， 实际上就是修改定时\
+器的 when_sec 字段和 when_ms 字段， 这个过程执行的是 aeAddMillisecondsToNow_ 函数。 
+
+.. _aeAddMillisecondsToNow: #aeAddMillisecondsToNow-func
+
+然后设置定时器的处理函数， timeProc 字段被设置为参数 proc； finalizerProc 字段被设\
+置为参数 finalizerProc； clientData 字段被设置为参数 clientData。
+
+再然后这个新建的定时器的下一个定时器被设置为当前事件循环的定时器链表的头指针， 同时当\
+前事件循环的定时器头指针被设置为这个新建的定时器。 实际上就是创建完就作为第一个监听的\
+定时器。
+
+最终将定时器的 id 返回。
+
+.. _`aeAddMillisecondsToNow-func`:
+.. `aeAddMillisecondsToNow-func`
+
+20 aeAddMillisecondsToNow 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static void aeAddMillisecondsToNow(long long milliseconds, long *sec, long *ms) {
+        long cur_sec, cur_ms, when_sec, when_ms;
+
+        aeGetTime(&cur_sec, &cur_ms);
+        when_sec = cur_sec + milliseconds/1000;
+        when_ms = cur_ms + milliseconds%1000;
+        if (when_ms >= 1000) {
+            when_sec ++;
+            when_ms -= 1000;
+        }
+        *sec = when_sec;
+        *ms = when_ms;
+    }
+
+这个函数的功能很简单， 对时间进行换算， 当前的时间加上需要间隔的毫秒数， 最终返回超时\
+时间， 也就是时间到了那个点， 就会执行一些操作。
+
+aeGetTime_ 函数用于获取当前的秒和毫秒。
+
+.. _aeGetTime: #aeGetTime-func
+
+``milliseconds/1000`` 用于获取 milliseconds 包含有多少秒， 如果 milliseconds 大于\
+或等于 1000， 则取整， 否则为 0。 然后用当前的毫秒加上上一步剩余的毫秒， 如果 when_ms \
+大于等于 1000， 可以对秒进行加一， 同时将毫秒减去 1000， 最终将计算后的秒和毫秒赋值给\
+参数 sec 和参数 ms。
+
+

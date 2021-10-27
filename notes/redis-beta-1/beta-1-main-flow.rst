@@ -228,4 +228,10 @@ redisLog_ 函数并退出程序。
 .. _dictCreate: beta-1-functions.rst#dictCreate-func
 .. _sdsDictType: beta-1-others.rst#sdsDictType-var
 
+使用 dictCreate_ 函数创建的哈希表都是被初始化的， 内部均没有其他数据， 为 NULL 或 0。
 
+然后 ``cronloops``， ``bgsaveinprogress``， ``dirty`` 三个 server 字段被设置为 0， \
+lastsave 字段被设置为当前的时间戳， 因为 ``time(NULL)`` 计算的就是从 1970 年 1 月 \
+1 日 00:00:00 到现在为止经过了多少秒。 
+
+最后使用 aeCreateTimeEvent_ 函数创建定时器

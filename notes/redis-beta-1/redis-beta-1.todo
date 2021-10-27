@@ -52,7 +52,7 @@ Constants (47):
 	☐ __ADLIST_H__
 	☐ AE_ALL_EVENTS
 	☐ AE_DONT_WAIT
-	☐ AE_ERR
+	✔ AE_ERR @done(21-10-27 22:07)
 	☐ AE_EXCEPTION
 	☐ AE_FILE_EVENTS
 	☐ __AE_H__
@@ -70,7 +70,7 @@ Constants (47):
 	☐ DICT_ERR
 	☐ __DICT_H
 	☐ DICT_HT_INITIAL_SIZE
-	☐ DICT_OK
+	✔ DICT_OK @done(21-10-27 22:00)
 	☐ DICT_STATS_VECTLEN
 	☐ REDIS_CMD_BULK
 	☐ REDIS_CMD_INLINE
@@ -132,10 +132,10 @@ Functions (188):
 	☐ acceptHandler
 	☐ addReply
 	☐ addReplySds
-	☐ aeAddMillisecondsToNow
+	✔ aeAddMillisecondsToNow @done(21-10-27 22:31)
 	✔ aeCreateEventLoop @done(21-10-23 23:23)
 	☐ aeCreateFileEvent
-	☐ aeCreateTimeEvent
+	✔ aeCreateTimeEvent @done(21-10-27 22:31)
 	☐ aeDeleteEventLoop
 	☐ aeDeleteFileEvent
 	☐ aeDeleteTimeEvent
@@ -351,7 +351,7 @@ Function Prototypes (111):
 	☐ addReplySds
 	☐ aeCreateEventLoop
 	☐ aeCreateFileEvent
-	☐ aeCreateTimeEvent
+	✔ aeCreateTimeEvent @done(21-10-27 22:31)
 	☐ aeDeleteEventLoop
 	☐ aeDeleteFileEvent
 	☐ aeDeleteTimeEvent
