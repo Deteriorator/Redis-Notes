@@ -752,6 +752,14 @@ aeGetTime_ 函数用于获取当前的秒和毫秒。
 
 .. code-block:: C 
 
+    #define REDIS_DEBUG 0
+    #define REDIS_NOTICE 1
+    #define REDIS_WARNING 2
+
+    /* Hash table parameters */
+    #define REDIS_HT_MINFILL        10      /* Minimal hash table fill 10% */
+    #define REDIS_HT_MINSLOTS       16384   /* Never resize the HT under this */
+
     int serverCron(struct aeEventLoop *eventLoop, long long id, void *clientData) {
         // 1
         int j, size, used, loops = server.cronloops++;
@@ -822,15 +830,50 @@ aeGetTime_ 函数用于获取当前的秒和毫秒。
         return 1000;
     }
 
-server 的 cronloops 字典根据我目前的理解应该是自动循环的次数， 初始的时候为 0。 将这\
-个大函数根据注释分成 6 部分。
+server 的 cronloops 字端根据我目前的理解应该是自动检测循环的次数， 初始的时候为 0。 \
+将这个大函数根据注释分成 6 部分。
 
 #. 新建局部变量 j， size， used 和 loops， 其中 loops 被初始化为 server.cronloops \
    + 1； 同时将三个参数 eventLoop， id 和 clientData 的类型强制转换为 void， 因为\
    在这个函数中， 这三个参数并没有使用。
 #. 当哈希表中已经使用的空间达到 redis 哈希表最小填充， 即 REDIS_HT_MINFILL， 重新设\
-   置哈希表的尺寸以达到节省内存的目的
-#. 
-#. 
-#. 
-#. 
+   置哈希表的尺寸以达到节省内存的目的。 首先会用 dictGetHashTableSize_ 宏和 \
+   dictGetHashTableUsed_ 宏来获取哈希表的大小以及以及使用的大小； 然后每 5 次定时检\
+   测记录一次日志， 因为 ``loops % 5`` 只有在 loops 为 5 的整数倍的时候， 这个表达式\
+   才能为 0， 才会执行第一个 if 语句中的 redisLog_ 函数； 然后当 ``size``， \
+   ``used``， ``size > REDIS_HT_MINSLOTS`` 和 \
+   ``(used*100/size < REDIS_HT_MINFILL)`` 都为真值的时候， 也就是当哈希表的大小大\
+   于 16384， 且已使用的比率小于 10% 时， 就需要执行 if 内部的缩小哈希表大小的操作， \
+   因为哈希表的大小比较大， 但是使用率低， 因此缩小以节省内存， 重置哈希表大小的函数是 \
+   dictResize_
+#. 每 5 次定时检测记录一次有多少个 client 在连接着 server， 这个数量是通过 \
+   listLength_ 宏定义获取 server.clients 的长度拿到的。
+#. 每 10 次检测， 断开连接超时的 clients， 执行的函数是 closeTimedoutClients_
+#. 然后检测 redis 是否有后台进程用于持久化数据， 也就是保存数据。 当 \
+   server.bgsaveinprogress 为真值非 0 时会执行 if 语句的内容， 否则执行 else 的内\
+   容。 当为真值时， 说明有后台进程在进行数据的保存， 因此会执行 wait4 函数等待说有的\
+   子进程， wait4 函数的第一个参数 -1 表示等待的是所有的子进程； 第二个参数 &statloc \
+   表示的是存储的等待结果， 第 3 个参数 WNOHANG 表示非阻塞， 如果没有子进程退出就立刻\
+   返回结果。 然后宏 WEXITSTATUS(statloc) 将等待的结果转换为 exitcode， 当 \
+   exitcode 为 0 时记录 REDIS_NOTICE 级别的日志， 同时将 server.dirty 置为 0， \
+   server.lastsave 置为当前时间； 否则的话记录 REDIS_WARNING 级别日志， 信息是后台\
+   保存错误最终将 server.bgsaveinprogress 置为 0。 当没有后台保存进程的时候， 就需要\
+   检测是否需要保存， 先获取当前时间， 然后判断修改的数量是否大于等于设定的数量， 同时\
+   上次保存成功的时间与当前时间的间隔是否大于或等于设定的时间间隔， 如果是就记录日志， \
+   同时执行 saveDbBackground_ 函数生成备份数据， 文件名为 dump.rdb
+#. 如果一切 OK， 则该函数返回 1000。
+
+..
+
+  wait3 等待所有的子进程； wait4 可以像 waitpid 一样指定要等待的子进程： pid>0 表示\
+  子进程ID； pid=0 表示当前进程组中的子进程； pid=-1 表示等待所有子进程； pid<-1 表\
+  示进程组ID为pid绝对值的子进程。
+
+.. _dictGetHashTableSize: beta-1-macros.rst#dictGetHashTableSize-macro
+.. _dictGetHashTableUsed: beta-1-macros.rst#dictGetHashTableUsed-macro
+.. _redisLog: beta-1-functions.rst#redisLog-func
+.. _dictResize: beta-1-functions.rst#dictResize-func
+.. _closeTimedoutClients: beta-1-functions.rst#closeTimedoutClients-func
+.. _saveDbBackground: beta-1-functions.rst#saveDbBackground-func
+
+

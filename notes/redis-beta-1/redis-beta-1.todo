@@ -311,7 +311,7 @@ Functions (188):
 	☐ selectCommand
 	☐ selectDb
 	☐ sendReplyToClient
-	☐ serverCron
+	✔ serverCron @done(21-10-28 23:19)
 	☐ setCommand
 	☐ setGenericCommand
 	☐ setnxCommand

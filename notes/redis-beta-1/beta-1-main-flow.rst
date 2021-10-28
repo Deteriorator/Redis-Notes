@@ -235,5 +235,7 @@ lastsave 字段被设置为当前的时间戳， 因为 ``time(NULL)`` 计算的
 1 日 00:00:00 到现在为止经过了多少秒。 
 
 最后使用 aeCreateTimeEvent_ 函数创建定时器， 事件循环是当前的 server.el， 时间间隔\
-是 1000 毫秒， 定时处理函数是 serverCron_ 函数， 另外两个参数均为 NULL， 不必在意。
+是 1000 毫秒， 定时处理函数是 serverCron_ 函数， 另外两个参数均为 NULL， 不必在意。 \
+也就是说 serverCron_ 函数每隔 1000 毫秒执行一次。 
 
+.. _aeCreateTimeEvent:
