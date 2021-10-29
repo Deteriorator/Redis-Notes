@@ -876,4 +876,34 @@ server 的 cronloops 字端根据我目前的理解应该是自动检测循环�
 .. _closeTimedoutClients: beta-1-functions.rst#closeTimedoutClients-func
 .. _saveDbBackground: beta-1-functions.rst#saveDbBackground-func
 
+.. _`dictResize-func`:
+.. `dictResize-func`
+
+24 dictResize 函数
+===============================================================================
+
+.. code-block:: C 
+
+    /* This is the initial size of every hash table */
+    #define DICT_HT_INITIAL_SIZE     16
+    
+    int dictResize(dict *ht)
+    {
+        int minimal = ht->used;
+
+        if (minimal < DICT_HT_INITIAL_SIZE)
+            minimal = DICT_HT_INITIAL_SIZE;
+        return dictExpand(ht, minimal);
+    }
+
+重置字典哈希表的最小 size， 使其最小能容纳所有的节点， 且满足不等式 used/buckets 接\
+近 <= 1。 
+
+``DICT_HT_INITIAL_SIZE`` 为默认的哈希表大小， 其值为 16， 当已经使用的大小小于 16 \
+的时候， 将 minimal 最小值设为 16， 否则就是哈希表已经使用的大小， 然后使用 \
+dictExpand_ 函数进行字典大小的修改。
+
+.. _dictExpand: #dictExpand-func
+
+
 
