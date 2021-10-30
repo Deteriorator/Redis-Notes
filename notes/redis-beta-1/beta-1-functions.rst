@@ -905,5 +905,81 @@ dictExpand_ 函数进行字典大小的修改。
 
 .. _dictExpand: #dictExpand-func
 
+.. _`dictExpand-func`:
+.. `dictExpand-func`
 
+24 dictExpand 函数
+===============================================================================
 
+.. code-block:: C 
+
+    /* Expand or create the hashtable */
+    int dictExpand(dict *ht, unsigned int size)
+    {
+        // 1
+        dict n; /* the new hashtable */
+        unsigned int realsize = _dictNextPower(size), i;
+
+        /* the size is invalid if it is smaller than the number of
+        * elements already inside the hashtable */
+        if (ht->used > size)
+            return DICT_ERR;
+
+        // 2
+        _dictInit(&n, ht->type, ht->privdata);
+        n.size = realsize;
+        n.sizemask = realsize-1;
+        n.table = _dictAlloc(realsize*sizeof(dictEntry*));
+
+        // 3
+        /* Initialize all the pointers to NULL */
+        memset(n.table, 0, realsize*sizeof(dictEntry*));
+
+        // 4
+        /* Copy all the elements from the old to the new table:
+        * note that if the old hash table is empty ht->size is zero,
+        * so dictExpand just creates an hash table. */
+        n.used = ht->used;
+        for (i = 0; i < ht->size && ht->used > 0; i++) {
+            dictEntry *he, *nextHe;
+
+            if (ht->table[i] == NULL) continue;
+            
+            /* For each hash entry on this slot... */
+            he = ht->table[i];
+            while(he) {
+                unsigned int h;
+
+                nextHe = he->next;
+                /* Get the new element index */
+                h = dictHashKey(ht, he->key) & n.sizemask;
+                he->next = n.table[h];
+                n.table[h] = he;
+                ht->used--;
+                /* Pass to the next element */
+                he = nextHe;
+            }
+        }
+
+        // 5
+        assert(ht->used == 0);
+        _dictFree(ht->table);
+
+        // 6
+        /* Remap the new hashtable in the old */
+        *ht = n;
+        return DICT_OK;
+    }
+
+该函数用于扩展或创建哈希表。 按照代码注释， 大致分成 6 部分解析。
+
+#. realsize 是 `_dictNextPower`_ 函数结果， 用于判断当前的 size 是否是在 2 的某一\
+   次方内， 如果不在就将乘以 2； 然后判断哈希表已使用的大小是否大于哈希表的大小， 若是\
+   返回 ``DICT_ERR`` 即 1
+#.
+#.
+#.
+#.
+#.
+
+.. _`_dictNextPower`: #_dictNextPower-func
