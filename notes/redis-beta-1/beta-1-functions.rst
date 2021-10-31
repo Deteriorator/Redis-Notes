@@ -1070,6 +1070,10 @@ sdsDictType 类型的 hash 函数就是该函数
 
 .. code-block:: C 
 
+    /* Directions for iterators */
+    #define AL_START_HEAD 0
+    #define AL_START_TAIL 1
+
     void closeTimedoutClients(void) {
         redisClient *c;
         listIter *li;
@@ -1089,3 +1093,53 @@ sdsDictType 类型的 hash 函数就是该函数
     }
 
 此处需要先了解一下 redisClient_ 结构体和 listIter_ 结构体。
+
+.. _redisClient: beta-1-structures.rst#redisClient-struct
+.. _listIter: beta-1-structures.rst#listIter-struct
+
+先获取当前的时间， 然后使用 listGetIterator_ 函数生成一个访问 List 的迭代器， 其中包\
+含了访问方向。 代码中使用的是 AL_START_HEAD 即 0， 表示的是从 List 头节点开始访问。
+
+.. _listGetIterator: #listGetIterator-func
+
+当访问迭代器为空时， 直接返回。 正常时继续向下执行， 然后使用 listNextElement_ 获取下\
+一个节点， 节点不为空时， 执行 listNodeValue_ 宏获取结点值。 当现在的时候与上次交互的\
+时间间隔大于 server.maxidletime 时， 即大于超时时间， 就记录关闭 client 连接的日志， \
+同时使用 freeClient_ 函数释放 client 连接。 
+
+.. _listNextElement: #listNextElement-func
+.. _listNodeValue: beta-1-macros.rst#listNodeValue-macro
+.. _freeClient: #freeClient-func
+
+最终使用 listReleaseIterator_ 函数释放 List 访问迭代器。
+
+.. _listReleaseIterator: #listReleaseIterator-func
+
+.. _`listGetIterator-func`:
+.. `listGetIterator-func`
+
+30 listGetIterator 函数
+===============================================================================
+
+.. code-block:: C 
+
+    listIter *listGetIterator(list *list, int direction)
+    {
+        listIter *iter;
+        
+        if ((iter = malloc(sizeof(*iter))) == NULL) return NULL;
+        if (direction == AL_START_HEAD)
+            iter->next = list->head;
+        else
+            iter->next = list->tail;
+        iter->direction = direction;
+        return iter;
+    }
+
+从给定的 List 和 direction 生成一个 List 访问迭代器。 
+
+如果分配迭代器内存失败， 直接返回 NULL。 当 direction 为 AL_START_HEAD 时， 表明是\
+从头节点开始访问， 那么将迭代器 next 字段置为当前 List 的头节点； 否则就是从尾节点开\
+始访问， 将 next 字段置为 List 的尾节点； 然后将其方向 direction 字段置为给定的 \
+direction， 最终返回这个迭代器。
+

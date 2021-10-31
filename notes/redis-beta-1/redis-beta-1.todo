@@ -61,8 +61,8 @@ Constants (47):
 	☐ AE_READABLE
 	☐ AE_TIME_EVENTS
 	☐ AE_WRITABLE
-	☐ AL_START_HEAD
-	☐ AL_START_TAIL
+	✔ AL_START_HEAD @done(21-10-31 22:51)
+	✔ AL_START_TAIL @done(21-10-31 22:51)
 	☐ ANET_ERR
 	✔ ANET_ERR_LEN @done(21-10-25 21:55)
 	☐ ANET_H
@@ -157,7 +157,7 @@ Functions (188):
 	☐ anetWrite
 	✔ appendServerSaveParams @done(21-10-19 22:01)
 	☐ bgsaveCommand
-	☐ closeTimedoutClients
+	✔ closeTimedoutClients @done(21-10-31 23:01)
 	☐ createClient
 	☐ createListObject
 	✔ createObject @done(21-10-20 21:31)
@@ -220,7 +220,7 @@ Functions (188):
 	✔ listCreate @done(21-10-19 22:36)
 	✔ listDelNode @done(21-10-20 22:12)
 	☐ listDup
-	☐ listGetIterator
+	✔ listGetIterator @done(21-10-31 23:07)
 	☐ listIndex
 	☐ listNextElement
 	☐ listRelease
@@ -409,7 +409,7 @@ Function Prototypes (111):
 	☐ listCreate
 	☐ listDelNode
 	☐ listDup
-	☐ listGetIterator
+	✔ listGetIterator @done(21-10-31 23:07)
 	☐ listIndex
 	☐ listNextElement
 	☐ listRelease
