@@ -998,7 +998,7 @@ dictExpand_ 函数进行字典大小的修改。
 .. _`_dictNextPower-func`:
 .. `_dictNextPower-func`
 
-25 _dictNextPower 函数
+26 _dictNextPower 函数
 ===============================================================================
 
 .. code-block:: C 
@@ -1025,5 +1025,41 @@ redis 中的哈希表的容量都是 2 的整数次幂， 同时初始化的容�
 - 当传入的参数大小大于等于 2147483648U， 直接返回 2147483648U
 - 当哈希表的大小小于或等于初始容量， 返回初始容量表明无须扩大， 否则将 i 乘以 2 继续\
   判断。 直到 i 的值大于等于 hash 表的值， 并返回这个值
+
+.. _`sdsDictHashFunction-func`:
+.. `sdsDictHashFunction-func`
+
+27 sdsDictHashFunction 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static unsigned int sdsDictHashFunction(const void *key) {
+        return dictGenHashFunction(key, sdslen((sds)key));
+    }
+
+sdsDictType 类型的 hash 函数就是该函数
+
+在该函数中执行 dictGenHashFunction_ 函数对 key 进行 hash 运算， 最终返回函数值
+
+.. _`dictGenHashFunction-func`:
+.. `dictGenHashFunction-func`
+
+28 dictGenHashFunction 函数
+===============================================================================
+
+.. code-block:: C 
+
+    /* Generic hash function (a popular one from Bernstein).
+    * I tested a few and this was the best. */
+    unsigned int dictGenHashFunction(const unsigned char *buf, int len) {
+        unsigned int hash = 5381;
+
+        while (len--)
+            hash = ((hash << 5) + hash) + (*buf++); /* hash * 33 + c */
+        return hash;
+    }
+
+传入的参数 len 有多少就执行多少次 hash 运算， 最终将运算结果返回。
 
 

@@ -177,7 +177,7 @@ Functions (188):
 	☐ dictFind
 	☐ _dictFree
 	☐ dictGenericDelete
-	☐ dictGenHashFunction
+	✔ dictGenHashFunction @done(21-10-31 22:28)
 	☐ dictGetIterator
 	☐ dictGetRandomKey
 	☐ dictIdentityHashFunction
@@ -290,7 +290,7 @@ Functions (188):
 	☐ sdscmp
 	☐ sdscpy
 	☐ sdscpylen
-	☐ sdsDictHashFunction
+	✔ sdsDictHashFunction @done(21-10-31 22:24)
 	☐ sdsDictKeyCompare
 	☐ sdsDictKeyDestructor
 	☐ sdsDictValDestructor
@@ -380,7 +380,7 @@ Function Prototypes (111):
 	✔ dictExpand @done(21-10-31 22:07)
 	☐ _dictExpandIfNeeded
 	☐ dictFind
-	☐ dictGenHashFunction
+	✔ dictGenHashFunction @done(21-10-31 22:28)
 	☐ dictGetIterator
 	☐ dictGetRandomKey
 	✔ _dictInit @done(21-10-27 21:39)
