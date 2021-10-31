@@ -86,3 +86,14 @@ listNode_。
 
 获取哈希表已经使用的大小。
 
+.. _`dictHashKey-macro`:
+.. dictHashKey-macro
+
+06 dictHashKey 宏定义
+===============================================================================
+
+.. code-block:: c
+
+    #define dictHashKey(ht, key) (ht)->type->hashFunction(key)
+
+用于获取不同类型的 hashFunction 函数指针。

@@ -327,7 +327,7 @@ Macros (26):
 	☐ dictGetEntryVal
 	✔ dictGetHashTableSize @done(21-10-27 22:55)
 	✔ dictGetHashTableUsed @done(21-10-27 22:55)
-	☐ dictHashKey
+	✔ dictHashKey @done(21-10-31 22:19)
 	☐ dictSetHashKey
 	☐ dictSetHashVal
 	☐ DICT_NOTUSED
@@ -386,7 +386,7 @@ Function Prototypes (111):
 	✔ _dictInit @done(21-10-27 21:39)
 	☐ _dictKeyIndex
 	☐ dictNext
-	☐ _dictNextPower
+	✔ _dictNextPower @done(21-10-31 22:19)
 	☐ dictPrintStats
 	☐ dictRelease
 	☐ dictReleaseIterator

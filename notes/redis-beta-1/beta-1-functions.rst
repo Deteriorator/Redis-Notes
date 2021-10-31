@@ -908,7 +908,7 @@ dictExpand_ 函数进行字典大小的修改。
 .. _`dictExpand-func`:
 .. `dictExpand-func`
 
-24 dictExpand 函数
+25 dictExpand 函数
 ===============================================================================
 
 .. code-block:: C 
@@ -994,4 +994,36 @@ dictExpand_ 函数进行字典大小的修改。
 .. _`sdsDictType`: beta-1-others.rst#sdsDictType-var
 .. _`dictHashKey`: beta-1-macros.rst#dictHashKey-macro
 .. _`sdsDictHashFunction`: #sdsDictHashFunction-func
+
+.. _`_dictNextPower-func`:
+.. `_dictNextPower-func`
+
+25 _dictNextPower 函数
+===============================================================================
+
+.. code-block:: C 
+
+    /* Our hash table capability is a power of two */
+    static unsigned int _dictNextPower(unsigned int size)
+    {
+        unsigned int i = DICT_HT_INITIAL_SIZE;
+
+        if (size >= 2147483648U)
+            return 2147483648U;
+        while(1) {
+            if (i >= size)
+                return i;
+            i *= 2;
+        }
+    }
+
+redis 中的哈希表的容量都是 2 的整数次幂， 同时初始化的容量是 DICT_HT_INITIAL_SIZE \
+即 16。
+
+该函数用于判断一个 hash 表的大小是否应该放大乘以 2。 
+
+- 当传入的参数大小大于等于 2147483648U， 直接返回 2147483648U
+- 当哈希表的大小小于或等于初始容量， 返回初始容量表明无须扩大， 否则将 i 乘以 2 继续\
+  判断。 直到 i 的值大于等于 hash 表的值， 并返回这个值
+
 
