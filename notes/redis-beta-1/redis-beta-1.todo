@@ -9,14 +9,14 @@ Structures (22):
 	☐ dictIterator
 	✔ dictType @done(21-10-17 15:56)
 	✔ list @done(21-10-17 16:14)
-	☐ listIter
+	✔ listIter @done(21-10-31 22:45)
 	✔ listNode @done(21-10-17 16:14)
 	☐ picolCallFrame
 	☐ picolCmd
 	☐ picolInterp
 	☐ picolParser
 	☐ picolVar
-	☐ redisClient
+	✔ redisClient @done(21-10-31 22:45)
 	☐ redisCommand
 	✔ redisObject @done(21-10-20 21:35)
 	✔ redisServer @done(21-10-18 21:56)
@@ -36,10 +36,10 @@ Type Definitions (18):
 	☐ dictIterator
 	✔ dictType @done(21-10-18 22:00)
 	✔ list @done(21-10-18 22:00)
-	☐ listIter
+	✔ listIter @done(21-10-31 22:45)
 	✔ listNode @done(21-10-18 22:00)
 	☐ picolCmdFunc
-	☐ redisClient
+	✔ redisClient @done(21-10-31 22:45)
 	☐ redisCommandProc
 	✔ robj @done(21-10-20 21:35)
 	✔ sds @done(21-10-22 22:49)

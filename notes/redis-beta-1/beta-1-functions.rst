@@ -1062,4 +1062,30 @@ sdsDictType 类型的 hash 函数就是该函数
 
 传入的参数 len 有多少就执行多少次 hash 运算， 最终将运算结果返回。
 
+.. _`closeTimedoutClients-func`:
+.. `closeTimedoutClients-func`
 
+29 closeTimedoutClients 函数
+===============================================================================
+
+.. code-block:: C 
+
+    void closeTimedoutClients(void) {
+        redisClient *c;
+        listIter *li;
+        listNode *ln;
+        time_t now = time(NULL);
+
+        li = listGetIterator(server.clients,AL_START_HEAD);
+        if (!li) return;
+        while ((ln = listNextElement(li)) != NULL) {
+            c = listNodeValue(ln);
+            if (now - c->lastinteraction > server.maxidletime) {
+                redisLog(REDIS_DEBUG,"Closing idle client");
+                freeClient(c);
+            }
+        }
+        listReleaseIterator(li);
+    }
+
+此处需要先了解一下 redisClient_ 结构体和 listIter_ 结构体。

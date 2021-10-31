@@ -301,3 +301,57 @@ redis 对象结构体， 包含了 3 个元素
 - free: 记录 buf 数组中未使用字节的数量
 - buf: 字节数组， 用于保存字符串
 
+.. _`redisClient-struct`:
+.. `redisClient-struct`
+
+14 redisClient 结构体
+===============================================================================
+
+.. code-block:: c 
+
+    /* With multiplexing we need to take per-clinet state.
+    * Clients are taken in a liked list. */
+    typedef struct redisClient {
+        int fd;
+        dict *dict;
+        sds querybuf;
+        sds argv[REDIS_MAX_ARGS];
+        int argc;
+        int bulklen;    /* bulk read len. -1 if not in bulk read mode */
+        list *reply;
+        int sentlen;
+        time_t lastinteraction; /* time of the last interaction, used for timeout */
+    } redisClient;
+
+redisClient 结构体拥有 9 个字段：
+
+- fd: 代表 client 的文件描述符
+- dict: 字典指针
+- querybuf: 查询缓存
+- argv: 参数数组
+- argc: 参数个数
+- bulklen: 批量读取长度
+- reply: 回应
+- sentlen: 发送数据长度
+- lastinteraction: 最近的交互时间， 用于 timeout
+
+.. _`listIter-struct`:
+.. `listIter-struct`
+
+15 listIter 结构体
+===============================================================================
+
+.. code-block:: c 
+
+    typedef struct listIter {
+        listNode *next;
+        listNode *prev;
+        int direction;
+    } listIter;
+
+listIter 结构体拥有 3 个字段：
+
+- next: 上一个链表节点
+- prev: 下一个链表节点
+- direction: 查询方向
+
