@@ -976,10 +976,22 @@ dictExpand_ 函数进行字典大小的修改。
 #. realsize 是 `_dictNextPower`_ 函数结果， 用于判断当前的 size 是否是在 2 的某一\
    次方内， 如果不在就将乘以 2； 然后判断哈希表已使用的大小是否大于哈希表的大小， 若是\
    返回 ``DICT_ERR`` 即 1
-#.
-#.
-#.
-#.
-#.
+#. 对哈希表 n 进行初始化， 然后将哈希表的 size 置为 realsize， 同时 sizemask 置为 \
+   realsize-1， table 置为哈希表分配 dictEntry 内存的地址
+#. 将指向 n.table 的内存全部写成 0
+#. 当旧的哈希表的大小不为 0 且有使用的大小时， 循环迭代复制每一个元素到新的哈希表中， \
+   需要注意的是， 之前在 initServer_ 函数中使用的 sdsDictType_ 进行的初始化 dict 操\
+   作， 因此在 dictHashKey_ 宏中使用的是 hash 函数是 sdsDictHashFunction_， 在此处\
+   使用 ``dictHashKey(ht, he->key) & n.sizemask`` 是为了防止数组越界， 因为 \
+   sizemask 一直比 size 小 1。 复制完成后将旧的 hash 表已使用大小减 1。 
+#. 判断就的 hash 表已使用大小是否为 0， 为 0 说明复制完毕， 因为在复制的时候复制一个\
+   就减 1。 然后在将旧的 hash 表释放
+#. 然后将旧的 hash 表的指针指向新的拓展后的 hash 表。 之前步骤一切 OK 后， 返回 \
+   DICT_OK 即 0
 
 .. _`_dictNextPower`: #_dictNextPower-func
+.. _`initServer`: beta-1-main-flow.rst#initServer-func
+.. _`sdsDictType`: beta-1-others.rst#sdsDictType-var
+.. _`dictHashKey`: beta-1-macros.rst#dictHashKey-macro
+.. _`sdsDictHashFunction`: #sdsDictHashFunction-func
+

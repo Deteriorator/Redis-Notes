@@ -67,7 +67,7 @@ Constants (47):
 	✔ ANET_ERR_LEN @done(21-10-25 21:55)
 	☐ ANET_H
 	☐ ANET_OK
-	☐ DICT_ERR
+	✔ DICT_ERR @done(21-10-31 22:09)
 	☐ __DICT_H
 	✔ DICT_HT_INITIAL_SIZE @done(21-10-29 23:43)
 	✔ DICT_OK @done(21-10-27 22:00)
@@ -172,7 +172,7 @@ Functions (188):
 	✔ dictCreate @done(21-10-25 23:06)
 	☐ dictDelete
 	☐ dictDeleteNoFree
-	☐ dictExpand
+	✔ dictExpand @done(21-10-31 22:06)
 	☐ _dictExpandIfNeeded
 	☐ dictFind
 	☐ _dictFree
@@ -377,7 +377,7 @@ Function Prototypes (111):
 	✔ dictCreate @done(21-10-27 21:39)
 	☐ dictDelete
 	☐ dictDeleteNoFree
-	☐ dictExpand
+	✔ dictExpand @done(21-10-31 22:07)
 	☐ _dictExpandIfNeeded
 	☐ dictFind
 	☐ dictGenHashFunction
