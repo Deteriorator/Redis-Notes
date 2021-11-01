@@ -1265,4 +1265,30 @@ next->next， 相当于 iter 向后移动了一个单位。 否则就向前移�
 
 如果不满足 if 条件， 则开始进行下一轮判断， 直到 fe 为空。
 
+.. _`sdsfree-func`:
+.. `sdsfree-func`
+
+34 sdsfree 函数
+===============================================================================
+
+.. code-block:: C 
+
+    void sdsfree(sds s) {
+        if (s == NULL) return;
+        free(s-sizeof(struct sdshdr));
+    }
+
+释放字符串对象内存。 当字符串 s 为空时直接返回； 否则将 sds 的对象释放掉。
+
+``s-sizeof(struct sdshdr)`` 此处的意思是字符串和 sdshdr 整体。
+
+.. code-block::
+
+    |5|0|redis|
+    ^   ^
+    sh  sh->buf
+
+sizeof(struct sdshdr) 实际上只是 len 和 free 字段的长度， buf 字段是不确定长度， 因\
+此在 sizeof 计算时并没有包含在内。 那么 s 就是 buf 所在的指针， 因此此处 free 的时候\
+就是连同 sdshdr 一起释放。
 
