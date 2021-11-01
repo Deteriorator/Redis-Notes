@@ -1042,6 +1042,8 @@ sdsDictType 类型的 hash 函数就是该函数
 
 在该函数中执行 dictGenHashFunction_ 函数对 key 进行 hash 运算， 最终返回函数值
 
+.. _dictGenHashFunction: #dictGenHashFunction-func
+
 .. _`dictGenHashFunction-func`:
 .. `dictGenHashFunction-func`
 
@@ -1142,4 +1144,81 @@ sdsDictType 类型的 hash 函数就是该函数
 从头节点开始访问， 那么将迭代器 next 字段置为当前 List 的头节点； 否则就是从尾节点开\
 始访问， 将 next 字段置为 List 的尾节点； 然后将其方向 direction 字段置为给定的 \
 direction， 最终返回这个迭代器。
+
+.. _`listNextElement-func`:
+.. `listNextElement-func`
+
+31 listNextElement 函数
+===============================================================================
+
+.. code-block:: C 
+
+    listNode *listNextElement(listIter *iter)
+    {
+        listNode *current = iter->next;
+
+        if (current != NULL) {
+            if (iter->direction == AL_START_HEAD)
+                iter->next = current->next;
+            else
+                iter->next = current->prev;
+        }
+        return current;
+    }
+    
+声明 current 为当前节点， 其值为 List 访问迭代器的 next 指针， 如果 current 非空， \
+当 iter 方向为从头节点开始时， 那么 iter->next 就是当前节点的 next 节点， 即 iter->\
+next->next， 相当于 iter 向后移动了一个单位。 否则就向前移动。
+
+最终返回 current 节点。 
+
+.. _`freeClient-func`:
+.. `freeClient-func`
+
+32 freeClient 函数
+===============================================================================
+
+.. code-block:: C 
+
+    #define AE_READABLE 1
+    #define AE_WRITABLE 2
+    #define AE_EXCEPTION 4
+
+    static void freeClient(redisClient *c) {
+        listNode *ln;
+
+        aeDeleteFileEvent(server.el,c->fd,AE_READABLE);
+        aeDeleteFileEvent(server.el,c->fd,AE_WRITABLE);
+        sdsfree(c->querybuf);
+        listRelease(c->reply);
+        freeClientArgv(c);
+        close(c->fd);
+        ln = listSearchKey(server.clients,c);
+        assert(ln != NULL);
+        listDelNode(server.clients,ln);
+        free(c);
+    }
+
+释放 client 连接， 需要进行一系列的操作：
+
+#. aeDeleteFileEvent(server.el,c->fd,AE_READABLE); aeDeleteFileEvent_ 函数删除 \
+   IO 读
+#. aeDeleteFileEvent(server.el,c->fd,AE_WRITABLE); aeDeleteFileEvent_ 函数删除 \
+   IO 写
+#. sdsfree_ 函数释放 client 查询缓冲区 
+#. listRelease_ 函数释放 client reply 
+#. freeClientArgv_ 函数释放 client 参数
+#. close 关闭 client 连接
+#. listSearchKey_ 从 server.clients 中搜索要释放的 client
+#. 断言搜索结果是否为空， 为空说明 clients 列表中没有要释放的 client 
+#. 正常情况下 ln 是不为空的， 使用 listDelNode_ 从 server.clients 将 client 删除
+#. 最后释放 client 占用的内存
+
+.. _`aeDeleteFileEvent`: #aeDeleteFileEvent-func
+.. _`sdsfree`: #sdsfree-func
+.. _`listRelease`: #listRelease-func
+.. _`freeClientArgv`: #freeClientArgv-func
+.. _`listSearchKey`: #listSearchKey-func
+.. _`listDelNode`: #listDelNode-func
+
 

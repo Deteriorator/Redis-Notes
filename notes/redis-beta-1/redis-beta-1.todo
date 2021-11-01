@@ -201,7 +201,7 @@ Functions (188):
 	☐ _dictStringKeyValCopyHTValDup
 	☐ echoCommand
 	☐ existsCommand
-	☐ freeClient
+	✔ freeClient @done(21-11-01 22:26)
 	☐ freeClientArgv
 	☐ freeListObject
 	☐ freeSetObject
@@ -222,7 +222,7 @@ Functions (188):
 	☐ listDup
 	✔ listGetIterator @done(21-10-31 23:07)
 	☐ listIndex
-	☐ listNextElement
+	✔ listNextElement @done(21-11-01 22:07)
 	☐ listRelease
 	☐ listReleaseIterator
 	☐ listSearchKey
@@ -394,7 +394,7 @@ Function Prototypes (111):
 	✔ dictResize @done(21-10-29 23:43)
 	☐ echoCommand
 	☐ existsCommand
-	☐ freeClient
+	✔ freeClient @done(21-11-01 22:26)
 	☐ freeListObject
 	☐ freeSetObject
 	☐ freeStringObject
@@ -411,7 +411,7 @@ Function Prototypes (111):
 	☐ listDup
 	✔ listGetIterator @done(21-10-31 23:07)
 	☐ listIndex
-	☐ listNextElement
+	✔ listNextElement @done(21-11-01 22:07)
 	☐ listRelease
 	☐ listReleaseIterator
 	☐ listSearchKey
