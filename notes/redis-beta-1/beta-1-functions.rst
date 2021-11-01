@@ -1221,4 +1221,48 @@ next->next， 相当于 iter 向后移动了一个单位。 否则就向前移�
 .. _`listSearchKey`: #listSearchKey-func
 .. _`listDelNode`: #listDelNode-func
 
+.. _`aeDeleteFileEvent-func`:
+.. `aeDeleteFileEvent-func`
+
+33 aeDeleteFileEvent 函数
+===============================================================================
+
+.. code-block:: C 
+
+    void aeDeleteFileEvent(aeEventLoop *eventLoop, int fd, int mask)
+    {
+        aeFileEvent *fe, *prev = NULL;
+
+        fe = eventLoop->fileEventHead;
+        while(fe) {
+            if (fe->fd == fd && fe->mask == mask) {
+                if (prev == NULL)
+                    eventLoop->fileEventHead = fe->next;
+                else
+                    prev->next = fe->next;
+                if (fe->finalizerProc)
+                    fe->finalizerProc(eventLoop, fe->clientData);
+                free(fe);
+                return;
+            }
+            prev = fe;
+            fe = fe->next;
+        }
+    }
+
+局部变量 fe 指的是当前 FileEvent， prev 指的是上一个 FileEvent。 
+
+然后从第一个 FileEvent， 即 ``fe = eventLoop->fileEventHead`` 开始循环判断， 当当\
+前 FileEvent 的 fd 与传递的 fd 相等且当前的 mask 与传递的 mask 相等时， 开始执行删除\
+操作：
+
+- 当 prev 为空， 说明是第一个 FileEvent， 那么直接将 fileEventHead 指向当前 \
+  FileEvent 的 next； 否则就不是第一个 FileEvent， 直接将当前 FileEvent 的前一个的\
+  next 指向当前 FileEvent 的 next， 直接略过当前 FileEvent， 表明删除
+- 当当前 FileEvent 的 finalizerProc 指针有值时， 那么执行这个函数。 finalizerProc \
+  是一个指向函数的指针。
+- 删除后将当前 FileEvent 占用的内存释放， 并返回
+
+如果不满足 if 条件， 则开始进行下一轮判断， 直到 fe 为空。
+
 

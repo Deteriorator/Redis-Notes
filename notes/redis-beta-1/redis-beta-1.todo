@@ -137,7 +137,7 @@ Functions (188):
 	☐ aeCreateFileEvent
 	✔ aeCreateTimeEvent @done(21-10-27 22:31)
 	☐ aeDeleteEventLoop
-	☐ aeDeleteFileEvent
+	✔ aeDeleteFileEvent @done(21-11-01 22:57)
 	☐ aeDeleteTimeEvent
 	✔ aeGetTime @done(21-10-27 22:44)
 	☐ aeMain
@@ -353,7 +353,7 @@ Function Prototypes (111):
 	☐ aeCreateFileEvent
 	✔ aeCreateTimeEvent @done(21-10-27 22:31)
 	☐ aeDeleteEventLoop
-	☐ aeDeleteFileEvent
+	✔ aeDeleteFileEvent @done(21-11-01 22:58)
 	☐ aeDeleteTimeEvent
 	☐ aeMain
 	☐ aeProcessEvents
