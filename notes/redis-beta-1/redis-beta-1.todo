@@ -223,7 +223,7 @@ Functions (188):
 	✔ listGetIterator @done(21-10-31 23:07)
 	☐ listIndex
 	✔ listNextElement @done(21-11-01 22:07)
-	☐ listRelease
+	✔ listRelease @done(21-11-02 23:32)
 	☐ listReleaseIterator
 	☐ listSearchKey
 	☐ llenCommand
@@ -412,7 +412,7 @@ Function Prototypes (111):
 	✔ listGetIterator @done(21-10-31 23:07)
 	☐ listIndex
 	✔ listNextElement @done(21-11-01 22:07)
-	☐ listRelease
+	✔ listRelease @done(21-11-02 23:32)
 	☐ listReleaseIterator
 	☐ listSearchKey
 	☐ llenCommand

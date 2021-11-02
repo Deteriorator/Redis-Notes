@@ -1292,3 +1292,34 @@ sizeof(struct sdshdr) 实际上只是 len 和 free 字段的长度， buf 字段
 此在 sizeof 计算时并没有包含在内。 那么 s 就是 buf 所在的指针， 因此此处 free 的时候\
 就是连同 sdshdr 一起释放。
 
+.. _`listRelease-func`:
+.. `listRelease-func`
+
+35 listRelease 函数
+===============================================================================
+
+.. code-block:: C 
+
+    void listRelease(list *list)
+    {
+        int len;
+        listNode *current, *next;
+
+        current = list->head;
+        len = list->len;
+        while(len--) {
+            next = current->next;
+            if (list->free) list->free(current->value);
+            free(current);
+            current = next;
+        }
+        free(list);
+    }
+
+该函数用于释放整个 List， 会从第一个节点开始释放内存， 直到整个 list 完全释放。
+
+current 从头节点开始， 如果指定了 ``list->free``， 那么就执行该函数释放当前结点的值。 \
+否则直接释放当前结点， 同时将当前结点指向下一个节点。
+
+最终释放 list 的内存。
+
