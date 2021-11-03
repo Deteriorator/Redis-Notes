@@ -1452,3 +1452,135 @@ server.bgsaveinprogress 置为 1 并返回 REDIS_OK 即 0。
 
 最后的返回 0 是不会执行到这一步的。
 
+.. _`saveDb-func`:
+.. `saveDb-func`
+
+40 saveDb 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static int saveDb(char *filename) {
+        dictIterator *di = NULL;
+        dictEntry *de;
+        uint32_t len;
+        uint8_t type;
+        FILE *fp;
+        char tmpfile[256];
+        int j;
+
+        // 1
+        snprintf(tmpfile,256,"temp-%d.%ld.rdb",(int)time(NULL),(long int)random());
+        
+        // 2
+        fp = fopen(tmpfile,"w");
+        if (!fp) {
+            redisLog(REDIS_WARNING, "Failed saving the DB: %s", strerror(errno));
+            return REDIS_ERR;
+        }
+
+        // 3
+        if (fwrite("REDIS0000",9,1,fp) == 0) goto werr;
+        
+        // 4
+        for (j = 0; j < server.dbnum; j++) {
+            // 1
+            dict *dict = server.dict[j];
+            if (dictGetHashTableUsed(dict) == 0) continue;
+            di = dictGetIterator(dict);
+            if (!di) {
+                fclose(fp);
+                return REDIS_ERR;
+            }
+
+            // 2
+            /* Write the SELECT DB opcode */
+            type = REDIS_SELECTDB;
+            len = htonl(j);
+            if (fwrite(&type,1,1,fp) == 0) goto werr;
+            if (fwrite(&len,4,1,fp) == 0) goto werr;
+
+            // 3
+            /* Iterate this DB writing every entry */
+            while((de = dictNext(di)) != NULL) {
+                // 1
+                sds key = dictGetEntryKey(de);
+                robj *o = dictGetEntryVal(de);
+
+                // 2
+                type = o->type;
+                len = htonl(sdslen(key));
+                if (fwrite(&type,1,1,fp) == 0) goto werr;
+                if (fwrite(&len,4,1,fp) == 0) goto werr;
+                if (fwrite(key,sdslen(key),1,fp) == 0) goto werr;
+
+                // 3
+                if (type == REDIS_STRING) {
+                    /* Save a string value */
+                    sds sval = o->ptr;
+                    len = htonl(sdslen(sval));
+                    if (fwrite(&len,4,1,fp) == 0) goto werr;
+                    if (fwrite(sval,sdslen(sval),1,fp) == 0) goto werr;
+                } else if (type == REDIS_LIST) {
+                    /* Save a list value */
+                    list *list = o->ptr;
+                    listNode *ln = list->head;
+
+                    len = htonl(listLength(list));
+                    if (fwrite(&len,4,1,fp) == 0) goto werr;
+                    while(ln) {
+                        robj *eleobj = listNodeValue(ln);
+                        len = htonl(sdslen(eleobj->ptr));
+                        if (fwrite(&len,4,1,fp) == 0) goto werr;
+                        if (fwrite(eleobj->ptr,sdslen(eleobj->ptr),1,fp) == 0)
+                            goto werr;
+                        ln = ln->next;
+                    }
+                } else {
+                    assert(0 != 0);
+                }
+            }
+            // 4
+            dictReleaseIterator(di);
+        }
+
+        // 5
+        /* EOF opcode */
+        type = REDIS_EOF;
+        if (fwrite(&type,1,1,fp) == 0) goto werr;
+        fclose(fp);
+        
+        // 6
+        /* Use RENAME to make sure the DB file is changed atomically only
+        * if the generate DB file is ok. */
+        if (rename(tmpfile,filename) == -1) {
+            redisLog(REDIS_WARNING,"Error moving temp DB file on the final destionation: %s", strerror(errno));
+            unlink(tmpfile);
+            return REDIS_ERR;
+        }
+
+        // 7
+        redisLog(REDIS_NOTICE,"DB saved on disk");
+        server.dirty = 0;
+        server.lastsave = time(NULL);
+        return REDIS_OK;
+
+        // 8
+    werr:
+        fclose(fp);
+        redisLog(REDIS_WARNING,"Error saving DB on disk: %s", strerror(errno));
+        if (di) dictReleaseIterator(di);
+        return REDIS_ERR;
+    }
+
+保存 redis 数据到 rdb 数据库文件中， 函数太长就分解了一下：
+
+#. 临时数据库的名称， 包含了保存数据库时的时间和随机字符
+#. 使用临时数据库名称打开一个文件流， 如果文件流打开错误， 记录日志并返回 REDIS_ERR
+#. 将 REDIS0000 字符串写入到文件流， 如果写入错误， 直接执行 werr 代码段， 代码段的\
+   操是关闭文件流， 记录日志， 如果已经生成 di 了就释放了， 最终返回 REDIS_ERR 即 -1
+#. 
+#.
+#.
+#.
+#.
