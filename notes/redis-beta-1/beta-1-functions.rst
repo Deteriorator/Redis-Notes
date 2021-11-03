@@ -1323,3 +1323,71 @@ current 从头节点开始， 如果指定了 ``list->free``， 那么就执行�
 
 最终释放 list 的内存。
 
+.. _`freeClientArgv-func`:
+.. `freeClientArgv-func`
+
+36 freeClientArgv 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static void freeClientArgv(redisClient *c) {
+        int j;
+
+        for (j = 0; j < c->argc; j++)
+            sdsfree(c->argv[j]);
+        c->argc = 0;
+    }
+
+在 redisClient_ 结构体中， argv 字段是字符串数组， 因此在该函数中通过 for 循环的方式\
+使用 sdsfree_ 函数逐个释放掉每个 argv ， argc 就是 argv 的数量， 因此释放完毕后， \
+argc 被置为 0。
+
+.. _redisClient: beta-1-structures.rst#redisClient-struct
+.. _sdsfree: #sdsfree-func
+
+.. _`listSearchKey-func`:
+.. `listSearchKey-func`
+
+37 listSearchKey 函数
+===============================================================================
+
+.. code-block:: C 
+
+    // todo
+    listNode *listSearchKey(list *list, void *key)
+    {
+        listIter *iter;
+        listNode *node;
+
+        iter = listGetIterator(list, AL_START_HEAD);
+        while((node = listNextElement(iter)) != NULL) {
+            if (list->match) {
+                if (list->match(node->value, key)) {
+                    listReleaseIterator(iter);
+                    return node;
+                }
+            } else {
+                if (key == node->value) {
+                    listReleaseIterator(iter);
+                    return node;
+                }
+            }
+        }
+        listReleaseIterator(iter);
+        return NULL;
+    }
+
+该函数用于在 list 中搜索 key， 如果搜索到返回这个节点， 否则返回 NULL。
+
+iter 是 list 访问迭代器， 它是从 list 的头节点开始的； node 就是 list 节点。
+
+当 ``list->match`` 指针有值时， 如果 ``list->match(node->value, key)`` 直接使用 \
+listReleaseIterator_ 释放 iter 同时返回节点 node； 否则当 ``key == node->value`` \
+时释放 iter 同时返回 node。
+
+.. _listReleaseIterator: #listReleaseIterator-func
+
+如果 ``listNextElement(iter)`` 为 NULL， 直接使用 listReleaseIterator 释放 iter \
+并返回 NULL。
+

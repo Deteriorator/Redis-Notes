@@ -202,7 +202,7 @@ Functions (188):
 	☐ echoCommand
 	☐ existsCommand
 	✔ freeClient @done(21-11-01 22:26)
-	☐ freeClientArgv
+	✔ freeClientArgv @done(21-11-03 21:50)
 	☐ freeListObject
 	☐ freeSetObject
 	☐ freeStringObject
@@ -225,7 +225,7 @@ Functions (188):
 	✔ listNextElement @done(21-11-01 22:07)
 	✔ listRelease @done(21-11-02 23:32)
 	☐ listReleaseIterator
-	☐ listSearchKey
+	✔ listSearchKey @done(21-11-03 22:03)
 	☐ llenCommand
 	☐ loadDb
 	☐ loadServerConfig
@@ -414,7 +414,7 @@ Function Prototypes (111):
 	✔ listNextElement @done(21-11-01 22:07)
 	✔ listRelease @done(21-11-02 23:32)
 	☐ listReleaseIterator
-	☐ listSearchKey
+	✔ listSearchKey @done(21-11-03 22:03)
 	☐ llenCommand
 	☐ loadDb
 	☐ lpopCommand
