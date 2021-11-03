@@ -224,7 +224,7 @@ Functions (188):
 	☐ listIndex
 	✔ listNextElement @done(21-11-01 22:07)
 	✔ listRelease @done(21-11-02 23:32)
-	☐ listReleaseIterator
+	✔ listReleaseIterator @done(21-11-03 22:15)
 	✔ listSearchKey @done(21-11-03 22:03)
 	☐ llenCommand
 	☐ loadDb
@@ -282,7 +282,7 @@ Functions (188):
 	☐ rpushCommand
 	☐ saveCommand
 	☐ saveDb
-	☐ saveDbBackground
+	✔ saveDbBackground @done(21-11-03 22:39)
 	☐ sdsavail
 	☐ sdscat
 	☐ sdscatlen

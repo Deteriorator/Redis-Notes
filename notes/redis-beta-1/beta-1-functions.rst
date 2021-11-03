@@ -1391,3 +1391,64 @@ listReleaseIterator_ 释放 iter 同时返回节点 node； 否则当 ``key == n
 如果 ``listNextElement(iter)`` 为 NULL， 直接使用 listReleaseIterator 释放 iter \
 并返回 NULL。
 
+.. _`listReleaseIterator-func`:
+.. `listReleaseIterator-func`
+
+38 listReleaseIterator 函数
+===============================================================================
+
+.. code-block:: C 
+
+    void listReleaseIterator(listIter *iter) {
+        free(iter);
+    }
+
+该函数直接调用 free 函数释放 listIter 结构体的内存。
+
+.. _`saveDbBackground-func`:
+.. `saveDbBackground-func`
+
+39 saveDbBackground 函数
+===============================================================================
+
+.. code-block:: C 
+
+    /* Error codes */
+    #define REDIS_OK                0
+    #define REDIS_ERR               -1
+
+    static int saveDbBackground(char *filename) {
+        pid_t childpid;
+
+        if (server.bgsaveinprogress) return REDIS_ERR;
+        if ((childpid = fork()) == 0) {
+            /* Child */
+            close(server.fd);
+            if (saveDb(filename) == REDIS_OK) {
+                exit(0);
+            } else {
+                exit(1);
+            }
+        } else {
+            /* Parent */
+            redisLog(REDIS_NOTICE,"Background saving started by pid %d",childpid);
+            server.bgsaveinprogress = 1;
+            return REDIS_OK;
+        }
+        return REDIS_OK; /* unreached */
+    }
+
+后台备份 redis 数据， childpid 就是子进程。 server.bgsaveinprogress 表示的是是否有\
+进程在进行数据备份。 在 serverCron_ 函数中已经将 server.bgsaveinprogress 置为 0 了。
+
+.. _serverCron: #serverCron-func
+
+childpid 被用于存放 fork 函数值。 当成功执行 fork 函数的时候， 在子进程中返回的是 0， \
+父进程中返回的是进程 ID， 因此在在子进程中进行 saveDb_ 操作， 成功保存后使用 exit(0) \
+退出进程， 否则使用 exit(1) 退出进程； 与此同时父进程中打印日志， 将 \
+server.bgsaveinprogress 置为 1 并返回 REDIS_OK 即 0。 
+
+.. _saveDb: #saveDb-func
+
+最后的返回 0 是不会执行到这一步的。
+
