@@ -1575,12 +1575,23 @@ server.bgsaveinprogress 置为 1 并返回 REDIS_OK 即 0。
 
 保存 redis 数据到 rdb 数据库文件中， 函数太长就分解了一下：
 
-#. 临时数据库的名称， 包含了保存数据库时的时间和随机字符
-#. 使用临时数据库名称打开一个文件流， 如果文件流打开错误， 记录日志并返回 REDIS_ERR
-#. 将 REDIS0000 字符串写入到文件流， 如果写入错误， 直接执行 werr 代码段， 代码段的\
-   操是关闭文件流， 记录日志， 如果已经生成 di 了就释放了， 最终返回 REDIS_ERR 即 -1
-#. 
-#.
-#.
-#.
-#.
+- STEP-1: 临时数据库的名称， 包含了保存数据库时的时间和随机字符
+- STEP-2: 使用临时数据库名称打开一个文件流， 如果文件流打开错误， 记录日志并返回 \
+  REDIS_ERR
+- STEP-3: 将 REDIS0000 字符串写入到文件流， 如果写入错误， 直接执行 werr 代码段， 代\
+  码段的操是关闭文件流， 记录日志， 如果已经生成 di 了就释放了， 最终返回 REDIS_ERR \
+  即 -1
+- STEP-4: 从这一步开始迭代写入每个 db
+    - STEP-1: 局部变量 dict 用于存放每轮循环中的哈希表， 然后 dictGetHashTableUsed_ \
+      宏用于查看哈希表已经使用的数量， 如为 0 说明哈希表为空则执行 Continue 跳过此次\
+      循环， 否则 dictGetIterator_ 函数生成哈希表迭代器 di， 如果 di 为假， 则关闭\
+      文件流并返回 -1
+    - STEP-2: 
+
+- STEP-5: 
+- STEP-6:
+- STEP-7:
+- STEP-8:
+
+.. _dictGetHashTableUsed: beta-1-macros.rst#dictGetHashTableUsed-macro
+.. _dictGetIterator: #dictGetIterator-func
