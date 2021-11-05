@@ -1460,6 +1460,10 @@ server.bgsaveinprogress 置为 1 并返回 REDIS_OK 即 0。
 
 .. code-block:: C 
 
+    #define REDIS_SELECTDB 254
+    #define REDIS_STRING 0
+    #define REDIS_LIST 1
+
     static int saveDb(char *filename) {
         dictIterator *di = NULL;
         dictEntry *de;
@@ -1503,18 +1507,18 @@ server.bgsaveinprogress 置为 1 并返回 REDIS_OK 即 0。
             // 3
             /* Iterate this DB writing every entry */
             while((de = dictNext(di)) != NULL) {
-                // 1
+                // 4
                 sds key = dictGetEntryKey(de);
                 robj *o = dictGetEntryVal(de);
 
-                // 2
+                // 5
                 type = o->type;
                 len = htonl(sdslen(key));
                 if (fwrite(&type,1,1,fp) == 0) goto werr;
                 if (fwrite(&len,4,1,fp) == 0) goto werr;
                 if (fwrite(key,sdslen(key),1,fp) == 0) goto werr;
 
-                // 3
+                // 6
                 if (type == REDIS_STRING) {
                     /* Save a string value */
                     sds sval = o->ptr;
@@ -1540,7 +1544,7 @@ server.bgsaveinprogress 置为 1 并返回 REDIS_OK 即 0。
                     assert(0 != 0);
                 }
             }
-            // 4
+            // 7
             dictReleaseIterator(di);
         }
 
@@ -1586,7 +1590,22 @@ server.bgsaveinprogress 置为 1 并返回 REDIS_OK 即 0。
       宏用于查看哈希表已经使用的数量， 如为 0 说明哈希表为空则执行 Continue 跳过此次\
       循环， 否则 dictGetIterator_ 函数生成哈希表迭代器 di， 如果 di 为假， 则关闭\
       文件流并返回 -1
-    - STEP-2: 
+    - STEP-2: 将 type 置为 REDIS_SELECTDB 即 254， 将 len db 序号从主机字节序转换\
+      为网络字节序， 然后将 type 和 len 写入到文件流中， 如果写入出错执行 werr 代码\
+      段
+    - STEP-3: 从此处开始将哈希表的每个条目写入到文件中。 当 dictNext_ 函数值即 de 不\
+      为空时开始循环。 dictNext_ 函数用于获取哈希表中的下一个条目。
+    - STEP-4: 哈希表条目的 key 由 dictGetEntryKey_ 宏获取， 是一个 sds 字符串； \
+      val 由 dictGetEntryVal_ 宏获取， 是一个 robj 对象
+    - STEP-5: 分别将 dict 的 type、 len 和 key 写入到文件流中， 如果写入出错直接执\
+      行 werr 代码段
+    - STEP-6: 当 dict 的 type 为 REDIS_STRING 即 0 时， dict 的 val 就是 sds 字符\
+      串， 然后将 val 的长度和值写入到文件流中， 写入出错就执行 werr， val 的长度使\
+      用 sdslen_ 函数获取； 当 dict 的 type 为 REDIS_LIST 即 1 时， dict 的 val \
+      就是 list 对象， 先将 list 的长度写入到文件流中， 然后从 list 头节点开始循环写\
+      入每个节点的长度和值。 else 中的语句极大概率不会执行， 因此早期 redis 的数据中\
+      只有字符串和 list 类型， 其他类型并没有进行处理
+    - STEP-7: 哈希表处理完毕后， 通过 dictReleaseIterator_ 函数来释放掉迭代器 
 
 - STEP-5: 
 - STEP-6:
@@ -1595,3 +1614,8 @@ server.bgsaveinprogress 置为 1 并返回 REDIS_OK 即 0。
 
 .. _dictGetHashTableUsed: beta-1-macros.rst#dictGetHashTableUsed-macro
 .. _dictGetIterator: #dictGetIterator-func
+.. _dictNext: #dictNext-func
+.. _dictGetEntryKey: beta-1-macros.rst#dictGetEntryKey-macro
+.. _dictGetEntryVal: beta-1-macros.rst#dictGetEntryKey-macro
+.. _sdslen: #sdslen-func
+.. _dictReleaseIterator: #dictReleaseIterator-func
