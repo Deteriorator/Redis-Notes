@@ -985,7 +985,7 @@ dictExpand_ 函数进行字典大小的修改。
    使用 ``dictHashKey(ht, he->key) & n.sizemask`` 是为了防止数组越界， 因为 \
    sizemask 一直比 size 小 1。 复制完成后将旧的 hash 表已使用大小减 1。 
 #. 判断就的 hash 表已使用大小是否为 0， 为 0 说明复制完毕， 因为在复制的时候复制一个\
-   就减 1。 然后在将旧的 hash 表释放
+   就减 1。 然后在将旧的 hash 表使用 `_dictFree`_ 函数释放
 #. 然后将旧的 hash 表的指针指向新的拓展后的 hash 表。 之前步骤一切 OK 后， 返回 \
    DICT_OK 即 0
 
@@ -994,6 +994,7 @@ dictExpand_ 函数进行字典大小的修改。
 .. _`sdsDictType`: beta-1-others.rst#sdsDictType-var
 .. _`dictHashKey`: beta-1-macros.rst#dictHashKey-macro
 .. _`sdsDictHashFunction`: #sdsDictHashFunction-func
+.. _`dictFree`: #_dictFree-func
 
 .. _`_dictNextPower-func`:
 .. `_dictNextPower-func`
@@ -1690,4 +1691,51 @@ server.bgsaveinprogress 置为 1 并返回 REDIS_OK 即 0。
   为 nextEntry。
 - 当 entry 为真时， 将 nextEntry 置为 iter->entry->next， 即 next next， 并返回修\
   改后的 iter->entry。 
+
+.. _`sdslen-func`:
+.. `sdslen-func`
+
+43 sdslen 函数
+===============================================================================
+
+.. code-block:: C 
+
+    size_t sdslen(const sds s) {
+        struct sdshdr *sh = (void*) (s-(sizeof(struct sdshdr)));
+        return sh->len;
+    }
+
+之前分析过， redis 中的字符串时字符串头 (sdshdr) 和字符串拼接使用的， 在 sdshdr 中包\
+含了字符串的长度， 但是在使用 sds 的时候， 字符串的指针指向的是 sdshdr 的 buf， 并不\
+是 sdshdr， 因此需要减去 sdshdr 的大小， 从而使其指向 sdshdr， 最终返回 sdshdr 的 \
+len 字段。 
+
+.. _`dictReleaseIterator-func`:
+.. `dictReleaseIterator-func`
+
+44 dictReleaseIterator 函数
+===============================================================================
+
+.. code-block:: C 
+
+    void dictReleaseIterator(dictIterator *iter)
+    {
+        _dictFree(iter);
+    }
+
+直接使用 `_dictFree`_ 函数释放掉哈希表迭代器占用的内存。
+
+.. _`_dictFree-func`:
+.. `_dictFree-func`
+
+45 _dictFree 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static void _dictFree(void *ptr) {
+        free(ptr);
+    }
+
+直接使用 free 函数释放掉给定的指针。
 
