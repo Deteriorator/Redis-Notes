@@ -1463,6 +1463,7 @@ server.bgsaveinprogress 置为 1 并返回 REDIS_OK 即 0。
     #define REDIS_SELECTDB 254
     #define REDIS_STRING 0
     #define REDIS_LIST 1
+    #define REDIS_EOF 255
 
     static int saveDb(char *filename) {
         dictIterator *di = NULL;
@@ -1607,10 +1608,14 @@ server.bgsaveinprogress 置为 1 并返回 REDIS_OK 即 0。
       只有字符串和 list 类型， 其他类型并没有进行处理
     - STEP-7: 哈希表处理完毕后， 通过 dictReleaseIterator_ 函数来释放掉迭代器 
 
-- STEP-5: 
-- STEP-6:
-- STEP-7:
-- STEP-8:
+- STEP-5: 将 REDIS_EOF 即 255 Redis 结束符写入到文件流中， 写入出错执行 werr 代码并\
+  关闭文件流
+- STEP-6: 使用 rename 函数将写好的临时数据库文件移动到目标地址， 执行成功返回 0， 失\
+  败返回 -1； 如果 rename 失败， 将记录 redis 日志， 并使用 unlink 函数删除指定的临\
+  时文件 tmpfile， 并最终返回 REDIS_ERR 即 -1。
+- STEP-7: rename 成功也会记录 redis 日志， 并将 server 的 dirty 置为 0， lastsave \
+  置为当前时间， 最后返回 REDIS_OK 即 0
+- STEP-8: 在保存数据的任意一个过程失败都将会执行该代码段。
 
 .. _dictGetHashTableUsed: beta-1-macros.rst#dictGetHashTableUsed-macro
 .. _dictGetIterator: #dictGetIterator-func
@@ -1619,3 +1624,5 @@ server.bgsaveinprogress 置为 1 并返回 REDIS_OK 即 0。
 .. _dictGetEntryVal: beta-1-macros.rst#dictGetEntryKey-macro
 .. _sdslen: #sdslen-func
 .. _dictReleaseIterator: #dictReleaseIterator-func
+
+

@@ -77,19 +77,19 @@ Constants (47):
 	☐ REDIS_CONFIGLINE_MAX
 	✔ REDIS_DEBUG @done(21-10-25 22:46)
 	☐ REDIS_DEFAULT_DBNUM
-	☐ REDIS_EOF
-	☐ REDIS_ERR
+	✔ REDIS_EOF @done(21-11-06 22:38)
+	✔ REDIS_ERR @done(21-11-06 22:38)
 	☐ REDIS_HEAD
 	☐ REDIS_HT_MINFILL
 	☐ REDIS_HT_MINSLOTS
-	☐ REDIS_LIST
+	✔ REDIS_LIST @done(21-11-06 22:38)
 	☐ REDIS_LOADBUF_LEN
 	☐ REDIS_MAXIDLETIME
 	☐ REDIS_MAX_ARGS
 	✔ REDIS_NOTICE @done(21-10-25 22:46)
 	☐ REDIS_OK
 	☐ REDIS_QUERYBUF_LEN
-	☐ REDIS_SELECTDB
+	✔ REDIS_SELECTDB @done(21-11-06 22:37)
 	☐ REDIS_SERVERPORT
 	☐ REDIS_SET
 	✔ REDIS_STRING @done(21-10-20 21:40)
@@ -281,7 +281,7 @@ Functions (188):
 	☐ rpopCommand
 	☐ rpushCommand
 	☐ saveCommand
-	☐ saveDb
+	✔ saveDb @done(21-11-06 22:38)
 	✔ saveDbBackground @done(21-11-03 22:39)
 	☐ sdsavail
 	☐ sdscat
@@ -435,7 +435,7 @@ Function Prototypes (111):
 	☐ rpopCommand
 	☐ rpushCommand
 	☐ saveCommand
-	☐ saveDbBackground
+	✔ saveDbBackground @done(21-11-06 22:38)
 	☐ sdsavail
 	☐ sdscat
 	☐ sdscatlen
