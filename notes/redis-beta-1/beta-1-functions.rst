@@ -1625,4 +1625,27 @@ server.bgsaveinprogress 置为 1 并返回 REDIS_OK 即 0。
 .. _sdslen: #sdslen-func
 .. _dictReleaseIterator: #dictReleaseIterator-func
 
+.. _`dictGetIterator-func`:
+.. `dictGetIterator-func`
+
+41 dictGetIterator 函数
+===============================================================================
+
+.. code-block:: C 
+
+    dictIterator *dictGetIterator(dict *ht)
+    {
+        dictIterator *iter = _dictAlloc(sizeof(*iter));
+
+        iter->ht = ht;
+        iter->index = -1;
+        iter->entry = NULL;
+        iter->nextEntry = NULL;
+        return iter;
+    }
+
+生成一个哈希表迭代器。
+
+首先分配这个迭代器的内存， 然后初始化迭代器内部各个字段的值， index 为 -1 说明还没开始\
+迭代， 而且当前 entry 和 nextEntry 都是 NULL。 最终返回这个迭代器
 

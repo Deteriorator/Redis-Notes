@@ -6,7 +6,7 @@ Structures (22):
 	✔ aeTimeEvent @done(21-10-18 21:56)
 	✔ dict @done(21-10-17 15:56)
 	✔ dictEntry @done(21-10-17 15:47)
-	☐ dictIterator
+	✔ dictIterator @done(21-11-06 22:45)
 	✔ dictType @done(21-10-17 15:56)
 	✔ list @done(21-10-17 16:14)
 	✔ listIter @done(21-10-31 22:45)
@@ -33,7 +33,7 @@ Type Definitions (18):
 	✔ aeTimeProc @done(21-10-18 22:00)
 	✔ dict @done(21-10-18 22:00)
 	✔ dictEntry @done(21-10-18 22:00)
-	☐ dictIterator
+	✔ dictIterator @done(21-11-06 22:45)
 	✔ dictType @done(21-10-18 22:00)
 	✔ list @done(21-10-18 22:00)
 	✔ listIter @done(21-10-31 22:45)
@@ -178,7 +178,7 @@ Functions (188):
 	☐ _dictFree
 	☐ dictGenericDelete
 	✔ dictGenHashFunction @done(21-10-31 22:28)
-	☐ dictGetIterator
+	✔ dictGetIterator @done(21-11-06 22:49)
 	☐ dictGetRandomKey
 	☐ dictIdentityHashFunction
 	✔ _dictInit @done(21-10-27 21:39)
@@ -381,7 +381,7 @@ Function Prototypes (111):
 	☐ _dictExpandIfNeeded
 	☐ dictFind
 	✔ dictGenHashFunction @done(21-10-31 22:28)
-	☐ dictGetIterator
+	✔ dictGetIterator @done(21-11-06 22:49)
 	☐ dictGetRandomKey
 	✔ _dictInit @done(21-10-27 21:39)
 	☐ _dictKeyIndex

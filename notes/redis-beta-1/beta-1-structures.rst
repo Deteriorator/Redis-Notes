@@ -355,3 +355,24 @@ listIter 结构体拥有 3 个字段：
 - prev: 下一个链表节点
 - direction: 查询方向
 
+.. _`dictIterator-struct`:
+.. `dictIterator-struct`
+
+16 dictIterator 结构体
+===============================================================================
+
+.. code-block:: c 
+
+    typedef struct dictIterator {
+        dict *ht;
+        int index;
+        dictEntry *entry, *nextEntry;
+    } dictIterator;
+
+dictIterator 结构体包含了 4 个字段：
+
+- ht: 当前哈希表
+- index: 索引值
+- entry: 此次迭代的哈希表 Entry 
+- nextEntry: 下一次迭代的哈希表 Entry 
+
