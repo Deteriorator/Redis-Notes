@@ -1644,8 +1644,50 @@ server.bgsaveinprogress 置为 1 并返回 REDIS_OK 即 0。
         return iter;
     }
 
-生成一个哈希表迭代器。
+生成一个哈希表迭代器， 结构体是 dictIterator_。
+
+.. _dictIterator: beta-1-structures.rst#dictIterator-struct
 
 首先分配这个迭代器的内存， 然后初始化迭代器内部各个字段的值， index 为 -1 说明还没开始\
 迭代， 而且当前 entry 和 nextEntry 都是 NULL。 最终返回这个迭代器
+
+.. _`dictNext-func`:
+.. `dictNext-func`
+
+42 dictNext 函数
+===============================================================================
+
+.. code-block:: C 
+
+    dictEntry *dictNext(dictIterator *iter)
+    {
+        while (1) {
+            if (iter->entry == NULL) {
+                iter->index++;
+                if (iter->index >=
+                        (signed)iter->ht->size) break;
+                iter->entry = iter->ht->table[iter->index];
+            } else {
+                iter->entry = iter->nextEntry;
+            }
+            if (iter->entry) {
+                /* We need to save the 'next' here, the iterator user
+                * may delete the entry we are returning. */
+                iter->nextEntry = iter->entry->next;
+                return iter->entry;
+            }
+        }
+        return NULL;
+    }
+
+开始循环判断哈希表迭代器， 获取下一个 entry。
+
+首先判断当前 entry 是否为 NULL：
+
+- 若是， 说明这个迭代器是进行的初次迭代， 将 index 自增加 1； 如果 index 大于等于哈希\
+  表的大小 size， 直接 break 循环， 并返回 NULL； 正常情况下将 entry 置为哈希表的 \
+  index 索引代表的 entry； 若 entry 不是 NULL， 说明不是初次迭代， 直接将 entry 置\
+  为 nextEntry。
+- 当 entry 为真时， 将 nextEntry 置为 iter->entry->next， 即 next next， 并返回修\
+  改后的 iter->entry。 
 

@@ -184,8 +184,8 @@ Functions (188):
 	✔ _dictInit @done(21-10-27 21:39)
 	☐ dictIntHashFunction
 	☐ _dictKeyIndex
-	☐ dictNext
-	☐ _dictNextPower
+	✔ dictNext @done(21-11-06 23:02)
+	✔ _dictNextPower @done(21-11-06 23:03)
 	✔ _dictPanic @done(21-10-26 23:32)
 	☐ dictPrintStats
 	☐ dictRelease
@@ -385,7 +385,7 @@ Function Prototypes (111):
 	☐ dictGetRandomKey
 	✔ _dictInit @done(21-10-27 21:39)
 	☐ _dictKeyIndex
-	☐ dictNext
+	✔ dictNext @done(21-11-06 23:02)
 	✔ _dictNextPower @done(21-10-31 22:19)
 	☐ dictPrintStats
 	☐ dictRelease
