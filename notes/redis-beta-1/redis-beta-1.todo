@@ -323,8 +323,8 @@ Macros (26):
 	☐ dictCompareHashKeys
 	☐ dictFreeEntryKey
 	☐ dictFreeEntryVal
-	☐ dictGetEntryKey
-	☐ dictGetEntryVal
+	✔ dictGetEntryKey @done(21-11-06 23:09)
+	✔ dictGetEntryVal @done(21-11-06 23:09)
 	✔ dictGetHashTableSize @done(21-10-27 22:55)
 	✔ dictGetHashTableUsed @done(21-10-27 22:55)
 	✔ dictHashKey @done(21-10-31 22:19)

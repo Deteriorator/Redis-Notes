@@ -89,7 +89,7 @@ listNode_。
 .. _`dictHashKey-macro`:
 .. dictHashKey-macro
 
-06 dictHashKey 宏定义
+07 dictHashKey 宏定义
 ===============================================================================
 
 .. code-block:: c
@@ -97,3 +97,32 @@ listNode_。
     #define dictHashKey(ht, key) (ht)->type->hashFunction(key)
 
 用于获取不同类型的 hashFunction 函数指针。
+
+.. _`dictGetEntryKey-macro`:
+.. dictGetEntryKey-macro
+
+08 dictGetEntryKey 宏定义
+===============================================================================
+
+.. code-block:: c
+
+    #define dictGetEntryKey(he) ((he)->key)
+
+用于获取哈希表条目的 key， he 就是 hashtable entry 的 缩写， 是一个 dictEntry_ 结构\
+体， 直接获取其 key 字段
+
+.. _dictEntry: beta-1-structures.rst#dictEntry-struct
+
+.. _`dictGetEntryVal-macro`:
+.. dictGetEntryVal-macro
+
+09 dictGetEntryVal 宏定义
+===============================================================================
+
+.. code-block:: c
+
+    #define dictGetEntryVal(he) ((he)->val)
+
+用于获取哈希表条目的 val， he 就是 hashtable entry 的 缩写， 是一个 dictEntry_ 结构\
+体， 直接获取其 val 字段
+
