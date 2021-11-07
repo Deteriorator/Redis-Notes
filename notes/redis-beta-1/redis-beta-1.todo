@@ -161,7 +161,7 @@ Functions (188):
 	☐ createClient
 	☐ createListObject
 	✔ createObject @done(21-10-20 21:31)
-	☐ createSharedObjects
+	✔ createSharedObjects @done(21-11-07 23:12)
 	☐ dbsizeCommand
 	☐ decrCommand
 	☐ decrRefCount
@@ -349,7 +349,7 @@ Macros (26):
 Function Prototypes (111):
 	☐ addReply
 	☐ addReplySds
-	☐ aeCreateEventLoop
+	✔ aeCreateEventLoop @done(21-11-07 23:13)
 	☐ aeCreateFileEvent
 	✔ aeCreateTimeEvent @done(21-10-27 22:31)
 	☐ aeDeleteEventLoop
@@ -406,14 +406,14 @@ Function Prototypes (111):
 	☐ lindexCommand
 	☐ listAddNodeHead
 	☐ listAddNodeTail
-	☐ listCreate
-	☐ listDelNode
+	✔ listCreate @done(21-11-07 23:09)
+	✔ listDelNode @done(21-11-07 23:10)
 	☐ listDup
 	✔ listGetIterator @done(21-10-31 23:07)
 	☐ listIndex
 	✔ listNextElement @done(21-11-01 22:07)
 	✔ listRelease @done(21-11-02 23:32)
-	☐ listReleaseIterator
+	✔ listReleaseIterator @done(21-11-07 23:28)
 	✔ listSearchKey @done(21-11-03 22:03)
 	☐ llenCommand
 	☐ loadDb

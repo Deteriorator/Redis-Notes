@@ -238,4 +238,7 @@ lastsave 字段被设置为当前的时间戳， 因为 ``time(NULL)`` 计算的
 是 1000 毫秒， 定时处理函数是 serverCron_ 函数， 另外两个参数均为 NULL， 不必在意。 \
 也就是说 serverCron_ 函数每隔 1000 毫秒执行一次。 
 
-.. _aeCreateTimeEvent:
+.. _aeCreateTimeEvent: beta-1-functions.rst#aeCreateTimeEvent-func
+
+如此， initServer 执行完毕， 创建了定时器， 每秒钟执行一次 serverCron_ 函数。 
+
