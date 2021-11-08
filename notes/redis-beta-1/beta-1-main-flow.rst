@@ -242,3 +242,132 @@ lastsave 字段被设置为当前的时间戳， 因为 ``time(NULL)`` 计算的
 
 如此， initServer 执行完毕， 创建了定时器， 每秒钟执行一次 serverCron_ 函数。 
 
+.. _`loadServerConfig-func`:
+.. `loadServerConfig-func`
+
+2.4 loadServerConfig 函数
+===============================================================================
+
+loadServerConfig 函数是正常情况下必须执行的， 也就是从 conf 文件中加载 redis 的配置， \
+非正常情况就是 else 语句中的 redis 执行参数 argc 大于 2， 它会打印正确的用法并退出执\
+行。 
+
+还是看正常情况， 也就是 argc 等于 2 的情况， 执行 ResetServerSaveParams_ 函数， 将 \
+server 中的 saveparams 字段置为 NULL， saveparamslen 字段被置为 0。 然后执行 \
+loadServerConfig 函数， 将 main 函数的第二个参数 ``argv[1]`` 作为 redis 配置文件作\
+为参数， 解析其内容。
+
+.. code-block:: c
+
+    static void loadServerConfig(char *filename) {
+        // 1
+        FILE *fp = fopen(filename,"r");
+        char buf[REDIS_CONFIGLINE_MAX+1], *err = NULL;
+        int linenum = 0;
+        sds line = NULL;
+        
+        // 2
+        if (!fp) {
+            redisLog(REDIS_WARNING,"Fatal error, can't open config file");
+            exit(1);
+        }
+
+        // 3
+        while(fgets(buf,REDIS_CONFIGLINE_MAX+1,fp) != NULL) {
+
+            // 1
+            sds *argv;
+            int argc;
+
+            linenum++;
+            line = sdsnew(buf);
+            line = sdstrim(line," \t\r\n");
+
+            // 2
+            /* Skip comments and blank lines*/
+            if (line[0] == '#' || line[0] == '\0') {
+                sdsfree(line);
+                continue;
+            }
+
+            // 3
+            /* Split into arguments */
+            argv = sdssplitlen(line,sdslen(line)," ",1,&argc);
+
+            // 4
+            /* Execute config directives */
+            if (!strcmp(argv[0],"timeout") && argc == 2) {
+                server.maxidletime = atoi(argv[1]);
+                if (server.maxidletime < 1) {
+                    err = "Invalid timeout value"; goto loaderr;
+                }
+            } else if (!strcmp(argv[0],"save") && argc == 3) {
+            // 5
+                int seconds = atoi(argv[1]);
+                int changes = atoi(argv[2]);
+                if (seconds < 1 || changes < 0) {
+                    err = "Invalid save parameters"; goto loaderr;
+                }
+                appendServerSaveParams(seconds,changes);
+            } else if (!strcmp(argv[0],"dir") && argc == 2) {
+            // 6
+                if (chdir(argv[1]) == -1) {
+                    redisLog(REDIS_WARNING,"Can't chdir to '%s': %s",
+                        argv[1], strerror(errno));
+                    exit(1);
+                }
+            } else if (!strcmp(argv[0],"loglevel") && argc == 2) {
+            // 7    
+                if (!strcmp(argv[1],"debug")) server.verbosity = REDIS_DEBUG;
+                else if (!strcmp(argv[1],"notice")) server.verbosity = REDIS_NOTICE;
+                else if (!strcmp(argv[1],"warning")) server.verbosity = REDIS_WARNING;
+                else {
+                    err = "Invalid log level. Must be one of debug, notice, warning";
+                    goto loaderr;
+                }
+            } else if (!strcmp(argv[0],"logfile") && argc == 2) {
+            // 8    
+                FILE *fp;
+
+                server.logfile = strdup(argv[1]);
+                if (!strcmp(server.logfile,"stdout")) server.logfile = NULL;
+                if (server.logfile) {
+                    /* Test if we are able to open the file. The server will not
+                    * be able to abort just for this problem later... */
+                    fp = fopen(server.logfile,"a");
+                    if (fp == NULL) {
+                        err = sdscatprintf(sdsempty(),
+                            "Can't open the log file: %s", strerror(errno));
+                        goto loaderr;
+                    }
+                    fclose(fp);
+                }
+            } else if (!strcmp(argv[0],"databases") && argc == 2) {
+            // 9    
+                server.dbnum = atoi(argv[1]);
+                if (server.dbnum < 1) {
+                    err = "Invalid number of databases"; goto loaderr;
+                }
+            } else {
+            // 10    
+                err = "Bad directive or wrong number of arguments"; goto loaderr;
+            }
+            // 11
+            sdsfree(line);
+        }
+        // 4
+        fclose(fp);
+        return;
+
+        // 5
+    loaderr:
+        fprintf(stderr, "\n*** FATAL CONFIG FILE ERROR ***\n");
+        fprintf(stderr, "Reading the configuration file, at line %d\n", linenum);
+        fprintf(stderr, ">>> '%s'\n", line);
+        fprintf(stderr, "%s\n", err);
+        exit(1);
+    }
+
+这个函数很长， 我将它按照结构大致分成了几部分， 后面会按照这个结构进行解析。
+
+
