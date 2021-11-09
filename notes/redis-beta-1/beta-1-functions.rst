@@ -1779,7 +1779,72 @@ strchr 函数就返回 NULL， 从而推出 while 循环。
 字节， 就是将去除首尾特定字符后的字符串设置为 sds 字符串， 然后重新设置 sdshdr 中的值\
 ， 最终返回去除字符后的字符串。
 
+.. _`sdssplitlen-func`:
+.. `sdssplitlen-func`
 
+47 sdssplitlen 函数
+===============================================================================
 
+.. code-block:: C 
 
+    sds *sdssplitlen(char *s, int len, char *sep, int seplen, int *count) {
+        int elements = 0, slots = 5, start = 0, j;
+
+        sds *tokens = malloc(sizeof(sds)*slots);
+    #ifdef SDS_ABORT_ON_OOM
+        if (tokens == NULL) sdsOomAbort();
+    #endif
+        if (seplen < 1 || len < 0 || tokens == NULL) return NULL;
+        for (j = 0; j < (len-(seplen-1)); j++) {
+            /* make sure there is room for the next element and the final one */
+            if (slots < elements+2) {
+                slots *= 2;
+                sds *newtokens = realloc(tokens,sizeof(sds)*slots);
+                if (newtokens == NULL) {
+    #ifdef SDS_ABORT_ON_OOM
+                    sdsOomAbort();
+    #else
+                    goto cleanup;
+    #endif
+                }
+                tokens = newtokens;
+            }
+            /* search the separator */
+            if ((seplen == 1 && *(s+j) == sep[0]) || (memcmp(s+j,sep,seplen) == 0)) {
+                tokens[elements] = sdsnewlen(s+start,j-start);
+                if (tokens[elements] == NULL) {
+    #ifdef SDS_ABORT_ON_OOM
+                    sdsOomAbort();
+    #else
+                    goto cleanup;
+    #endif
+                }
+                elements++;
+                start = j+seplen;
+                j = j+seplen-1; /* skip the separator */
+            }
+        }
+        /* Add the final element. We are sure there is room in the tokens array. */
+        tokens[elements] = sdsnewlen(s+start,len-start);
+        if (tokens[elements] == NULL) {
+    #ifdef SDS_ABORT_ON_OOM
+                    sdsOomAbort();
+    #else
+                    goto cleanup;
+    #endif
+        }
+        elements++;
+        *count = elements;
+        return tokens;
+
+    #ifndef SDS_ABORT_ON_OOM
+    cleanup:
+        {
+            int i;
+            for (i = 0; i < elements; i++) sdsfree(tokens[i]);
+            free(tokens);
+            return NULL;
+        }
+    #endif
+    }
 
