@@ -1739,3 +1739,47 @@ len 字段。
 
 直接使用 free 函数释放掉给定的指针。
 
+.. _`sdstrim-func`:
+.. `sdstrim-func`
+
+46 sdstrim 函数
+===============================================================================
+
+.. code-block:: C 
+
+    sds sdstrim(sds s, const char *cset) {
+        struct sdshdr *sh = (void*) (s-(sizeof(struct sdshdr)));
+        char *start, *end, *sp, *ep;
+        size_t len;
+
+        sp = start = s;
+        ep = end = s+sdslen(s)-1;
+        while(sp <= end && strchr(cset, *sp)) sp++;
+        while(ep > start && strchr(cset, *ep)) ep--;
+        len = (sp > ep) ? 0 : ((ep-sp)+1);
+        if (sh->buf != sp) memmove(sh->buf, sp, len);
+        sh->buf[len] = '\0';
+        sh->free = sh->free+(sh->len-len);
+        sh->len = len;
+        return s;
+    }
+
+从 sds 字符串首尾去除特定字符的函数。
+
+sp 指的是字符串开始位置， 可以看做是 start point， ep 是字符串结束位置， 可以看做 \
+end point， 然后循环判断 sp 指向的字符在 cset 中第一次出现的指针， strchr 函数就是这\
+个意思， 执行成功返回指针， 失败返回 NULL； 直到 sp > end 或者 strchr 为 NULL。 下面\
+的一个步骤反着进行， 从最后一个字符开始判断。 一旦首字符或尾字符不是 cset 中的， \
+strchr 函数就返回 NULL， 从而推出 while 循环。
+
+然后重新设置字符串长度， 当 sp > ep 时， 说明字符串都需要去除， len 就为 0 否则为 \
+((ep-sp)+1)， 这是去除特定字符后的长度。 
+
+当 sh->buf 即字符串与 sp 不相等时， 使用 memmove 将 sp 复制到 sh->buf， 复制 len 个\
+字节， 就是将去除首尾特定字符后的字符串设置为 sds 字符串， 然后重新设置 sdshdr 中的值\
+， 最终返回去除字符后的字符串。
+
+
+
+
+

@@ -306,7 +306,7 @@ Functions (188):
 	☐ sdssplitlen
 	☐ sdstolower
 	☐ sdstoupper
-	☐ sdstrim
+	✔ sdstrim @done(21-11-09 22:43)
 	☐ sdsupdatelen
 	☐ selectCommand
 	☐ selectDb
@@ -452,7 +452,7 @@ Function Prototypes (111):
 	☐ sdsrange
 	☐ sdssplitlen
 	☐ sdstolower
-	☐ sdstrim
+	✔ sdstrim @done(21-11-09 22:43)
 	☐ sdsupdatelen
 	☐ selectCommand
 	☐ setCommand

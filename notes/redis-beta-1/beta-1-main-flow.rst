@@ -259,6 +259,8 @@ loadServerConfig 函数， 将 main 函数的第二个参数 ``argv[1]`` 作为 
 
 .. code-block:: c
 
+    #define REDIS_CONFIGLINE_MAX    1024
+
     static void loadServerConfig(char *filename) {
         // 1
         FILE *fp = fopen(filename,"r");
@@ -370,4 +372,16 @@ loadServerConfig 函数， 将 main 函数的第二个参数 ``argv[1]`` 作为 
 
 这个函数很长， 我将它按照结构大致分成了几部分， 后面会按照这个结构进行解析。
 
+- STEP-1: 将加载的文件以文件流 fp 的方式打开， 并初始化 4 个局部变量。
+- STEP-2: 当 fp 为空时， 说明加载文件失败， 记录日志并退出程序
+- STEP-3: 然后从 fp 逐行读取配置， fgets 函数的意思是从 fp 一次最多读取 \
+  REDIS_CONFIGLINE_MAX+1 的内容， 并存储到 buf 中， 读取到 EOF 或换行符时停止。 执\
+  行成功返回 buf， 失败返回 NULL。
+    - STEP-1: 开始逐行读取后， 现将 linenum 自增加一， 然后对读取的内容使用 sdsnew_ \
+      函数新建一个动态字符串 line， 并使用 sdstrim_ 函数去除 " \t\r\n" 字符。 
 
+
+
+
+.. _sdsnew: beta-1-functions.rst#sdsnew-func
+.. _sdstrim: beta-1-functions.rst#sdstrim-func
