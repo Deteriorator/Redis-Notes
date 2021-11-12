@@ -1788,6 +1788,7 @@ strchr 函数就返回 NULL， 从而推出 while 循环。
 .. code-block:: C 
 
     sds *sdssplitlen(char *s, int len, char *sep, int seplen, int *count) {
+        // 1
         int elements = 0, slots = 5, start = 0, j;
 
         sds *tokens = malloc(sizeof(sds)*slots);
@@ -1797,6 +1798,7 @@ strchr 函数就返回 NULL， 从而推出 while 循环。
         if (seplen < 1 || len < 0 || tokens == NULL) return NULL;
         for (j = 0; j < (len-(seplen-1)); j++) {
             /* make sure there is room for the next element and the final one */
+            // 2
             if (slots < elements+2) {
                 slots *= 2;
                 sds *newtokens = realloc(tokens,sizeof(sds)*slots);
@@ -1809,6 +1811,7 @@ strchr 函数就返回 NULL， 从而推出 while 循环。
                 }
                 tokens = newtokens;
             }
+            // 3
             /* search the separator */
             if ((seplen == 1 && *(s+j) == sep[0]) || (memcmp(s+j,sep,seplen) == 0)) {
                 tokens[elements] = sdsnewlen(s+start,j-start);
@@ -1824,6 +1827,8 @@ strchr 函数就返回 NULL， 从而推出 while 循环。
                 j = j+seplen-1; /* skip the separator */
             }
         }
+
+        // 4
         /* Add the final element. We are sure there is room in the tokens array. */
         tokens[elements] = sdsnewlen(s+start,len-start);
         if (tokens[elements] == NULL) {
@@ -1837,6 +1842,7 @@ strchr 函数就返回 NULL， 从而推出 while 循环。
         *count = elements;
         return tokens;
 
+    // 5
     #ifndef SDS_ABORT_ON_OOM
     cleanup:
         {
@@ -1848,3 +1854,13 @@ strchr 函数就返回 NULL， 从而推出 while 循环。
     #endif
     }
 
+该函数用于拆分字符串， 分割符可以是一个字符， 也可以是多个字符。
+
+- STEP-1: 初始化局部变量 elements 为 0； slots 为 5， slots 应该是用于存放拆分后的\
+  字符串； start 为 0； 以及 j。 然后分配 slots 占用内存， 分配失败就执行 \
+  sdsOomAbort_ 函数； 然后判断分割符的长度， 被分割字符串的长度以及 slots 内存释放分\
+  配成功， 如果有任意一个为真， 都将返回 NULL。
+- STEP-2: 在被分割字符串减去分割符长度范围内进行循环； 当 ``slots < elements+2`` 时\
+  说明存储分割后的字符串的空间不足， slots 需要进行扩展， 在代码中直接扩大一倍， 然后\
+  使用 realloc 函数重新分配内存。 如果内存分配失败， 将会执行 cleanup 代码段。
+- STEP-3: 
