@@ -1874,4 +1874,60 @@ strchr 函数就返回 NULL， 从而推出 while 循环。
 
 .. _sdsOomAbort: #sdsOomAbort-func
 
+.. _`sdsempty-func`:
+.. `sdsempty-func`
+
+48 sdsempty 函数
+===============================================================================
+
+.. code-block:: C 
+
+    sds sdsempty(void) {
+        return sdsnewlen("",0);
+    }
+
+该函数使用 sdsnewlen_ 函数新建了一个长度为 0 的空字符串。
+
+.. _sdsnewlen: #sdsnewlen-func
+
+.. _`sdscatprintf-func`:
+.. `sdscatprintf-func`
+
+49 sdscatprintf 函数
+===============================================================================
+
+.. code-block:: C 
+
+    sds sdscatprintf(sds s, const char *fmt, ...) {
+        va_list ap;
+        char *buf, *t;
+        size_t buflen = 32;
+
+        va_start(ap, fmt);
+        while(1) {
+            buf = malloc(buflen);
+    #ifdef SDS_ABORT_ON_OOM
+            if (buf == NULL) sdsOomAbort();
+    #else
+            if (buf == NULL) return NULL;
+    #endif
+            buf[buflen-2] = '\0';
+            vsnprintf(buf, buflen, fmt, ap);
+            if (buf[buflen-2] != '\0') {
+                free(buf);
+                buflen *= 2;
+                continue;
+            }
+            break;
+        }
+        va_end(ap);
+        t = sdscat(s, buf);
+        free(buf);
+        return t;
+    }
+
+将字符串格式化后再与字符串 s 进行拼接， 最后返回拼接后的字符串。 拼接函数使用的是 \
+sdscat_ 
+
+.. _sdscat: #sdscat-func
 

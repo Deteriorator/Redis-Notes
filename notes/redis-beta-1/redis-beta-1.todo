@@ -286,7 +286,7 @@ Functions (188):
 	☐ sdsavail
 	☐ sdscat
 	☐ sdscatlen
-	☐ sdscatprintf
+	✔ sdscatprintf @done(21-11-13 21:52)
 	☐ sdscmp
 	☐ sdscpy
 	☐ sdscpylen
@@ -295,7 +295,7 @@ Functions (188):
 	☐ sdsDictKeyDestructor
 	☐ sdsDictValDestructor
 	☐ sdsdup
-	☐ sdsempty
+	✔ sdsempty @done(21-11-13 21:46)
 	✔ sdsfree @done(21-11-01 23:13)
 	✔ sdslen @done(21-11-06 23:16)
 	☐ sdsMakeRoomFor
@@ -439,12 +439,12 @@ Function Prototypes (111):
 	☐ sdsavail
 	☐ sdscat
 	☐ sdscatlen
-	☐ sdscatprintf
+	✔ sdscatprintf @done(21-11-13 21:52)
 	☐ sdscmp
 	☐ sdscpy
 	☐ sdscpylen
 	☐ sdsdup
-	☐ sdsempty
+	✔ sdsempty @done(21-11-13 21:46)
 	✔ sdsfree @done(21-11-01 23:13)
 	✔ sdslen @done(21-11-06 23:16)
 	✔ sdsnew @done(21-10-22 22:50)

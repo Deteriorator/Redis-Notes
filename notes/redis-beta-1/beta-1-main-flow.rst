@@ -383,7 +383,19 @@ loadServerConfig 函数， 将 main 函数的第二个参数 ``argv[1]`` 作为 
     - STEP-2: 如果首字符是 # 或 ``\0``， 说明是注释掉的行或空行， 直接使用 sdsfree_ \
       函数释放掉这一行， 并执行下一轮循环。
     - STEP-3: 正常情况下， 开始将你 line 拆分成参数形式。 使用 sdssplitlen_ 函数进\
-      行拆分。
+      行拆分。 分割符是空格， 长度是 1， 分割后的数量存入 argc 中。 
+    - STEP-4: 当分割后的字符串数组第一个字符串等于 timeout 且 argc 等于 2， 将 \
+      server 的 maxidletime 字段置为第二个字符串； 即 redis 的配置文件是 "配置 值" \
+      格式， 配置名称与值之间使用空格进行分割。
+    - STEP-5: 当配置名称是 save 且 argc 是 3 时， 执行 appendServerSaveParams_ 函\
+      数进行定时器注册。 在 seconds 时间内进行 changes 次修改后将执行数据备份操作。
+    - STEP-6: 当配置名称是 dir 且 argc 为 2 时， 进行切换工作目录操作， 如果切换失败\
+      记录日志并中止程序执行。
+    - STEP-7: 当配置名称是 loglevel 且 argc 为 2 时， 设置 server 的 verbosity 字\
+      段， 也就是 redis 日志的级别即信息复杂度。 值分别是 debug， notice 和 warning
+    - STEP-8: 当配置名称是 logfile 且 argc 为 2 时， 将 server 的 logfile 字段置为\
+      logfile 配置的值， 如果 logfile 字段是 stdout， 就清空 logfile； 否则打开这个\
+      文件， 如果打开失败， 
 
 
 
