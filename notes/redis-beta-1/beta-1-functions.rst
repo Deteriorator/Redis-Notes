@@ -1931,3 +1931,64 @@ sdscat_
 
 .. _sdscat: #sdscat-func
 
+.. _`sdscat-func`:
+.. `sdscat-func`
+
+50 sdscat 函数
+===============================================================================
+
+.. code-block:: C 
+
+    sds sdscat(sds s, char *t) {
+        return sdscatlen(s, t, strlen(t));
+    }
+
+该函数通过调用 sdscatlen_ 函数进行字符串连接操作。 需要连接的长度是字符串 t 的长度。
+
+.. _sdscatlen: #sdscatlen-func
+
+.. _`sdscatlen-func`:
+.. `sdscatlen-func`
+
+51 sdscatlen 函数
+===============================================================================
+
+.. code-block:: C 
+
+    sds sdscatlen(sds s, void *t, size_t len) {
+        struct sdshdr *sh;
+        size_t curlen = sdslen(s);
+
+        s = sdsMakeRoomFor(s,len);
+        if (s == NULL) return NULL;
+        sh = (void*) (s-(sizeof(struct sdshdr)));
+        memcpy(s+curlen, t, len);
+        sh->len = curlen+len;
+        sh->free = sh->free-len;
+        s[curlen+len] = '\0';
+        return s;
+    }
+
+当前字符串的长度使用 sdslen_ 函数进行获取， 之后使用 sdsMakeRoomFor_ 函数进行字符串 \
+s 的拓展， 如果拓展失败返回 NULL。
+
+然后将字符串 t 追加到字符串 s 的尾部， 同时进行 sdshdr 字段的相关变更， 最终返回拼接\
+后的字符串 s
+
+.. _sdsMakeRoomFor: #sdsMakeRoomFor-func
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
