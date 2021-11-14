@@ -377,7 +377,6 @@ loadServerConfig 函数， 将 main 函数的第二个参数 ``argv[1]`` 作为 
 - STEP-3: 然后从 fp 逐行读取配置， fgets 函数的意思是从 fp 一次最多读取 \
   REDIS_CONFIGLINE_MAX+1 的内容， 并存储到 buf 中， 读取到 EOF 或换行符时停止。 执\
   行成功返回 buf， 失败返回 NULL
-  
     - STEP-1: 开始逐行读取后， 现将 linenum 自增加一， 然后对读取的内容使用 sdsnew_ \
       函数新建一个动态字符串 line， 并使用 sdstrim_ 函数去除 line 首尾的 \
       " \\t\\r\\n" 字符。 
