@@ -1585,7 +1585,7 @@ server.bgsaveinprogress 置为 1 并返回 REDIS_OK 即 0。
   REDIS_ERR
 - STEP-3: 将 REDIS0000 字符串写入到文件流， 如果写入错误， 直接执行 werr 代码段， 代\
   码段的操是关闭文件流， 记录日志， 如果已经生成 di 了就释放了， 最终返回 REDIS_ERR \
-  即 -1
+  即 -1。
 - STEP-4: 从这一步开始迭代写入每个 db。
     - STEP-1: 局部变量 dict 用于存放每轮循环中的哈希表， 然后 dictGetHashTableUsed_ \
       宏用于查看哈希表已经使用的数量， 如为 0 说明哈希表为空则执行 Continue 跳过此次\
