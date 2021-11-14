@@ -395,10 +395,18 @@ loadServerConfig 函数， 将 main 函数的第二个参数 ``argv[1]`` 作为 
       段， 也就是 redis 日志的级别即信息复杂度。 值分别是 debug， notice 和 warning
     - STEP-8: 当配置名称是 logfile 且 argc 为 2 时， 将 server 的 logfile 字段置为\
       logfile 配置的值， 如果 logfile 字段是 stdout， 就清空 logfile； 否则打开这个\
-      文件， 如果打开失败， 
+      文件， 如果打开失败， 打印错误信息并执行错误代码段， 最后关闭文件流。
+    - STEP-9: 当配置名称是 databases 且 argc 为 2 时， 将 server 的 dbnum 置为 \
+      databases 的值。 如有问题将执行错误代码段。
+    - STEP-10: 其他情况将执行错误代码段， 认为是配置错误
+    - STEP-11: 一行配置加载完毕后使用 sdsfree_ 函数释放掉。
 
-
-
+- STEP-4: 完整的配置加载完成后， 关闭配置文件流， 返回空
+- STEP-5: 错误代码段， 打印错误行号信息并中止程序执行。
 
 .. _sdsnew: beta-1-functions.rst#sdsnew-func
 .. _sdstrim: beta-1-functions.rst#sdstrim-func
+.. _sdsfree: beta-1-functions.rst#sdsfree-func
+.. _sdssplitlen: beta-1-functions.rst#sdssplitlen-func
+.. _appendServerSaveParams: beta-1-functions.rst#appendServerSaveParams-func
+
