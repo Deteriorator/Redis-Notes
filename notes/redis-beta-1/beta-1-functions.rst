@@ -1977,14 +1977,58 @@ s 的拓展， 如果拓展失败返回 NULL。
 
 .. _sdsMakeRoomFor: #sdsMakeRoomFor-func
 
+.. _`sdsMakeRoomFor-func`:
+.. `sdsMakeRoomFor-func`
 
+52 sdsMakeRoomFor 函数
+===============================================================================
 
+.. code-block:: C 
 
+    static sds sdsMakeRoomFor(sds s, size_t addlen) {
+        struct sdshdr *sh, *newsh;
+        size_t free = sdsavail(s);
+        size_t len, newlen;
 
+        if (free >= addlen) return s;
+        len = sdslen(s);
+        sh = (void*) (s-(sizeof(struct sdshdr)));
+        newlen = (len+addlen)*2;
+        newsh = realloc(sh, sizeof(struct sdshdr)+newlen+1);
+    #ifdef SDS_ABORT_ON_OOM
+        if (newsh == NULL) sdsOomAbort();
+    #else
+        if (newsh == NULL) return NULL;
+    #endif
 
+        newsh->free = newlen - len;
+        return newsh->buf;
+    }
 
+该函数用于拓展字符串 s 的内存空间。
 
+首先创建两个 sdshdr， 字符串 s 的可用空间使用 sdsavail_ 函数进行获取。 当可用空间大于\
+或等于需要增加的长度时， 直接返回字符串 s 不做任何操作。
 
+.. _sdsavail: #sdsavail-func
+
+否则将当前的长度加上需要增加的长度的和乘以 2 作为新的字符串的长度， 之后重新分配 sh 代\
+表的内存， 随后修改新的可用空间， 最后返回拓展后的字符串。
+
+.. _`sdsavail-func`:
+.. `sdsavail-func`
+
+53 sdsavail 函数
+===============================================================================
+
+.. code-block:: C 
+
+    size_t sdsavail(sds s) {
+        struct sdshdr *sh = (void*) (s-(sizeof(struct sdshdr)));
+        return sh->free;
+    }
+
+该函数用于获取当前字符串 s 可用的空间。
 
 
 

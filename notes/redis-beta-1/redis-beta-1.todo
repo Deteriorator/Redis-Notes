@@ -283,7 +283,7 @@ Functions (188):
 	☐ saveCommand
 	✔ saveDb @done(21-11-06 22:38)
 	✔ saveDbBackground @done(21-11-03 22:39)
-	☐ sdsavail
+	✔ sdsavail @done(21-11-14 22:14)
 	✔ sdscat @done(21-11-14 22:05)
 	✔ sdscatlen @done(21-11-14 22:05)
 	✔ sdscatprintf @done(21-11-13 21:52)
@@ -298,7 +298,7 @@ Functions (188):
 	✔ sdsempty @done(21-11-13 21:46)
 	✔ sdsfree @done(21-11-01 23:13)
 	✔ sdslen @done(21-11-06 23:16)
-	☐ sdsMakeRoomFor
+	✔ sdsMakeRoomFor @done(21-11-14 22:14)
 	✔ sdsnew @done(21-10-22 22:50)
 	✔ sdsnewlen @done(21-10-22 23:21)
 	✔ sdsOomAbort @done(21-10-23 23:24)
@@ -436,7 +436,7 @@ Function Prototypes (111):
 	☐ rpushCommand
 	☐ saveCommand
 	✔ saveDbBackground @done(21-11-06 22:38)
-	☐ sdsavail
+	✔ sdsavail @done(21-11-14 22:14)
 	✔ sdscat @done(21-11-14 22:05)
 	✔ sdscatlen @done(21-11-14 22:05)
 	✔ sdscatprintf @done(21-11-13 21:52)
@@ -460,23 +460,23 @@ Function Prototypes (111):
 	☐ shutdownCommand
 
 Data Members (111):
-	☐ aeEventLoop::fileEventHead
-	☐ aeEventLoop::stop
-	☐ aeEventLoop::timeEventHead
-	☐ aeEventLoop::timeEventNextId
-	☐ aeFileEvent::clientData
-	☐ aeFileEvent::fd
-	☐ aeFileEvent::fileProc
-	☐ aeFileEvent::finalizerProc
-	☐ aeFileEvent::mask
-	☐ aeFileEvent::next
-	☐ aeTimeEvent::clientData
-	☐ aeTimeEvent::finalizerProc
-	☐ aeTimeEvent::id
-	☐ aeTimeEvent::next
-	☐ aeTimeEvent::timeProc
-	☐ aeTimeEvent::when_ms
-	☐ aeTimeEvent::when_sec
+	✔ aeEventLoop::fileEventHead @done(21-11-14 22:15)
+	✔ aeEventLoop::stop @done(21-11-14 22:15)
+	✔ aeEventLoop::timeEventNextId @done(21-11-14 22:16)
+	✔ aeEventLoop::timeEventHead @done(21-11-14 22:15)
+	✔ aeFileEvent::clientData @done(21-11-14 22:16)
+	✔ aeFileEvent::fd @done(21-11-14 22:16)
+	✔ aeFileEvent::fileProc @done(21-11-14 22:16)
+	✔ aeFileEvent::finalizerProc @done(21-11-14 22:16)
+	✔ aeFileEvent::mask @done(21-11-14 22:16)
+	✔ aeFileEvent::next @done(21-11-14 22:16)
+	✔ aeTimeEvent::clientData @done(21-11-14 22:16)
+	✔ aeTimeEvent::finalizerProc @done(21-11-14 22:16)
+	✔ aeTimeEvent::id @done(21-11-14 22:16)
+	✔ aeTimeEvent::next @done(21-11-14 22:16)
+	✔ aeTimeEvent::timeProc @done(21-11-14 22:16)
+	✔ aeTimeEvent::when_ms @done(21-11-14 22:16)
+	✔ aeTimeEvent::when_sec @done(21-11-14 22:16)
 	✔ dict::privdata @done(21-10-20 21:42)
 	✔ dict::size @done(21-10-20 21:42)
 	✔ dict::sizemask @done(21-10-20 21:42)
@@ -486,25 +486,25 @@ Data Members (111):
 	✔ dictEntry::key @done(21-10-20 21:41)
 	✔ dictEntry::next @done(21-10-20 21:41)
 	✔ dictEntry::val @done(21-10-20 21:41)
-	☐ dictIterator::entry
-	☐ dictIterator::ht
-	☐ dictIterator::index
-	☐ dictIterator::nextEntry
-	☐ dictType::hashFunction
-	☐ dictType::keyCompare
-	☐ dictType::keyDestructor
-	☐ dictType::valDestructor
-	☐ list::free
-	☐ list::head
-	☐ list::len
-	☐ list::match
-	☐ list::tail
-	☐ listIter::direction
-	☐ listIter::next
-	☐ listIter::prev
-	☐ listNode::next
-	☐ listNode::prev
-	☐ listNode::value
+	✔ dictIterator::entry @done(21-11-14 22:15)
+	✔ dictIterator::ht @done(21-11-14 22:15)
+	✔ dictIterator::nextEntry @done(21-11-14 22:15)
+	✔ dictIterator::index @done(21-11-14 22:15)
+	✔ dictType::hashFunction @done(21-11-14 22:15)
+	✔ dictType::keyCompare @done(21-11-14 22:15)
+	✔ dictType::keyDestructor @done(21-11-14 22:15)
+	✔ dictType::valDestructor @done(21-11-14 22:15)
+	✔ list::free @done(21-11-14 22:15)
+	✔ list::head @done(21-11-14 22:15)
+	✔ list::len @done(21-11-14 22:15)
+	✔ list::match @done(21-11-14 22:15)
+	✔ list::tail @done(21-11-14 22:15)
+	✔ listIter::direction @done(21-11-14 22:15)
+	✔ listIter::next @done(21-11-14 22:15)
+	✔ listIter::prev @done(21-11-14 22:15)
+	✔ listNode::next @done(21-11-14 22:15)
+	✔ listNode::prev @done(21-11-14 22:15)
+	✔ listNode::value @done(21-11-14 22:15)
 	☐ picolCallFrame::parent
 	☐ picolCallFrame::vars
 	☐ picolCmd::func
@@ -525,49 +525,49 @@ Data Members (111):
 	☐ picolVar::name
 	☐ picolVar::next
 	☐ picolVar::val
-	☐ redisClient::argc
-	☐ redisClient::argv
-	☐ redisClient::bulklen
-	☐ redisClient::dict
-	☐ redisClient::fd
-	☐ redisClient::lastinteraction
-	☐ redisClient::querybuf
-	☐ redisClient::reply
-	☐ redisClient::sentlen
-	☐ redisCommand::arity
-	☐ redisCommand::name
-	☐ redisCommand::proc
-	☐ redisCommand::type
+	✔ redisClient::argc @done(21-11-14 22:15)
+	✔ redisClient::argv @done(21-11-14 22:15)
+	✔ redisClient::bulklen @done(21-11-14 22:15)
+	✔ redisClient::dict @done(21-11-14 22:15)
+	✔ redisClient::fd @done(21-11-14 22:15)
+	✔ redisClient::lastinteraction @done(21-11-14 22:15)
+	✔ redisClient::querybuf @done(21-11-14 22:15)
+	✔ redisClient::reply @done(21-11-14 22:15)
+	✔ redisClient::sentlen @done(21-11-14 22:15)
+	✔ redisCommand::arity @done(21-11-14 22:15)
+	✔ redisCommand::name @done(21-11-14 22:15)
+	✔ redisCommand::proc @done(21-11-14 22:15)
+	✔ redisCommand::type @done(21-11-14 22:15)
 	✔ redisObject::ptr @done(21-10-20 21:42)
 	✔ redisObject::refcount @done(21-10-20 21:42)
 	✔ redisObject::type @done(21-10-20 21:42)
-	☐ redisServer::bgsaveinprogress
-	☐ redisServer::clients
-	☐ redisServer::cronloops
-	☐ redisServer::dbnum
-	☐ redisServer::dict
-	☐ redisServer::dirty
-	☐ redisServer::el
-	☐ redisServer::fd
-	☐ redisServer::lastsave
-	☐ redisServer::logfile
-	☐ redisServer::maxidletime
-	☐ redisServer::neterr
-	☐ redisServer::objfreelist
-	☐ redisServer::port
-	☐ redisServer::saveparams
-	☐ redisServer::saveparamslen
-	☐ redisServer::verbosity
-	☐ saveparam::changes
-	☐ saveparam::seconds
+	✔ redisServer::bgsaveinprogress @done(21-11-14 22:15)
+	✔ redisServer::clients @done(21-11-14 22:15)
+	✔ redisServer::cronloops @done(21-11-14 22:15)
+	✔ redisServer::dbnum @done(21-11-14 22:15)
+	✔ redisServer::dict @done(21-11-14 22:15)
+	✔ redisServer::dirty @done(21-11-14 22:15)
+	✔ redisServer::el @done(21-11-14 22:15)
+	✔ redisServer::fd @done(21-11-14 22:15)
+	✔ redisServer::lastsave @done(21-11-14 22:15)
+	✔ redisServer::logfile @done(21-11-14 22:15)
+	✔ redisServer::maxidletime @done(21-11-14 22:15)
+	✔ redisServer::neterr @done(21-11-14 22:15)
+	✔ redisServer::objfreelist @done(21-11-14 22:15)
+	✔ redisServer::port @done(21-11-14 22:15)
+	✔ redisServer::saveparams @done(21-11-14 22:15)
+	✔ redisServer::saveparamslen @done(21-11-14 22:15)
+	✔ redisServer::verbosity @done(21-11-14 22:15)
+	✔ saveparam::changes @done(21-11-14 22:15)
+	✔ saveparam::seconds @done(21-11-14 22:15)
 	✔ sdshdr::buf @done(21-10-22 23:22)
 	✔ sdshdr::free @done(21-10-22 23:22)
 	✔ sdshdr::len @done(21-10-22 23:22)
-	☐ sharedObjectsStruct::crlf
-	☐ sharedObjectsStruct::err
-	☐ sharedObjectsStruct::nil
-	☐ sharedObjectsStruct::ok
-	☐ sharedObjectsStruct::one
-	☐ sharedObjectsStruct::pong
-	☐ sharedObjectsStruct::zero
-	☐ sharedObjectsStruct::zerobulk
+	✔ sharedObjectsStruct::crlf @done(21-11-14 22:15)
+	✔ sharedObjectsStruct::err @done(21-11-14 22:15)
+	✔ sharedObjectsStruct::nil @done(21-11-14 22:15)
+	✔ sharedObjectsStruct::ok @done(21-11-14 22:15)
+	✔ sharedObjectsStruct::pong @done(21-11-14 22:15)
+	✔ sharedObjectsStruct::one @done(21-11-14 22:15)
+	✔ sharedObjectsStruct::zero @done(21-11-14 22:15)
+	✔ sharedObjectsStruct::zerobulk @done(21-11-14 22:15)
