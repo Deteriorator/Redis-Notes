@@ -410,3 +410,138 @@ loadServerConfig 函数， 将 main 函数的第二个参数 ``argv[1]`` 作为 
 .. _sdssplitlen: beta-1-functions.rst#sdssplitlen-func
 .. _appendServerSaveParams: beta-1-functions.rst#appendServerSaveParams-func
 
+.. _`loadDb-func`:
+.. `loadDb-func`
+
+2.5 loadDb 函数
+===============================================================================
+
+initServer 和 加载完配置之后， 尝试加载已有的数据文件， 使用的是 loadDb 函数。 
+
+.. code-block:: c 
+
+    static int loadDb(char *filename) {
+        FILE *fp;
+        char buf[REDIS_LOADBUF_LEN];    /* Try to use this buffer instead of */
+        char vbuf[REDIS_LOADBUF_LEN];   /* malloc() when the element is small */
+        char *key = NULL, *val = NULL;
+        uint32_t klen,vlen,dbid;
+        uint8_t type;
+        int retval;
+        dict *dict = server.dict[0];
+
+        // 1
+        fp = fopen(filename,"r");
+        if (!fp) return REDIS_ERR;
+        if (fread(buf,9,1,fp) == 0) goto eoferr;
+        if (memcmp(buf,"REDIS0000",9) != 0) {
+            fclose(fp);
+            redisLog(REDIS_WARNING,"Wrong signature trying to load DB from file");
+            return REDIS_ERR;
+        }
+
+        // 2
+        while(1) {
+            robj *o;
+
+            // 1
+            /* Read type. */
+            if (fread(&type,1,1,fp) == 0) goto eoferr;
+            if (type == REDIS_EOF) break;
+            /* Handle SELECT DB opcode as a special case */
+            if (type == REDIS_SELECTDB) {
+                if (fread(&dbid,4,1,fp) == 0) goto eoferr;
+                dbid = ntohl(dbid);
+                if (dbid >= (unsigned)server.dbnum) {
+                    redisLog(REDIS_WARNING,"FATAL: Data file was created with a Redis server compiled to handle more than %d databases. Exiting\n", server.dbnum);
+                    exit(1);
+                }
+                dict = server.dict[dbid];
+                continue;
+            }
+
+            // 2
+            /* Read key */
+            if (fread(&klen,4,1,fp) == 0) goto eoferr;
+            klen = ntohl(klen);
+            if (klen <= REDIS_LOADBUF_LEN) {
+                key = buf;
+            } else {
+                key = malloc(klen);
+                if (!key) oom("Loading DB from file");
+            }
+            if (fread(key,klen,1,fp) == 0) goto eoferr;
+
+            if (type == REDIS_STRING) {
+                /* Read string value */
+                if (fread(&vlen,4,1,fp) == 0) goto eoferr;
+                vlen = ntohl(vlen);
+                if (vlen <= REDIS_LOADBUF_LEN) {
+                    val = vbuf;
+                } else {
+                    val = malloc(vlen);
+                    if (!val) oom("Loading DB from file");
+                }
+                if (fread(val,vlen,1,fp) == 0) goto eoferr;
+                o = createObject(REDIS_STRING,sdsnewlen(val,vlen));
+            } else if (type == REDIS_LIST) {
+                /* Read list value */
+                uint32_t listlen;
+                if (fread(&listlen,4,1,fp) == 0) goto eoferr;
+                listlen = ntohl(listlen);
+                o = createListObject();
+                /* Load every single element of the list */
+                while(listlen--) {
+                    robj *ele;
+
+                    if (fread(&vlen,4,1,fp) == 0) goto eoferr;
+                    vlen = ntohl(vlen);
+                    if (vlen <= REDIS_LOADBUF_LEN) {
+                        val = vbuf;
+                    } else {
+                        val = malloc(vlen);
+                        if (!val) oom("Loading DB from file");
+                    }
+                    if (fread(val,vlen,1,fp) == 0) goto eoferr;
+                    ele = createObject(REDIS_STRING,sdsnewlen(val,vlen));
+                    if (!listAddNodeTail((list*)o->ptr,ele))
+                        oom("listAddNodeTail");
+                    /* free the temp buffer if needed */
+                    if (val != vbuf) free(val);
+                    val = NULL;
+                }
+            } else {
+                assert(0 != 0);
+            }
+
+            // 3
+            /* Add the new object in the hash table */
+            retval = dictAdd(dict,sdsnewlen(key,klen),o);
+            if (retval == DICT_ERR) {
+                redisLog(REDIS_WARNING,"Loading DB, duplicated key found! Unrecoverable error, exiting now.");
+                exit(1);
+            }
+
+            // 4
+            /* Iteration cleanup */
+            if (key != buf) free(key);
+            if (val != vbuf) free(val);
+            key = val = NULL;
+        }
+
+        // 3
+        fclose(fp);
+        return REDIS_OK;
+
+        // 4
+    eoferr: /* unexpected end of file is handled here with a fatal exit */
+        if (key != buf) free(key);
+        if (val != vbuf) free(val);
+        redisLog(REDIS_WARNING,"Short read loading DB. Unrecoverable error, exiting now.");
+        exit(1);
+        return REDIS_ERR; /* Just to avoid warning */
+    }
+
+该函数比较长， 按照其结构大致分成了几个步骤， 解析的时候将按照步骤进行。
+
+

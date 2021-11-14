@@ -228,7 +228,7 @@ Functions (188):
 	✔ listSearchKey @done(21-11-03 22:03)
 	☐ llenCommand
 	☐ loadDb
-	☐ loadServerConfig
+	✔ loadServerConfig @done(21-11-14 22:28)
 	☐ lookupCommand
 	☐ lpopCommand
 	☐ lpushCommand
