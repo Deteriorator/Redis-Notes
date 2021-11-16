@@ -444,7 +444,6 @@ initServer 和 加载完配置之后， 尝试加载已有的数据文件， 使
         while(1) {
             robj *o;
 
-            // 1
             /* Read type. */
             if (fread(&type,1,1,fp) == 0) goto eoferr;
             if (type == REDIS_EOF) break;
@@ -460,7 +459,7 @@ initServer 和 加载完配置之后， 尝试加载已有的数据文件， 使
                 continue;
             }
 
-            // 2
+            // 3
             /* Read key */
             if (fread(&klen,4,1,fp) == 0) goto eoferr;
             klen = ntohl(klen);
@@ -472,6 +471,7 @@ initServer 和 加载完配置之后， 尝试加载已有的数据文件， 使
             }
             if (fread(key,klen,1,fp) == 0) goto eoferr;
 
+            // 4
             if (type == REDIS_STRING) {
                 /* Read string value */
                 if (fread(&vlen,4,1,fp) == 0) goto eoferr;
@@ -485,6 +485,7 @@ initServer 和 加载完配置之后， 尝试加载已有的数据文件， 使
                 if (fread(val,vlen,1,fp) == 0) goto eoferr;
                 o = createObject(REDIS_STRING,sdsnewlen(val,vlen));
             } else if (type == REDIS_LIST) {
+            // 5    
                 /* Read list value */
                 uint32_t listlen;
                 if (fread(&listlen,4,1,fp) == 0) goto eoferr;
@@ -514,7 +515,7 @@ initServer 和 加载完配置之后， 尝试加载已有的数据文件， 使
                 assert(0 != 0);
             }
 
-            // 3
+            // 6
             /* Add the new object in the hash table */
             retval = dictAdd(dict,sdsnewlen(key,klen),o);
             if (retval == DICT_ERR) {
@@ -522,18 +523,18 @@ initServer 和 加载完配置之后， 尝试加载已有的数据文件， 使
                 exit(1);
             }
 
-            // 4
+            // 7
             /* Iteration cleanup */
             if (key != buf) free(key);
             if (val != vbuf) free(val);
             key = val = NULL;
         }
 
-        // 3
+        // 8
         fclose(fp);
         return REDIS_OK;
 
-        // 4
+        // 9
     eoferr: /* unexpected end of file is handled here with a fatal exit */
         if (key != buf) free(key);
         if (val != vbuf) free(val);
@@ -544,4 +545,10 @@ initServer 和 加载完配置之后， 尝试加载已有的数据文件， 使
 
 该函数比较长， 按照其结构大致分成了几个步骤， 解析的时候将按照步骤进行。
 
-
+- STEP-1: 打开文件流， 一次读取 9 个字节的数据， 判断是否为 REDIS0000， 若不是关闭文\
+  件流， 记录日志并返回 REDIS_ERR
+- STEP-2: 循环读取加载的 rdb 文件， 先一次读取 1 个字节的数据， 如果是 REDIS_EOF 直\
+  接打断循环； 如果是 REDIS_SELECTDB 则一次读取 4 个字节的数据， 它就是选中的 DB， \
+  正常情况下这个 dbid 是小于 dbnum 的。 然后将 dict 赋值为选中的 db， 然后执行下一轮\
+  循环。
+- STEP-3: 
