@@ -159,7 +159,7 @@ Functions (188):
 	☐ bgsaveCommand
 	✔ closeTimedoutClients @done(21-10-31 23:01)
 	☐ createClient
-	☐ createListObject
+	✔ createListObject @done(21-11-17 23:07)
 	✔ createObject @done(21-10-20 21:31)
 	✔ createSharedObjects @done(21-11-07 23:12)
 	☐ dbsizeCommand
@@ -341,7 +341,7 @@ Macros (26):
 	✔ listNodeValue @done(21-10-20 22:06)
 	☐ listPrevNode
 	☐ listSetDupMethod
-	☐ listSetFreeMethod
+	✔ listSetFreeMethod @done(21-11-17 23:07)
 	☐ listSetMatchMethod
 	☐ PICOL_NOTUSED
 	✔ REDIS_NOTUSED @done(21-10-27 22:44)

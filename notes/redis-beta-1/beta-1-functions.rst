@@ -2031,9 +2031,32 @@ s 的拓展， 如果拓展失败返回 NULL。
 
 该函数用于获取当前字符串 s 可用的空间。
 
+.. _`createListObject-func`:
+.. `createListObject-func`
 
+54 createListObject 函数
+===============================================================================
 
+.. code-block:: C 
 
+    static robj *createListObject(void) {
+        list *l = listCreate();
+
+        if (!l) oom("createListObject");
+        listSetFreeMethod(l,decrRefCount);
+        return createObject(REDIS_LIST,l);
+    }
+
+该函数用于创建 List 对象。 
+
+首先使用 listCreate_ 函数创建一个空的 List， 然后使用 listSetFreeMethod_ 宏设置 \
+List 的 Free 方法为 decrRefCount_ 函数。 
+
+.. _`listCreate`: #listCreate-func
+.. _`listSetFreeMethod`: beta-1-macros.rst#listSetFreeMethod-macro
+.. _`decrRefCount`: #decrRefCount-func
+
+最终返回使用 createObject_ 函数创建的 REDIS_LIST 对象。 
 
 
 

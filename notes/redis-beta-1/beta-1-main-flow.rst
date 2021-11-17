@@ -551,4 +551,9 @@ initServer 和 加载完配置之后， 尝试加载已有的数据文件， 使
   接打断循环； 如果是 REDIS_SELECTDB 则一次读取 4 个字节的数据， 它就是选中的 DB， \
   正常情况下这个 dbid 是小于 dbnum 的。 然后将 dict 赋值为选中的 db， 然后执行下一轮\
   循环。
-- STEP-3: 
+- STEP-3: 此步骤读取 key； 首先读取一个四字节的 klen， 判断 klen 是否小于 \
+  REDIS_LOADBUF_LEN， 若是直接使用 buf 作为 key 的容器， 否则需要分配 klen 字节的长\
+  度的内存， 然后使用 key 存储从 rdb 文件中读取 klen 字节的数据
+- STEP-4: 当 type 为 REDIS_STRING 时， 读取一个四字节的 vlen， 随后读取一个 vlen 字\
+  节的数据存储为 val， 然后使用 createObject_ 函数创建 REDIS_STRING 对象。 
+- STEP-5: 当 type 为 REDIS_LIST 时， 

@@ -126,3 +126,16 @@ listNode_。
 用于获取哈希表条目的 val， he 就是 hashtable entry 的 缩写， 是一个 dictEntry_ 结构\
 体， 直接获取其 val 字段
 
+.. _`listSetFreeMethod-macro`:
+.. listSetFreeMethod-macro
+
+10 listSetFreeMethod 宏定义
+===============================================================================
+
+.. code-block:: c
+
+    #define listSetFreeMethod(l,m) ((l)->free = (m))
+
+该宏定义用于设置 List 对象的 Free 方法。 宏定义中的 l 就是 List， m 就是指定的某一方\
+法函数。
+
