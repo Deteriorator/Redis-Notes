@@ -164,7 +164,7 @@ Functions (188):
 	✔ createSharedObjects @done(21-11-07 23:12)
 	☐ dbsizeCommand
 	☐ decrCommand
-	☐ decrRefCount
+	✔ decrRefCount @done(21-11-17 23:22)
 	☐ delCommand
 	☐ dictAdd
 	✔ _dictAlloc @done(21-10-26 23:28)
@@ -371,7 +371,7 @@ Function Prototypes (111):
 	✔ createObject @done(21-10-20 21:41)
 	☐ dbsizeCommand
 	☐ decrCommand
-	☐ decrRefCount
+	✔ decrRefCount @done(21-11-17 23:22)
 	☐ delCommand
 	☐ dictAdd
 	✔ dictCreate @done(21-10-27 21:39)

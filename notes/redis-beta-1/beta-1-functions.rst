@@ -2058,5 +2058,43 @@ List 的 Free 方法为 decrRefCount_ 函数。
 
 最终返回使用 createObject_ 函数创建的 REDIS_LIST 对象。 
 
+.. _`decrRefCount-func`:
+.. `decrRefCount-func`
 
+55 decrRefCount 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static void decrRefCount(void *obj) {
+        robj *o = obj;
+        if (--(o->refcount) == 0) {
+            switch(o->type) {
+            case REDIS_STRING: freeStringObject(o); break;
+            case REDIS_LIST: freeListObject(o); break;
+            case REDIS_SET: freeSetObject(o); break;
+            default: assert(0 != 0); break;
+            }
+            if (!listAddNodeHead(server.objfreelist,o))
+                free(o);
+        }
+    }
+
+函数名称是减少引用计数， 参数是一个 void 类型的 obj 对象， 实际上就是不确定类型的对象， \
+然后将 obj 赋值给 robj 对象即 redis 对象。 
+
+首先判断将 robj 对象的引用计数减一后是否为 0， 若是， 看 robj 的 type 属性进行相关的\
+操作: 1. 如果是 REDIS_STRING 类型， 则使用 freeStringObject_ 函数进行对象释放； 2. \
+如果是 REDIS_LIST 类型， 则使用 freeListObject_ 函数进行对象释放； 3. 如果是 \
+REDIS_SET 类型， 则使用 freeSetObject_ 函数进行对象释放； 其他情况执行 assert 语句， \
+这是一处逻辑错误， 一旦执行到此处说明有逻辑问题。
+
+.. _`freeStringObject`: #freeStringObject-func
+.. _`freeListObject`: #freeListObject-func
+.. _`freeSetObject`: #freeSetObject-func
+
+然后将 o 对象使用 listAddNodeHead_ 函数添加到 objfreelist 的头部， 添加失败就执行 \
+free 函数直接释放掉。
+
+.. _`listAddNodeHead`: #listAddNodeHead-func
 
