@@ -173,7 +173,7 @@ Functions (188):
 	☐ dictDelete
 	☐ dictDeleteNoFree
 	✔ dictExpand @done(21-10-31 22:06)
-	☐ _dictExpandIfNeeded
+	✔ _dictExpandIfNeeded @done(21-11-18 22:36)
 	☐ dictFind
 	✔ _dictFree @done(21-11-06 23:21)
 	☐ dictGenericDelete
@@ -183,7 +183,7 @@ Functions (188):
 	☐ dictIdentityHashFunction
 	✔ _dictInit @done(21-10-27 21:39)
 	☐ dictIntHashFunction
-	☐ _dictKeyIndex
+	✔ _dictKeyIndex @done(21-11-18 22:36)
 	✔ dictNext @done(21-11-06 23:02)
 	✔ _dictNextPower @done(21-11-06 23:03)
 	✔ _dictPanic @done(21-10-26 23:32)
@@ -378,13 +378,13 @@ Function Prototypes (111):
 	☐ dictDelete
 	☐ dictDeleteNoFree
 	✔ dictExpand @done(21-10-31 22:07)
-	☐ _dictExpandIfNeeded
+	✔ _dictExpandIfNeeded @done(21-11-18 22:36)
 	☐ dictFind
 	✔ dictGenHashFunction @done(21-10-31 22:28)
 	✔ dictGetIterator @done(21-11-06 22:49)
 	☐ dictGetRandomKey
 	✔ _dictInit @done(21-10-27 21:39)
-	☐ _dictKeyIndex
+	✔ _dictKeyIndex @done(21-11-18 22:36)
 	✔ dictNext @done(21-11-06 23:02)
 	✔ _dictNextPower @done(21-10-31 22:19)
 	☐ dictPrintStats

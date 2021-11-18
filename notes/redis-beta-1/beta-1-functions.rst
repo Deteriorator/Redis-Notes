@@ -2254,3 +2254,68 @@ entry 的 next 设置为 ht->table[index]， 同时 ht->table[index] 被置为 n
 .. _`dictSetHashKey`: beta-1-macros.rst#dictSetHashKey-macro
 .. _`dictSetHashVal`: beta-1-macros.rst#dictSetHashVal-macro
 
+.. _`_dictKeyIndex-func`:
+.. `_dictKeyIndex-func`
+
+62 _dictKeyIndex 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static int _dictKeyIndex(dict *ht, const void *key)
+    {
+        unsigned int h;
+        dictEntry *he;
+
+        /* Expand the hashtable if needed */
+        if (_dictExpandIfNeeded(ht) == DICT_ERR)
+            return -1;
+        /* Compute the key hash value */
+        h = dictHashKey(ht, key) & ht->sizemask;
+        /* Search if this slot does not already contain the given key */
+        he = ht->table[h];
+        while(he) {
+            if (dictCompareHashKeys(ht, key, he->key))
+                return -1;
+            he = he->next;
+        }
+        return h;
+    }
+
+首先使用 `_dictExpandIfNeeded`_ 函数进行预判断， 如有需要将对哈希表扩展。
+
+然后使用 dictHashKey_ 宏获取 key 在 ht 哈希表中的值， 然后和 ht->sizemask 进行与运\
+算获取 index 索引值。 然后循环使用 dictCompareHashKeys_ 宏对比哈希表中是否已经存在， \
+如果已经存在则返回 -1， 若不存在则返回获取的 index 索引值 h。 
+
+.. _`_dictExpandIfNeeded`: #_dictExpandIfNeeded-func
+.. _`dictHashKey`: beta-1-macros.rst#dictHashKey-macro
+.. _`dictCompareHashKeys`: beta-1-macros.rst#dictCompareHashKeys-macro
+
+.. _`_dictExpandIfNeeded-func`:
+.. `_dictExpandIfNeeded-func`
+
+63 _dictExpandIfNeeded 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static int _dictExpandIfNeeded(dict *ht)
+    {
+        /* If the hash table is empty expand it to the intial size,
+        * if the table is "full" dobule its size. */
+        if (ht->size == 0)
+            return dictExpand(ht, DICT_HT_INITIAL_SIZE);
+        if (ht->used == ht->size)
+            return dictExpand(ht, ht->size*2);
+        return DICT_OK;
+    }
+
+当哈希表 ht 的大小为 0 时说明是空哈希表， 使用 dictExpand_ 函数创建一个 \
+DICT_HT_INITIAL_SIZE 即 16 个元素的哈希表； 如果已使用空间 used 等于哈希表的大小， \
+说明已经全部使用完毕， 就将哈希表扩展至原来的 2 倍。 如果不需要拓展， 直接返回 \
+DICT_OK 即 0， 其他情况下拓展失败， 则返回的是 DICT_ERR 即 1
+
+.. _`dictExpand`: #dictExpand-func
+
+

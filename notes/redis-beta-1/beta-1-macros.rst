@@ -96,7 +96,7 @@ listNode_。
 
     #define dictHashKey(ht, key) (ht)->type->hashFunction(key)
 
-用于获取不同类型的 hashFunction 函数指针。
+用于获取 dict 类型的 hashFunction 函数指针。
 
 .. _`dictGetEntryKey-macro`:
 .. dictGetEntryKey-macro
