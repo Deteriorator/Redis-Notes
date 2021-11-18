@@ -166,7 +166,7 @@ Functions (188):
 	☐ decrCommand
 	✔ decrRefCount @done(21-11-17 23:22)
 	☐ delCommand
-	☐ dictAdd
+	✔ dictAdd @done(21-11-18 22:18)
 	✔ _dictAlloc @done(21-10-26 23:28)
 	☐ _dictClear
 	✔ dictCreate @done(21-10-25 23:06)
@@ -216,7 +216,7 @@ Functions (188):
 	☐ lastsaveCommand
 	☐ lindexCommand
 	✔ listAddNodeHead @done(21-11-18 21:41)
-	☐ listAddNodeTail
+	✔ listAddNodeTail @done(21-11-18 22:05)
 	✔ listCreate @done(21-10-19 22:36)
 	✔ listDelNode @done(21-10-20 22:12)
 	☐ listDup
@@ -373,7 +373,7 @@ Function Prototypes (111):
 	☐ decrCommand
 	✔ decrRefCount @done(21-11-17 23:22)
 	☐ delCommand
-	☐ dictAdd
+	✔ dictAdd @done(21-11-18 22:18)
 	✔ dictCreate @done(21-10-27 21:39)
 	☐ dictDelete
 	☐ dictDeleteNoFree
@@ -405,7 +405,7 @@ Function Prototypes (111):
 	☐ lastsaveCommand
 	☐ lindexCommand
 	✔ listAddNodeHead @done(21-11-18 21:41)
-	☐ listAddNodeTail
+	✔ listAddNodeTail @done(21-11-18 22:05)
 	✔ listCreate @done(21-11-07 23:09)
 	✔ listDelNode @done(21-11-07 23:10)
 	☐ listDup

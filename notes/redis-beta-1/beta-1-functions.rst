@@ -2178,3 +2178,79 @@ list 的长度是否为 0， 如果为 0 则头节点和尾节点都将是添加
 
 将 list 的 len 自增加一， 最后返回该 list。
 
+.. _`listAddNodeTail-func`:
+.. `listAddNodeTail-func`
+
+60 listAddNodeTail 函数
+===============================================================================
+
+.. code-block:: C 
+
+    list *listAddNodeTail(list *list, void *value)
+    {
+        listNode *node;
+
+        if ((node = malloc(sizeof(*node))) == NULL)
+            return NULL;
+        node->value = value;
+        if (list->len == 0) {
+            list->head = list->tail = node;
+            node->prev = node->next = NULL;
+        } else {
+            node->prev = list->tail;
+            node->next = NULL;
+            list->tail->next = node;
+            list->tail = node;
+        }
+        list->len++;
+        return list;
+    }
+
+和上一个函数差不多， 只不过这个是追加到 List 的尾节点。 
+
+.. _`dictAdd-func`:
+.. `dictAdd-func`
+
+61 dictAdd 函数
+===============================================================================
+
+.. code-block:: C 
+
+    int dictAdd(dict *ht, void *key, void *val)
+    {
+        int index;
+        dictEntry *entry;
+
+        /* Get the index of the new element, or -1 if
+        * the element already exists. */
+        if ((index = _dictKeyIndex(ht, key)) == -1)
+            return DICT_ERR;
+
+        /* Allocates the memory and stores key */
+        entry = _dictAlloc(sizeof(*entry));
+        entry->next = ht->table[index];
+        ht->table[index] = entry;
+
+        /* Set the hash entry fields. */
+        dictSetHashKey(ht, entry, key);
+        dictSetHashVal(ht, entry, val);
+        ht->used++;
+        return DICT_OK;
+    }
+
+将给定的 key 和 val 添加到哈希表中。
+
+添加之前使用 `_dictKeyIndex`_ 函数从哈希表中获取 index 索引， 如果获取到 -1 就说明已\
+经存在， 直接返回 DICT_ERR， 否则正常执行。
+
+使用 `_dictAlloc`_ 函数分配一个 dictEntry 内存空间用于添加给定的 key 和 val， 将 \
+entry 的 next 设置为 ht->table[index]， 同时 ht->table[index] 被置为 nextEntry。
+
+然后使用 dictSetHashKey_ 宏和 dictSetHashVal_ 宏设置 hash 字段。 设置完成后， 将哈\
+希表的 used 自增加一， 并返回 DICT_OK 即 0
+
+.. _`_dictKeyIndex`: #_dictKeyIndex-func
+.. _`_dictAlloc`: #_dictAlloc-func
+.. _`dictSetHashKey`: beta-1-macros.rst#dictSetHashKey-macro
+.. _`dictSetHashVal`: beta-1-macros.rst#dictSetHashVal-macro
+
