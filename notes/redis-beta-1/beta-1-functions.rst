@@ -2141,3 +2141,40 @@ free 函数直接释放掉。
 
 集合类型 set 在 beta-1 版本中还未实现。
 
+.. _`listAddNodeHead-func`:
+.. `listAddNodeHead-func`
+
+59 listAddNodeHead 函数
+===============================================================================
+
+.. code-block:: C 
+
+    list *listAddNodeHead(list *list, void *value)
+    {
+        listNode *node;
+
+        if ((node = malloc(sizeof(*node))) == NULL)
+            return NULL;
+        node->value = value;
+        if (list->len == 0) {
+            list->head = list->tail = node;
+            node->prev = node->next = NULL;
+        } else {
+            node->prev = NULL;
+            node->next = list->head;
+            list->head->prev = node;
+            list->head = node;
+        }
+        list->len++;
+        return list;
+    }
+
+该函数用于将一个值添加到 List 的头节点。
+
+新建一个 listNode， 将需要添加的值设置为这个 listNode 的 value， 然后判断需要添加的 \
+list 的长度是否为 0， 如果为 0 则头节点和尾节点都将是添加的这个值； 否则将需要添加的这\
+个节点的前驱节点置为 NULL， 后继节点置为当前 list 的头节点， 然后将 list 头节点的前驱\
+节点置为该 node， 头节点置为当前 node。
+
+将 list 的 len 自增加一， 最后返回该 list。
+
