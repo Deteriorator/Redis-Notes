@@ -2284,8 +2284,9 @@ entry 的 next 设置为 ht->table[index]， 同时 ht->table[index] 被置为 n
 
 首先使用 `_dictExpandIfNeeded`_ 函数进行预判断， 如有需要将对哈希表扩展。
 
-然后使用 dictHashKey_ 宏获取 key 在 ht 哈希表中的值， 然后和 ht->sizemask 进行与运\
-算获取 index 索引值。 然后循环使用 dictCompareHashKeys_ 宏对比哈希表中是否已经存在， \
+然后使用 dictHashKey_ 宏获取 key 在 ht 哈希表中的值， 实际上使用的是 \
+sdsDictHashFunction_ 函数进行计算的 hash 值， 然后哈希值和 ht->sizemask 进行与运算\
+获取 index 索引值。 然后循环使用 dictCompareHashKeys_ 宏对比哈希表中是否已经存在， \
 如果已经存在则返回 -1， 若不存在则返回获取的 index 索引值 h。 
 
 .. _`_dictExpandIfNeeded`: #_dictExpandIfNeeded-func
