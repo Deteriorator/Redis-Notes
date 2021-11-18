@@ -556,4 +556,24 @@ initServer 和 加载完配置之后， 尝试加载已有的数据文件， 使
   度的内存， 然后使用 key 存储从 rdb 文件中读取 klen 字节的数据
 - STEP-4: 当 type 为 REDIS_STRING 时， 读取一个四字节的 vlen， 随后读取一个 vlen 字\
   节的数据存储为 val， 然后使用 createObject_ 函数创建 REDIS_STRING 对象。 
-- STEP-5: 当 type 为 REDIS_LIST 时， 
+- STEP-5: 当 type 为 REDIS_LIST 时， 先读取一个四字节的 listlen， 然后使用 \
+  createListObject_ 函数创建一个 List 对象， 然后循环读取 list 的节点， 每读取一次\
+  就将 listlen 自减一。 在这每一次读取中， 先创建局部变量 robj ele， 然后读取一个四\
+  字节的 vlen， 如果 vlen 小于等于 REDIS_LOADBUF_LEN 就使用默认的容器， 否则就分配 \
+  vlen 大小的内存， 然后读取一个 vlen 大小的 val， 就是 list 节点的值， 使用 \
+  sdsnewlen_ 函数创建一个新的 sds 字符串， 然后使用 createObject_ 函数将字符串转换\
+  成 robj 对象， 最后使用 listAddNodeTail_ 函数将创建的 robj 对象添加到 list 的尾节\
+  点。 有需要的时候释放 val
+- STEP-6: 将从文件中读取到的对象 o 使用 dictAdd_ 函数添加到哈希表中， 如果添加失败则\
+  记录日志并中止程序执行。
+- STEP-7: 释放 key 和 val 所占的内存
+- STEP-8: 文件读取完毕就关闭文件流， 返回 REDIS_OK
+- STEP-9: 当出现问题是， 释放 key 和 val 占用的内存， 记录日志中止程序执行并返回 \
+  REDIS_ERR
+
+.. _`createObject`: beta-1-functions.rst#createObject-func
+.. _`createListObject`: beta-1-functions.rst#createListObject-func
+.. _`sdsnewlen`: beta-1-functions.rst#sdsnewlen-func
+.. _`listAddNodeTail`: beta-1-functions.rst#listAddNodeTail-func
+.. _`dictAdd`: beta-1-functions.rst#dictAdd-func
+

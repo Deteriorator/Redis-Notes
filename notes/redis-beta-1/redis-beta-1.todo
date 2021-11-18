@@ -83,11 +83,11 @@ Constants (47):
 	☐ REDIS_HT_MINFILL
 	☐ REDIS_HT_MINSLOTS
 	✔ REDIS_LIST @done(21-11-06 22:38)
-	☐ REDIS_LOADBUF_LEN
+	✔ REDIS_LOADBUF_LEN @done(21-11-18 21:47)
 	☐ REDIS_MAXIDLETIME
 	☐ REDIS_MAX_ARGS
 	✔ REDIS_NOTICE @done(21-10-25 22:46)
-	☐ REDIS_OK
+	✔ REDIS_OK @done(21-11-18 22:01)
 	☐ REDIS_QUERYBUF_LEN
 	✔ REDIS_SELECTDB @done(21-11-06 22:37)
 	☐ REDIS_SERVERPORT
@@ -210,12 +210,12 @@ Functions (188):
 	☐ incrCommand
 	☐ incrDecrCommand
 	☐ incrRefCount
-	☐ initServer
+	✔ initServer @done(21-11-18 21:41)
 	✔ initServerConfig @done(21-10-18 22:12)
 	☐ keysCommand
 	☐ lastsaveCommand
 	☐ lindexCommand
-	☐ listAddNodeHead
+	✔ listAddNodeHead @done(21-11-18 21:41)
 	☐ listAddNodeTail
 	✔ listCreate @done(21-10-19 22:36)
 	✔ listDelNode @done(21-10-20 22:12)
@@ -227,7 +227,7 @@ Functions (188):
 	✔ listReleaseIterator @done(21-11-03 22:15)
 	✔ listSearchKey @done(21-11-03 22:03)
 	☐ llenCommand
-	☐ loadDb
+	✔ loadDb @done(21-11-18 22:00)
 	✔ loadServerConfig @done(21-11-14 22:28)
 	☐ lookupCommand
 	☐ lpopCommand
@@ -404,7 +404,7 @@ Function Prototypes (111):
 	☐ keysCommand
 	☐ lastsaveCommand
 	☐ lindexCommand
-	☐ listAddNodeHead
+	✔ listAddNodeHead @done(21-11-18 21:41)
 	☐ listAddNodeTail
 	✔ listCreate @done(21-11-07 23:09)
 	✔ listDelNode @done(21-11-07 23:10)
@@ -416,7 +416,7 @@ Function Prototypes (111):
 	✔ listReleaseIterator @done(21-11-07 23:28)
 	✔ listSearchKey @done(21-11-03 22:03)
 	☐ llenCommand
-	☐ loadDb
+	✔ loadDb @done(21-11-18 22:00)
 	☐ lpopCommand
 	☐ lpushCommand
 	☐ lrangeCommand
