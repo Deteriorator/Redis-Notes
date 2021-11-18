@@ -203,9 +203,9 @@ Functions (188):
 	☐ existsCommand
 	✔ freeClient @done(21-11-01 22:26)
 	✔ freeClientArgv @done(21-11-03 21:50)
-	☐ freeListObject
-	☐ freeSetObject
-	☐ freeStringObject
+	✔ freeListObject @done(21-11-18 21:32)
+	✔ freeSetObject @done(21-11-18 21:32)
+	✔ freeStringObject @done(21-11-18 21:32)
 	☐ getCommand
 	☐ incrCommand
 	☐ incrDecrCommand
@@ -395,9 +395,9 @@ Function Prototypes (111):
 	☐ echoCommand
 	☐ existsCommand
 	✔ freeClient @done(21-11-01 22:26)
-	☐ freeListObject
-	☐ freeSetObject
-	☐ freeStringObject
+	✔ freeListObject @done(21-11-18 21:32)
+	✔ freeSetObject @done(21-11-18 21:32)
+	✔ freeStringObject @done(21-11-18 21:32)
 	☐ getCommand
 	☐ incrCommand
 	☐ incrRefCount

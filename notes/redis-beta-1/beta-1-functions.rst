@@ -2098,3 +2098,46 @@ free 函数直接释放掉。
 
 .. _`listAddNodeHead`: #listAddNodeHead-func
 
+.. _`freeStringObject-func`:
+.. `freeStringObject-func`
+
+56 freeStringObject 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static void freeStringObject(robj *o) {
+        sdsfree(o->ptr);
+    }
+
+该函数调用了 sdsfree_ 函数进行 String 对象的释放。
+
+.. _`freeListObject-func`:
+.. `freeListObject-func`
+
+57 freeListObject 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static void freeListObject(robj *o) {
+        listRelease((list*) o->ptr);
+    }
+
+该函数调用了 listRelease_ 函数进行 List 对象的释放。
+
+.. _`freeSetObject-func`:
+.. `freeSetObject-func`
+
+58 freeSetObject 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static void freeSetObject(robj *o) {
+        /* TODO */
+        o = o;
+    }
+
+集合类型 set 在 beta-1 版本中还未实现。
+
