@@ -320,7 +320,7 @@ Functions (188):
 
 Macros (26):
 	☐ AE_NOTUSED
-	☐ dictCompareHashKeys
+	✔ dictCompareHashKeys @done(21-11-19 23:20)
 	☐ dictFreeEntryKey
 	☐ dictFreeEntryVal
 	✔ dictGetEntryKey @done(21-11-06 23:09)

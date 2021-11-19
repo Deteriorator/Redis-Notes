@@ -139,3 +139,19 @@ listNode_。
 该宏定义用于设置 List 对象的 Free 方法。 宏定义中的 l 就是 List， m 就是指定的某一方\
 法函数。
 
+.. _`dictCompareHashKeys-macro`:
+.. dictCompareHashKeys-macro
+
+11 dictCompareHashKeys 宏定义
+===============================================================================
+
+.. code-block:: c
+
+    #define dictCompareHashKeys(ht, key1, key2) \
+        (((ht)->type->keyCompare) ? \
+            (ht)->type->keyCompare((ht)->privdata, key1, key2) : \
+            (key1) == (key2))
+
+该宏定义用于比较两个 key， 如果定义了哈希表的 type 的 keyCompare 属性， 则会执行该函\
+数， keyCompare 是一个函数指针。 否则就直接比较 key1 与 key2 是否相等。
+

@@ -2287,11 +2287,16 @@ entry 的 next 设置为 ht->table[index]， 同时 ht->table[index] 被置为 n
 然后使用 dictHashKey_ 宏获取 key 在 ht 哈希表中的值， 实际上使用的是 \
 sdsDictHashFunction_ 函数进行计算的 hash 值， 然后哈希值和 ht->sizemask 进行与运算\
 获取 index 索引值。 然后循环使用 dictCompareHashKeys_ 宏对比哈希表中是否已经存在， \
-如果已经存在则返回 -1， 若不存在则返回获取的 index 索引值 h。 
+如果已经存在则返回 -1， 若不存在则返回获取的 index 索引值 h。 dictCompareHashKeys_ \
+宏实际执行的是 sdsDictKeyCompare_ 函数， 因为在 initServer_ 函数中 dictCreate_ 函\
+数创建的是 sdsDictType_ 类型。 
 
 .. _`_dictExpandIfNeeded`: #_dictExpandIfNeeded-func
 .. _`dictHashKey`: beta-1-macros.rst#dictHashKey-macro
 .. _`dictCompareHashKeys`: beta-1-macros.rst#dictCompareHashKeys-macro
+.. _`dictCreate`: #dictCreate-func
+.. _`sdsDictKeyCompare`: #sdsDictKeyCompare-func
+
 
 .. _`_dictExpandIfNeeded-func`:
 .. `_dictExpandIfNeeded-func`
