@@ -328,8 +328,8 @@ Macros (26):
 	✔ dictGetHashTableSize @done(21-10-27 22:55)
 	✔ dictGetHashTableUsed @done(21-10-27 22:55)
 	✔ dictHashKey @done(21-10-31 22:19)
-	☐ dictSetHashKey
-	☐ dictSetHashVal
+	✔ dictSetHashKey @done(21-11-20 22:57)
+	✔ dictSetHashVal @done(21-11-20 22:57)
 	✔ DICT_NOTUSED @done(21-11-20 22:50)
 	✔ listFirst @done(21-10-20 22:02)
 	☐ listGetDupMethod

@@ -167,4 +167,39 @@ listNode_。
 
 将没有使用的 Dict 值转换为 void 类型， 避免警告。
 
+.. _`dictSetHashKey-macro`:
+.. dictSetHashKey-macro
 
+13 dictSetHashKey 宏定义
+===============================================================================
+
+.. code-block:: c
+
+    #define dictSetHashKey(ht, entry, _key_) do { \
+        if ((ht)->type->keyDup) \
+            entry->key = (ht)->type->keyDup((ht)->privdata, _key_); \
+        else \
+            entry->key = (_key_); \
+    } while(0)
+
+设置哈希表中的 key， 当指定了 type->keyDup， 那么将会执行该函数， 否则就直接将 key \
+设置为给定的 `_key_`
+
+
+.. _`dictSetHashVal-macro`:
+.. dictSetHashVal-macro
+
+14 dictSetHashVal 宏定义
+===============================================================================
+
+.. code-block:: c
+
+    #define dictSetHashVal(ht, entry, _val_) do { \
+        if ((ht)->type->valDup) \
+            entry->val = (ht)->type->valDup((ht)->privdata, _val_); \
+        else \
+            entry->val = (_val_); \
+    } while(0)
+
+设置哈希表中的 value， 当指定了 type->valDup， 那么将会执行该函数， 否则就直接将 val \
+设置为给定的 `_val_`
