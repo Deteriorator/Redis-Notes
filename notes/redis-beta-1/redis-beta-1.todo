@@ -134,7 +134,7 @@ Functions (188):
 	☐ addReplySds
 	✔ aeAddMillisecondsToNow @done(21-10-27 22:31)
 	✔ aeCreateEventLoop @done(21-10-23 23:23)
-	☐ aeCreateFileEvent
+	✔ aeCreateFileEvent @done(21-11-20 23:16)
 	✔ aeCreateTimeEvent @done(21-10-27 22:31)
 	☐ aeDeleteEventLoop
 	✔ aeDeleteFileEvent @done(21-11-01 22:57)
@@ -350,7 +350,7 @@ Function Prototypes (111):
 	☐ addReply
 	☐ addReplySds
 	✔ aeCreateEventLoop @done(21-11-07 23:13)
-	☐ aeCreateFileEvent
+	✔ aeCreateFileEvent @done(21-11-20 23:16)
 	✔ aeCreateTimeEvent @done(21-10-27 22:31)
 	☐ aeDeleteEventLoop
 	✔ aeDeleteFileEvent @done(21-11-01 22:58)

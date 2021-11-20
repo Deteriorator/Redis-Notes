@@ -577,3 +577,45 @@ initServer 和 加载完配置之后， 尝试加载已有的数据文件， 使
 .. _`listAddNodeTail`: beta-1-functions.rst#listAddNodeTail-func
 .. _`dictAdd`: beta-1-functions.rst#dictAdd-func
 
+当数据文件加载正常后， 开始创建 IO 事件了。
+
+.. _`aeCreateFileEvent-func`:
+.. `aeCreateFileEvent-func`
+
+2.5 aeCreateFileEvent 函数
+===============================================================================
+
+创建 IO 事件。
+
+.. code-block:: c 
+
+    aeCreateFileEvent(server.el, server.fd, AE_READABLE, acceptHandler, NULL, NULL)
+
+    int aeCreateFileEvent(aeEventLoop *eventLoop, int fd, int mask,
+            aeFileProc *proc, void *clientData,
+            aeEventFinalizerProc *finalizerProc)
+    {
+        aeFileEvent *fe;
+
+        fe = malloc(sizeof(*fe));
+        if (fe == NULL) return AE_ERR;
+        fe->fd = fd;
+        fe->mask = mask;
+        fe->fileProc = proc;
+        fe->finalizerProc = finalizerProc;
+        fe->clientData = clientData;
+        fe->next = eventLoop->fileEventHead;
+        eventLoop->fileEventHead = fe;
+        return AE_OK;
+    }
+
+在该函数中， eventLoop=server.el， fd=server.fd， mask=AE_READABLE， \
+proc=acceptHandler， clientData 和 finalizerProc 为空。 
+
+创建 IO 事件实际上就是将 aeFileEvent 的属性进行填充， 填充完毕后返回 AE_OK 即 0。 创\
+建的 IO 事件就位于事件轮询 eventLoop 的第一个 IO 事件。 
+
+其中的 fileProc 处理函数是 acceptHandler_ 函数。 
+
+.. _`acceptHandler`: beta-1-functions.rst#acceptHandler-func
+
