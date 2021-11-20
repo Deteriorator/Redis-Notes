@@ -2246,8 +2246,10 @@ list 的长度是否为 0， 如果为 0 则头节点和尾节点都将是添加
 使用 `_dictAlloc`_ 函数分配一个 dictEntry 内存空间用于添加给定的 key 和 val， 将 \
 entry 的 next 设置为 ht->table[index]， 同时 ht->table[index] 被置为 nextEntry。
 
-然后使用 dictSetHashKey_ 宏和 dictSetHashVal_ 宏设置 hash 字段。 设置完成后， 将哈\
-希表的 used 自增加一， 并返回 DICT_OK 即 0
+然后使用 dictSetHashKey_ 宏和 dictSetHashVal_ 宏设置哈希表中的 Key 和 Val 字段。 \
+设置完成后， 将哈希表的 used 自增加一， 并返回 DICT_OK 即 0。 实际上这两个宏直接就将\
+给定的 key 和 val 设置到哈希表中了， 因为在 sdsDictType_ 类型中并没有设置 keyDup 和 \
+valDup 值。
 
 .. _`_dictKeyIndex`: #_dictKeyIndex-func
 .. _`_dictAlloc`: #_dictAlloc-func
