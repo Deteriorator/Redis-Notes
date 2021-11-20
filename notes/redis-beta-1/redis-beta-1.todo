@@ -291,7 +291,7 @@ Functions (188):
 	☐ sdscpy
 	☐ sdscpylen
 	✔ sdsDictHashFunction @done(21-10-31 22:24)
-	☐ sdsDictKeyCompare
+	✔ sdsDictKeyCompare @done(21-11-20 22:47)
 	☐ sdsDictKeyDestructor
 	☐ sdsDictValDestructor
 	☐ sdsdup
@@ -330,7 +330,7 @@ Macros (26):
 	✔ dictHashKey @done(21-10-31 22:19)
 	☐ dictSetHashKey
 	☐ dictSetHashVal
-	☐ DICT_NOTUSED
+	✔ DICT_NOTUSED @done(21-11-20 22:50)
 	✔ listFirst @done(21-10-20 22:02)
 	☐ listGetDupMethod
 	☐ listGetFree

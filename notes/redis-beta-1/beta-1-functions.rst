@@ -2324,4 +2324,31 @@ DICT_OK 即 0， 其他情况下拓展失败， 则返回的是 DICT_ERR 即 1
 
 .. _`dictExpand`: #dictExpand-func
 
+.. _`sdsDictKeyCompare-func`:
+.. `sdsDictKeyCompare-func`
+
+64 sdsDictKeyCompare 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static int sdsDictKeyCompare(void *privdata, const void *key1,
+            const void *key2)
+    {
+        int l1,l2;
+        DICT_NOTUSED(privdata);
+
+        l1 = sdslen((sds)key1);
+        l2 = sdslen((sds)key2);
+        if (l1 != l2) return 0;
+        return memcmp(key1, key2, l1) == 0;
+    }
+
+比较两个 key， 首先将 privdata 使用 DICT_NOTUSED_ 宏处理一下， 因为在该函数内部并没\
+有使用到， 但是函数指针声明的时候包含的有这个参数。
+
+之后使用 sdslen_ 函数获取两个 key 的长度， 长度不同肯定不相同， 不相等就返回 0 即假值\
+。长度相同的话， 就比较内存中的值是否相等， memcmp 在两个值相等的时候返回 0， 那么该函\
+数就会在相等的时候返回真值。
+
 

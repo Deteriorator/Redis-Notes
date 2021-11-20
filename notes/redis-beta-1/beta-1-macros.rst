@@ -155,3 +155,16 @@ listNode_。
 该宏定义用于比较两个 key， 如果定义了哈希表的 type 的 keyCompare 属性， 则会执行该函\
 数， keyCompare 是一个函数指针。 否则就直接比较 key1 与 key2 是否相等。
 
+.. _`DICT_NOTUSED-macro`:
+.. DICT_NOTUSED-macro
+
+12 DICT_NOTUSED 宏定义
+===============================================================================
+
+.. code-block:: c
+
+    #define DICT_NOTUSED(V) ((void) V)
+
+将没有使用的 Dict 值转换为 void 类型， 避免警告。
+
+
