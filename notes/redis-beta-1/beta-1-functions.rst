@@ -2349,8 +2349,50 @@ DICT_OK 即 0， 其他情况下拓展失败， 则返回的是 DICT_ERR 即 1
 比较两个 key， 首先将 privdata 使用 DICT_NOTUSED_ 宏处理一下， 因为在该函数内部并没\
 有使用到， 但是函数指针声明的时候包含的有这个参数。
 
+.. _`DICT_NOTUSED`: beta-1-macros.rst#DICT_NOTUSED-macro
+
 之后使用 sdslen_ 函数获取两个 key 的长度， 长度不同肯定不相同， 不相等就返回 0 即假值\
 。长度相同的话， 就比较内存中的值是否相等， memcmp 在两个值相等的时候返回 0， 那么该函\
 数就会在相等的时候返回真值。
+
+.. _`acceptHandler-func`:
+.. `acceptHandler-func`
+
+65 acceptHandler 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static void acceptHandler(aeEventLoop *el, int fd, void *privdata, int mask) {
+        int cport, cfd;
+        char cip[128];
+        REDIS_NOTUSED(el);
+        REDIS_NOTUSED(mask);
+        REDIS_NOTUSED(privdata);
+
+        cfd = anetAccept(server.neterr, fd, cip, &cport);
+        if (cfd == AE_ERR) {
+            redisLog(REDIS_DEBUG,"Accepting client connection: %s", server.neterr);
+            return;
+        }
+        redisLog(REDIS_DEBUG,"Accepted %s:%d", cip, cport);
+        if (createClient(cfd) == REDIS_ERR) {
+            redisLog(REDIS_WARNING,"Error allocating resoures for the client");
+            close(cfd); /* May be already closed, just ingore errors */
+            return;
+        }
+    }
+
+使用 REDIS_NOTUSED_ 宏将 el， mask 和 privdata 转换为 void 类型， 避免警告。
+
+然后使用 anetAccept_ 函数进行连接， 正常执行会返回套接字文件描述符， 否则返回 \
+ANET_ERR 即 -1。 当 cfd 为 AE_ERR 即 -1 时， 记录日志并无值返回。
+
+正常连接之后， 使用 createClient_ 函数创建 Client 对象， 如果创建失败， 则记录日志， \
+关闭连接并无值返回。
+
+.. _`REDIS_NOTUSED`: beta-1-macros.rst#REDIS_NOTUSED-macro
+.. _`anetAccept`: #anetAccept-func
+.. _`createClient`: #createClient-func
 
 

@@ -129,7 +129,7 @@ External Variables (3):
 	☐ dictTypeHeapStrings
 
 Functions (188):
-	☐ acceptHandler
+	✔ acceptHandler @done(21-11-21 22:01)
 	☐ addReply
 	☐ addReplySds
 	✔ aeAddMillisecondsToNow @done(21-10-27 22:31)
