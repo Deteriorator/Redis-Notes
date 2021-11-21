@@ -144,7 +144,7 @@ Functions (188):
 	☐ aeProcessEvents
 	☐ aeSearchNearestTimer
 	☐ aeStop
-	☐ anetAccept
+	✔ anetAccept @done(21-11-21 22:34)
 	☐ anetNonBlock
 	☐ anetRead
 	☐ anetResolve
@@ -358,7 +358,7 @@ Function Prototypes (111):
 	☐ aeMain
 	☐ aeProcessEvents
 	☐ aeStop
-	☐ anetAccept
+	✔ anetAccept @done(21-11-21 22:34)
 	☐ anetNonBlock
 	☐ anetRead
 	☐ anetResolve

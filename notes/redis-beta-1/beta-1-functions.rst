@@ -2395,4 +2395,79 @@ ANET_ERR 即 -1。 当 cfd 为 AE_ERR 即 -1 时， 记录日志并无值返回�
 .. _`anetAccept`: #anetAccept-func
 .. _`createClient`: #createClient-func
 
+.. _`anetAccept-func`:
+.. `anetAccept-func`
+
+66 anetAccept 函数
+===============================================================================
+
+.. code-block:: C 
+
+    int anetAccept(char *err, int serversock, char *ip, int *port)
+    {
+        int fd;
+        struct sockaddr_in sa;
+        unsigned int saLen;
+
+        while(1) {
+            saLen = sizeof(sa);
+            fd = accept(serversock, (struct sockaddr*)&sa, &saLen);
+            if (fd == -1) {
+                if (errno == EINTR)
+                    continue;
+                else {
+                    anetSetError(err, "accept: %s\n", strerror(errno));
+                    return ANET_ERR;
+                }
+            }
+            break;
+        }
+        if (ip) strcpy(ip,inet_ntoa(sa.sin_addr));
+        if (port) *port = ntohs(sa.sin_port);
+        return fd;
+    }
+
+该函数用于创建套接字连接， 创建成功将返回文件描述符， 失败则记录日志返回 ANET_ERR 即 -1
+
+.. _`createClient-func`:
+.. `createClient-func`
+
+67 createClient 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static int createClient(int fd) {
+        redisClient *c = malloc(sizeof(*c));
+
+        anetNonBlock(NULL,fd);
+        anetTcpNoDelay(NULL,fd);
+        if (!c) return REDIS_ERR;
+        selectDb(c,0);
+        c->fd = fd;
+        c->querybuf = sdsempty();
+        c->argc = 0;
+        c->bulklen = -1;
+        c->sentlen = 0;
+        c->lastinteraction = time(NULL);
+        if ((c->reply = listCreate()) == NULL) oom("listCreate");
+        listSetFreeMethod(c->reply,decrRefCount);
+        if (aeCreateFileEvent(server.el, c->fd, AE_READABLE,
+            readQueryFromClient, c, NULL) == AE_ERR) {
+            freeClient(c);
+            return REDIS_ERR;
+        }
+        if (!listAddNodeTail(server.clients,c)) oom("listAddNodeTail");
+        return REDIS_OK;
+    }
+
+该函数用于创建一个 Client 对象。 
+
+首先分配 Client 的内存空间； 然后使用 anetNonBlock_ 函数设置给定的 socket 连接为无阻\
+塞， 然后使用 anetTcpNoDelay_ 函数禁用 TCP 无延迟连接。 
+
+然后使用 selectDb_ 函数设置当前 Client 的 dict 为服务器中的第一个。 然后初始化 \
+Client 的其他值， 其中 querybuf 属性被 sdsempty_ 函数清空。 reply 属性是一个空的 \
+List， 使用的是 listCreate_ 函数创建的， 并将其 Free 方法使用 listSetFreeMethod_ \
+宏设置为 decrRefCount_ 函数。 
 
