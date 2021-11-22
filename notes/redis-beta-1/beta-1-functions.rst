@@ -2471,3 +2471,55 @@ Client 的其他值， 其中 querybuf 属性被 sdsempty_ 函数清空。 reply
 List， 使用的是 listCreate_ 函数创建的， 并将其 Free 方法使用 listSetFreeMethod_ \
 宏设置为 decrRefCount_ 函数。 
 
+然后使用 aeCreateFileEvent_ 函数创建一个 IO 事件， 但处理函数是 \
+readQueryFromClient_ 函数， 对应的 client 就是创建的 Client。 如果创建 IO 事件失败\
+则使用 freeClient_ 函数释放掉 Client 占用的内存， 并返回 REDIS_ERR 即 -1 
+
+创建 IO 事件成功后， 将创建的 Client 使用 listAddNodeTail_ 函数追加到 \
+server.clients 尾部。
+
+最终返回 REDIS_OK 即 0.
+
+.. _`anetNonBlock`: #anetNonBlock-func
+.. _`anetTcpNoDelay`: #anetTcpNoDelay-func
+.. _`selectDb`: #selectDb-func
+.. _`sdsempty`: #sdsempty-func
+.. _`readQueryFromClient`: #readQueryFromClient-func
+.. _`listAddNodeTail`: #listAddNodeTail-func
+.. _`aeCreateFileEvent`: beta-1-main-flow.rst#aeCreateFileEvent-func
+
+.. _`anetNonBlock-func`:
+.. `anetNonBlock-func`
+
+68 anetNonBlock 函数
+===============================================================================
+
+.. code-block:: C 
+
+    int anetNonBlock(char *err, int fd)
+    {
+        int flags;
+
+        /* Set the socket nonblocking.
+        * Note that fcntl(2) for F_GETFL and F_SETFL can't be
+        * interrupted by a signal. */
+        if ((flags = fcntl(fd, F_GETFL)) == -1) {
+            anetSetError(err, "fcntl(F_GETFL): %s\n", strerror(errno));
+            return ANET_ERR;
+        }
+        if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) == -1) {
+            anetSetError(err, "fcntl(F_SETFL,O_NONBLOCK): %s\n", strerror(errno));
+            return ANET_ERR;
+        }
+        return ANET_OK;
+    }
+
+首先使用 fcntl 函数获取给定的文件描述符 fd 的 access mode 和状态标志， 如果为 -1 则\
+使用 anetSetError_ 函数打印错误信息并返回 ANET_ERR 即 -1
+
+然后在使用 fcntl 函数设置给定的文件描述符 fd 为 O_NONBLOCK 模式， 如果设置失败则返回 \
+-1 使用 anetSetError_ 函数打印错误信息并返回 ANET_ERR 即 -1
+
+无异常则最终返回 ANET_OK 即 0
+
+
