@@ -152,7 +152,7 @@ Functions (188):
 	☐ anetSetSendBuffer
 	☐ anetTcpConnect
 	☐ anetTcpKeepAlive
-	☐ anetTcpNoDelay
+	✔ anetTcpNoDelay @done(21-11-22 21:59)
 	✔ anetTcpServer @done(21-10-25 21:42)
 	☐ anetWrite
 	✔ appendServerSaveParams @done(21-10-19 22:01)
@@ -309,7 +309,7 @@ Functions (188):
 	✔ sdstrim @done(21-11-09 22:43)
 	☐ sdsupdatelen
 	☐ selectCommand
-	☐ selectDb
+	✔ selectDb @done(21-11-22 22:02)
 	☐ sendReplyToClient
 	✔ serverCron @done(21-10-28 23:19)
 	☐ setCommand
@@ -364,7 +364,7 @@ Function Prototypes (111):
 	☐ anetResolve
 	☐ anetTcpConnect
 	☐ anetTcpKeepAlive
-	☐ anetTcpNoDelay
+	✔ anetTcpNoDelay @done(21-11-22 21:59)
 	✔ anetTcpServer @done(21-10-27 21:39)
 	☐ anetWrite
 	☐ bgsaveCommand

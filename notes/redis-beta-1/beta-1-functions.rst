@@ -2522,4 +2522,48 @@ server.clients 尾部。
 
 无异常则最终返回 ANET_OK 即 0
 
+.. _`anetTcpNoDelay-func`:
+.. `anetTcpNoDelay-func`
+
+69 anetTcpNoDelay 函数
+===============================================================================
+
+.. code-block:: C 
+
+    int anetTcpNoDelay(char *err, int fd)
+    {
+        int yes = 1;
+        if (setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &yes, sizeof(yes)) == -1)
+        {
+            anetSetError(err, "setsockopt TCP_NODELAY: %s\n", strerror(errno));
+            return ANET_ERR;
+        }
+        return ANET_OK;
+    }
+
+使用 setsockopt 函数设置给定的 socket 描述符 fd 的选项， 在本函数中， 将 \
+IPPROTO_TCP 即 IP 协议族中的 TCP 协议的 TCP_NODELAY 选项设置为 yes 即 1 (真值)， \
+如果执行失败则返回 -1 并设置相应的 errno， 使用 anetSetError_ 打印错误信息并返回 \
+ANET_ERR 即 -1
+
+无异常则最终返回 ANET_OK 即 0
+
+.. _`selectDb-func`:
+.. `selectDb-func`
+
+70 selectDb 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static int selectDb(redisClient *c, int id) {
+        if (id < 0 || id >= server.dbnum)
+            return REDIS_ERR;
+        c->dict = server.dict[id];
+        return REDIS_OK;
+    }
+
+对给定的 redisClient c 选择指定 id 的数据库。
+
+无异常最终返回 REDIS_OK 即 0
 
