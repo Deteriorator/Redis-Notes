@@ -2567,3 +2567,131 @@ ANET_ERR 即 -1
 
 无异常最终返回 REDIS_OK 即 0
 
+.. _`readQueryFromClient-func`:
+.. `readQueryFromClient-func`
+
+71 readQueryFromClient 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static void readQueryFromClient(aeEventLoop *el, int fd, void *privdata, int mask) {
+        redisClient *c = (redisClient*) privdata;
+        char buf[REDIS_QUERYBUF_LEN];
+        int nread;
+        REDIS_NOTUSED(el);
+        REDIS_NOTUSED(mask);
+
+        // 1
+        nread = read(fd, buf, REDIS_QUERYBUF_LEN);
+        if (nread == -1) {
+            if (errno == EAGAIN) {
+                nread = 0;
+            } else {
+                redisLog(REDIS_DEBUG, "Reading from client: %s",strerror(errno));
+                freeClient(c);
+                return;
+            }
+        } else if (nread == 0) {
+        // 2    
+            redisLog(REDIS_DEBUG, "Client closed connection");
+            freeClient(c);
+            return;
+        }
+        if (nread) {
+            // 3
+            c->querybuf = sdscatlen(c->querybuf, buf, nread);
+            c->lastinteraction = time(NULL);
+        } else {
+            return;
+        }
+
+    again:
+        if (c->bulklen == -1) {
+            /* Read the first line of the query */
+            // 4
+            char *p = strchr(c->querybuf,'\n');
+            size_t querylen;
+            if (p) {
+                sds query, *argv;
+                int argc, j;
+                
+                // 5
+                query = c->querybuf;
+                c->querybuf = sdsempty();
+                querylen = 1+(p-(query));
+                if (sdslen(query) > querylen) {
+                    /* leave data after the first line of the query in the buffer */
+                    c->querybuf = sdscatlen(c->querybuf,query+querylen,sdslen(query)-querylen);
+                }
+                // 6
+                *p = '\0'; /* remove "\n" */
+                if (*(p-1) == '\r') *(p-1) = '\0'; /* and "\r" if any */
+                sdsupdatelen(query);
+
+                // 7
+                /* Now we can split the query in arguments */
+                if (sdslen(query) == 0) {
+                    /* Ignore empty query */
+                    sdsfree(query);
+                    return;
+                }
+
+                // 8
+                argv = sdssplitlen(query,sdslen(query)," ",1,&argc);
+                sdsfree(query);
+                if (argv == NULL) oom("Splitting query in token");
+                for (j = 0; j < argc && j < REDIS_MAX_ARGS; j++) {
+                    if (sdslen(argv[j])) {
+                        c->argv[c->argc] = argv[j];
+                        c->argc++;
+                    } else {
+                        sdsfree(argv[j]);
+                    }
+                }
+
+                // 9
+                free(argv);
+                /* Execute the command. If the client is still valid
+                * after processCommand() return and there is something
+                * on the query buffer try to process the next command. */
+                if (processCommand(c) && sdslen(c->querybuf)) goto again;
+                return;
+            } else if (sdslen(c->querybuf) >= 1024) {
+                
+                // 10
+                redisLog(REDIS_DEBUG, "Client protocol error");
+                freeClient(c);
+                return;
+            }
+        } else {
+        // 11
+            /* Bulk read handling. Note that if we are at this point
+            the client already sent a command terminated with a newline,
+            we are reading the bulk data that is actually the last
+            argument of the command. */
+            int qbl = sdslen(c->querybuf);
+
+            if (c->bulklen <= qbl) {
+                /* Copy everything but the final CRLF as final argument */
+                c->argv[c->argc] = sdsnewlen(c->querybuf,c->bulklen-2);
+                c->argc++;
+                c->querybuf = sdsrange(c->querybuf,c->bulklen,-1);
+                processCommand(c);
+                return;
+            }
+        }
+    }
+
+该函数太长， 分成几个小部分进行解读：
+
+- STEP-1: 将没有使用的参数 el 和 mask 使用 REDIS_NOTUSED_ 宏转换为 void 类型， 将 \
+  privdata 转换为 redisClient_ 类型， 然后从给定的文件描述符 fd 中读取 \
+  REDIS_QUERYBUF_LEN 即 1024 字节存放到 buf 中， 如果读取失败返回 -1 且 errno 为 \
+  EAGAIN 则将 nread 置为 0； 否则将记录日志， 使用 freeClient_ 函数释放 client 内存\
+  并无值返回
+- STEP-2: 当 nread 为 0 时， 记录日志释放 client 内存并无值返回 
+- STEP-3: nread 正常时， 使用 sdscatlen_ 函数将读取到的内容 buf 与 c->querybuf 进\
+  行拼接， 同时将 lastinteraction 属性置为当前时间。
+- STEP-4: 
+
