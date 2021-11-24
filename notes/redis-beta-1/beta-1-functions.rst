@@ -2693,5 +2693,11 @@ ANET_ERR 即 -1
 - STEP-2: 当 nread 为 0 时， 记录日志释放 client 内存并无值返回 
 - STEP-3: nread 正常时， 使用 sdscatlen_ 函数将读取到的内容 buf 与 c->querybuf 进\
   行拼接， 同时将 lastinteraction 属性置为当前时间。
-- STEP-4: 
+- STEP-4: 从 c->querybuf 中查找第一个 '\\n' 换行符， 如果找到了就执行 if 内部语句否\
+  则执行 else 内的语句。
+- STEP-5: 将 c->querybuf 存为 query， 然后使用 sdsempty_ 函数清空 c->querybuf， p \
+  - (query) 表示的是第一个换行符到 query 第一个字符的距离， 加上 1 就是 query 的长\
+  度。 sdslen(query) > querylen 成立的时候说明 querybuf 中存在多个查询命令。 然后使\
+  用 sdscatlen_ 函数拼接字符串， query+querylen 将字符串的起始指针移动， 使其去除已\
+  经解析的 query。 
 
