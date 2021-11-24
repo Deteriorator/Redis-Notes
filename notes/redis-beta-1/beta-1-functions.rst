@@ -2700,4 +2700,8 @@ ANET_ERR 即 -1
   度。 sdslen(query) > querylen 成立的时候说明 querybuf 中存在多个查询命令。 然后使\
   用 sdscatlen_ 函数拼接字符串， query+querylen 将字符串的起始指针移动， 使其去除已\
   经解析的 query。 
+- STEP-6: 将 p 指向的字符置为 '\\0'， 达到去除 '\\n' 的目的， 如果 '\\n' 前面是 \
+  '\\r'， 也置为 '\\0'， 然后使用 sdsupdatelen_ 函数更新一下 query 
+- STEP-7: 如果查询 query 长度为 0 直接使用 sdsfree_ 函数释放其内存并无值返回。
+- STEP-8: 
 
