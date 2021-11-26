@@ -63,3 +63,16 @@ Type Definitions
 sds 就是一个 char 指针， sds 就是一个别名而已。 ``char*`` 表示字符指针类型， 当其指\
 向一个字符串的第一个元素时， 它就可以表示这个字符串。
 
+.. _`redisCommandProc-typedef`:
+.. redisCommandProc-typedef
+
+05 redisCommandProc 定义
+===============================================================================
+
+.. code-block:: c 
+
+    typedef void redisCommandProc(redisClient *c);
+
+定义了 redisCommandProc 类型。 
+
+

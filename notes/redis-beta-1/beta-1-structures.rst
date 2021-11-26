@@ -376,3 +376,25 @@ dictIterator 结构体包含了 4 个字段：
 - entry: 此次迭代的哈希表 Entry 
 - nextEntry: 下一次迭代的哈希表 Entry 
 
+.. _`redisCommand-struct`:
+.. `redisCommand-struct`
+
+17 redisCommand 结构体
+===============================================================================
+
+.. code-block:: c 
+
+    struct redisCommand {
+        char *name;
+        redisCommandProc *proc;
+        int arity;
+        int type;
+    };
+
+redis 命令结构体， 包含了 4 个属性：
+
+- name: redis 命令名称
+- proc: 函数指针， 执行该命令时应该执行的函数
+- arity: 
+- type: 类型
+

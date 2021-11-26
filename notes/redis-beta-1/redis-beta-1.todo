@@ -17,7 +17,7 @@ Structures (22):
 	☐ picolParser
 	☐ picolVar
 	✔ redisClient @done(21-10-31 22:45)
-	☐ redisCommand
+	✔ redisCommand @done(21-11-26 23:16)
 	✔ redisObject @done(21-10-20 21:35)
 	✔ redisServer @done(21-10-18 21:56)
 	✔ saveparam @done(21-10-18 22:03)
@@ -40,7 +40,7 @@ Type Definitions (18):
 	✔ listNode @done(21-10-18 22:00)
 	☐ picolCmdFunc
 	✔ redisClient @done(21-10-31 22:45)
-	☐ redisCommandProc
+	✔ redisCommandProc @done(21-11-26 23:18)
 	✔ robj @done(21-10-20 21:35)
 	✔ sds @done(21-10-22 22:49)
 
