@@ -88,7 +88,7 @@ Constants (47):
 	☐ REDIS_MAX_ARGS
 	✔ REDIS_NOTICE @done(21-10-25 22:46)
 	✔ REDIS_OK @done(21-11-18 22:01)
-	☐ REDIS_QUERYBUF_LEN
+	✔ REDIS_QUERYBUF_LEN @done(21-11-26 22:28)
 	✔ REDIS_SELECTDB @done(21-11-06 22:37)
 	☐ REDIS_SERVERPORT
 	☐ REDIS_SET
@@ -271,7 +271,7 @@ Functions (188):
 	☐ processCommand
 	☐ pushGenericCommand
 	☐ randomkeyCommand
-	☐ readQueryFromClient
+	✔ readQueryFromClient @done(21-11-26 22:59)
 	✔ redisLog @done(21-10-25 22:44)
 	☐ renameCommand
 	☐ renameGenericCommand

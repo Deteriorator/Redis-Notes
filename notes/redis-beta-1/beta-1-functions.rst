@@ -2703,5 +2703,20 @@ ANET_ERR 即 -1
 - STEP-6: 将 p 指向的字符置为 '\\0'， 达到去除 '\\n' 的目的， 如果 '\\n' 前面是 \
   '\\r'， 也置为 '\\0'， 然后使用 sdsupdatelen_ 函数更新一下 query 
 - STEP-7: 如果查询 query 长度为 0 直接使用 sdsfree_ 函数释放其内存并无值返回。
-- STEP-8: 
+- STEP-8: 使用 sdssplitlen_ 函数将 query 字符串以空格进行拆分。 拆分后将 query 释\
+  放， argv 就是拆分后的结果， 如果 argv 为 NULL， 则执行 oom 警告。 然后经分割的结\
+  果存入到 c->argv 数组中， 并将 argc 自增。 
+- STEP-9: 将 argv 存入 c->argv 后将 argv 释放， 并执行 processCommand_ 函数进行处\
+  理相关查询， 如果执行成功且 c->querybuf 的长度大于 0 则继续执行 again 代码块， 否\
+  则无值返回。
+- STEP-10: c->querybuf 长度大于等于 1024， 则直接记录错误日志释放 Client 并无值返\
+  回， 因为之前读取的时候设置的长度是 REDIS_QUERYBUF_LEN 即 1024
+- STEP-11: 读取最后一个查询命令， 将命令存入 argv 后， 将 querybuf 使用 sdsrange_ \
+  函数截取剩下的字符； 之后使用 processCommand_ 函数处理查询命令， 最后无值返回。
+
+.. _`sdsupdatelen`: #sdsupdatelen-func
+.. _`sdssplitlen`: #sdssplitlen-func
+.. _`processCommand`: #processCommand-func
+.. _`sdsrange`: #sdsrange-func
+
 
