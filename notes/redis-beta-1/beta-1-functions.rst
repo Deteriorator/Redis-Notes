@@ -2719,4 +2719,87 @@ ANET_ERR 即 -1
 .. _`processCommand`: #processCommand-func
 .. _`sdsrange`: #sdsrange-func
 
+.. _`sdsupdatelen-func`:
+.. `sdsupdatelen-func`
+
+72 sdsupdatelen 函数
+===============================================================================
+
+.. code-block:: C 
+
+    void sdsupdatelen(sds s) {
+        struct sdshdr *sh = (void*) (s-(sizeof(struct sdshdr)));
+        int reallen = strlen(s);
+        sh->free += (sh->len-reallen);
+        sh->len = reallen;
+    }
+
+更新 sds 字符串的真实长度。
+
+.. _`processCommand-func`:
+.. `processCommand-func`
+
+73 processCommand 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static int processCommand(redisClient *c) {
+        struct redisCommand *cmd;
+
+        // 1
+        sdstolower(c->argv[0]);
+        /* The QUIT command is handled as a special case. Normal command
+        * procs are unable to close the client connection safely */
+        if (!strcmp(c->argv[0],"quit")) {
+            freeClient(c);
+            return 0;
+        }
+
+        // 2
+        cmd = lookupCommand(c->argv[0]);
+        if (!cmd) {
+            addReplySds(c,sdsnew("-ERR unknown command\r\n"));
+            resetClient(c);
+            return 1;
+        } else if (cmd->arity != c->argc) {
+        // 3    
+            addReplySds(c,sdsnew("-ERR wrong number of arguments\r\n"));
+            resetClient(c);
+            return 1;
+        } else if (cmd->type == REDIS_CMD_BULK && c->bulklen == -1) {
+            
+            // 4
+            int bulklen = atoi(c->argv[c->argc-1]);
+
+            sdsfree(c->argv[c->argc-1]);
+            if (bulklen < 0 || bulklen > 1024*1024*1024) {
+                c->argc--;
+                c->argv[c->argc] = NULL;
+                addReplySds(c,sdsnew("-ERR invalid bulk write count\r\n"));
+                resetClient(c);
+                return 1;
+            }
+            c->argv[c->argc-1] = NULL;
+            c->argc--;
+            c->bulklen = bulklen+2; /* add two bytes for CR+LF */
+            /* It is possible that the bulk read is already in the
+            * buffer. Check this condition and handle it accordingly */
+            if ((signed)sdslen(c->querybuf) >= c->bulklen) {
+                c->argv[c->argc] = sdsnewlen(c->querybuf,c->bulklen-2);
+                c->argc++;
+                c->querybuf = sdsrange(c->querybuf,c->bulklen,-1);
+            } else {
+                return 1;
+            }
+        }
+        // 5
+        /* Exec the command */
+        cmd->proc(c);
+        resetClient(c);
+        return 1;
+    }
+
+该函数有些长， 分成 5 部分进行解析。
+
 
