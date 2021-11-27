@@ -202,4 +202,4 @@ listNode_。
     } while(0)
 
 设置哈希表中的 value， 当指定了 type->valDup， 那么将会执行该函数， 否则就直接将 val \
-设置为给定的 `_val_`
+设置为给定的 ``_val_``

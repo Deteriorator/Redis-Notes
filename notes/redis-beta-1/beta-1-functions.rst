@@ -2802,4 +2802,12 @@ ANET_ERR 即 -1
 
 该函数有些长， 分成 5 部分进行解析。
 
+- STEP-1: 新建一个 redisCommand_ 结构体实例 cmd， 然后将第一个命令 argv[0] 使用 \
+  sdstolower_ 函数转换为小写字符。 如果 argv[0] 等于 quit 则释放 client 内存并返回 \
+  0， 就是 redis 的 quit 命令
+- STEP-2: 使用 lookupCommand_ 函数查找命令需要执行的函数， 如果函数值 cmd 为假， 则\
+  addReplySds_ 函数添加回复字符串， 并使用 resetClient_ 函数重置 client 最后返回 1
+
+
+
 
