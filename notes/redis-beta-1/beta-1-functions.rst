@@ -3015,3 +3015,18 @@ reply list 尾节点， 同时使用 incrRefCount_ 函数将引用计数增加 1
 - STEP-4: 当 totwritten 大于 0 时更新 lastinteraction 属性为当前时间； 如果 reply \
   长度为 0 则将 sentlen 置为 0 并使用 aeDeleteFileEvent_ 函数删除 IO 事件
 
+.. _`incrRefCount-func`:
+.. `incrRefCount-func`
+
+80 incrRefCount 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static void incrRefCount(robj *o) {
+        o->refcount++;
+    }
+
+直接将 robj 的 refcount 属性自增加 1 即引用计数加 1
+
+

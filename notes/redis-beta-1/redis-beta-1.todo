@@ -209,7 +209,7 @@ Functions (188):
 	☐ getCommand
 	☐ incrCommand
 	☐ incrDecrCommand
-	☐ incrRefCount
+	✔ incrRefCount @done(21-11-28 23:21)
 	✔ initServer @done(21-11-18 21:41)
 	✔ initServerConfig @done(21-10-18 22:12)
 	☐ keysCommand
@@ -400,7 +400,7 @@ Function Prototypes (111):
 	✔ freeStringObject @done(21-11-18 21:32)
 	☐ getCommand
 	☐ incrCommand
-	☐ incrRefCount
+	✔ incrRefCount @done(21-11-28 23:21)
 	☐ keysCommand
 	☐ lastsaveCommand
 	☐ lindexCommand
