@@ -113,7 +113,7 @@ Enum Constants (12):
 
 Variables (10):
 	☐ CCOPT
-	☐ cmdTable
+	✔ cmdTable @done(21-11-28 22:43)
 	☐ dictTypeHeapStringCopyKey
 	☐ dictTypeHeapStringCopyKeyValue
 	☐ dictTypeHeapStrings
@@ -131,7 +131,7 @@ External Variables (3):
 Functions (188):
 	✔ acceptHandler @done(21-11-21 22:01)
 	☐ addReply
-	☐ addReplySds
+	✔ addReplySds @done(21-11-28 22:50)
 	✔ aeAddMillisecondsToNow @done(21-10-27 22:31)
 	✔ aeCreateEventLoop @done(21-10-23 23:23)
 	✔ aeCreateFileEvent @done(21-11-20 23:16)
@@ -229,7 +229,7 @@ Functions (188):
 	☐ llenCommand
 	✔ loadDb @done(21-11-18 22:00)
 	✔ loadServerConfig @done(21-11-14 22:28)
-	☐ lookupCommand
+	✔ lookupCommand @done(21-11-28 22:49)
 	☐ lpopCommand
 	☐ lpushCommand
 	☐ lrangeCommand
@@ -348,7 +348,7 @@ Macros (26):
 
 Function Prototypes (111):
 	☐ addReply
-	☐ addReplySds
+	✔ addReplySds @done(21-11-28 22:50)
 	✔ aeCreateEventLoop @done(21-11-07 23:13)
 	✔ aeCreateFileEvent @done(21-11-20 23:16)
 	✔ aeCreateTimeEvent @done(21-10-27 22:31)

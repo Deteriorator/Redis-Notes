@@ -2851,4 +2851,78 @@ ANET_ERR 即 -1
 
 同上， 使用 toupper 将字符串中的每个字符转换为大写字符
 
+.. _`lookupCommand-func`:
+.. `lookupCommand-func`
+
+76 lookupCommand 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static struct redisCommand cmdTable[] = {
+        {"get",getCommand,2,REDIS_CMD_INLINE},
+        {"set",setCommand,3,REDIS_CMD_BULK},
+        {"setnx",setnxCommand,3,REDIS_CMD_BULK},
+        {"del",delCommand,2,REDIS_CMD_INLINE},
+        {"exists",existsCommand,2,REDIS_CMD_INLINE},
+        {"incr",incrCommand,2,REDIS_CMD_INLINE},
+        {"decr",decrCommand,2,REDIS_CMD_INLINE},
+        {"rpush",rpushCommand,3,REDIS_CMD_BULK},
+        {"lpush",lpushCommand,3,REDIS_CMD_BULK},
+        {"rpop",rpopCommand,2,REDIS_CMD_INLINE},
+        {"lpop",lpopCommand,2,REDIS_CMD_INLINE},
+        {"llen",llenCommand,2,REDIS_CMD_INLINE},
+        {"lindex",lindexCommand,3,REDIS_CMD_INLINE},
+        {"lrange",lrangeCommand,4,REDIS_CMD_INLINE},
+        {"ltrim",ltrimCommand,4,REDIS_CMD_INLINE},
+        {"randomkey",randomkeyCommand,1,REDIS_CMD_INLINE},
+        {"select",selectCommand,2,REDIS_CMD_INLINE},
+        {"move",moveCommand,3,REDIS_CMD_INLINE},
+        {"rename",renameCommand,3,REDIS_CMD_INLINE},
+        {"renamenx",renamenxCommand,3,REDIS_CMD_INLINE},
+        {"keys",keysCommand,2,REDIS_CMD_INLINE},
+        {"dbsize",dbsizeCommand,1,REDIS_CMD_INLINE},
+        {"ping",pingCommand,1,REDIS_CMD_INLINE},
+        {"echo",echoCommand,2,REDIS_CMD_BULK},
+        {"save",saveCommand,1,REDIS_CMD_INLINE},
+        {"bgsave",bgsaveCommand,1,REDIS_CMD_INLINE},
+        {"shutdown",shutdownCommand,1,REDIS_CMD_INLINE},
+        {"lastsave",lastsaveCommand,1,REDIS_CMD_INLINE},
+        /* lpop, rpop, lindex, llen */
+        /* dirty, lastsave, info */
+        {"",NULL,0,0}
+    };
+
+    static struct redisCommand *lookupCommand(char *name) {
+        int j = 0;
+        while(cmdTable[j].name != NULL) {
+            if (!strcmp(name,cmdTable[j].name)) return &cmdTable[j];
+            j++;
+        }
+        return NULL;
+    }
+
+在 cmdTable 中用给定的命令名称 name 查找相应的执行函数， 如果找到对应的函数， 则返回\
+这一条 redisCommand， 否则返回 NULL。 
+
+.. _`addReplySds-func`:
+.. `addReplySds-func`
+
+77 addReplySds 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static void addReplySds(redisClient *c, sds s) {
+        robj *o = createObject(REDIS_STRING,s);
+        addReply(c,o);
+        decrRefCount(o);
+    }
+
+以给定的字符串创建一个 REDIS_STRING 对象， 将这个对象使用 addReply_ 函数回复给 \
+client， 然后将这个 REDIS_STRING 对象使用 decrRefCount_ 函数减少引用计数
+
+.. _`addReply`:  #addReply-func
+
+
 
