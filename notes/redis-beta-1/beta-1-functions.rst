@@ -2924,5 +2924,94 @@ client， 然后将这个 REDIS_STRING 对象使用 decrRefCount_ 函数减少�
 
 .. _`addReply`:  #addReply-func
 
+.. _`addReply-func`:
+.. `addReply-func`
 
+78 addReply 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static void addReply(redisClient *c, robj *obj) {
+        if (listLength(c->reply) == 0 &&
+            aeCreateFileEvent(server.el, c->fd, AE_WRITABLE,
+            sendReplyToClient, c, NULL) == AE_ERR) return;
+        if (!listAddNodeTail(c->reply,obj)) oom("listAddNodeTail");
+        incrRefCount(obj);
+    }
+
+添加回复信息； 如果 client 的 reply 属性长度为 0 且创建回复 IO 事件失败即 \
+sendReplyToClient_ 函数执行失败了则无值返回； 如果正常执行， 则将回复的 robj 添加到 \
+reply list 尾节点， 同时使用 incrRefCount_ 函数将引用计数增加 1
+
+.. _`sendReplyToClient`: #sendReplyToClient-func
+.. _`incrRefCount`: #incrRefCount-func
+
+.. _`sendReplyToClient-func`:
+.. `sendReplyToClient-func`
+
+79 sendReplyToClient 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static void sendReplyToClient(aeEventLoop *el, int fd, void *privdata, int mask) {
+        redisClient *c = privdata;
+        int nwritten = 0, totwritten = 0, objlen;
+        robj *o;
+        REDIS_NOTUSED(el);
+        REDIS_NOTUSED(mask);
+
+        while(listLength(c->reply)) {
+            // 1
+            o = listNodeValue(listFirst(c->reply));
+            objlen = sdslen(o->ptr);
+
+            if (objlen == 0) {
+                listDelNode(c->reply,listFirst(c->reply));
+                continue;
+            }
+
+            // 2
+            nwritten = write(fd, o->ptr+c->sentlen, objlen - c->sentlen);
+            if (nwritten <= 0) break;
+            c->sentlen += nwritten;
+            totwritten += nwritten;
+            /* If we fully sent the object on head go to the next one */
+            if (c->sentlen == objlen) {
+                listDelNode(c->reply,listFirst(c->reply));
+                c->sentlen = 0;
+            }
+        }
+        // 3
+        if (nwritten == -1) {
+            if (errno == EAGAIN) {
+                nwritten = 0;
+            } else {
+                redisLog(REDIS_DEBUG,
+                    "Error writing to client: %s", strerror(errno));
+                freeClient(c);
+                return;
+            }
+        }
+
+        // 4
+        if (totwritten > 0) c->lastinteraction = time(NULL);
+        if (listLength(c->reply) == 0) {
+            c->sentlen = 0;
+            aeDeleteFileEvent(server.el,c->fd,AE_WRITABLE);
+        }
+    }
+
+该函数用于将 server 的回复发送给 client。 
+
+- STEP-1: 使用 listNodeValue_ 宏获取 reply list 的头节点， 如果其长度为 0 则使用 \
+  listDelNode_ 函数删除该头节点， 继续下一轮循环
+- STEP-2: 将需要发送的信息使用 write 函数写入到 fd 中， 如果写入 0 或失败， 则执行 \
+  break 语句中断循环； 正常情况下， 发送完毕后即 sentlen 等于 objlen， 将头节点删除， \
+  并将 sentlen 重置为 0
+- STEP-3: 当 write 写入失败时， 如果 errno 为 EAGAIN， 则将 nwritten 置为 0， 否则\
+  记录日志， 使用 freeClient_ 函数释放 client 并无值返回。
+- STEP-4: 当 totwritten 大于 0 时更新 lastinteraction 属性为当前时间； 如果 reply \
+  长度为 0 则将 sentlen 置为 0 并使用 aeDeleteFileEvent_ 函数删除 IO 事件
 

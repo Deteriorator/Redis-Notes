@@ -130,7 +130,7 @@ External Variables (3):
 
 Functions (188):
 	✔ acceptHandler @done(21-11-21 22:01)
-	☐ addReply
+	✔ addReply @done(21-11-28 23:16)
 	✔ addReplySds @done(21-11-28 22:50)
 	✔ aeAddMillisecondsToNow @done(21-10-27 22:31)
 	✔ aeCreateEventLoop @done(21-10-23 23:23)
@@ -310,7 +310,7 @@ Functions (188):
 	☐ sdsupdatelen
 	☐ selectCommand
 	✔ selectDb @done(21-11-22 22:02)
-	☐ sendReplyToClient
+	✔ sendReplyToClient @done(21-11-28 23:16)
 	✔ serverCron @done(21-10-28 23:19)
 	☐ setCommand
 	☐ setGenericCommand
@@ -347,7 +347,7 @@ Macros (26):
 	✔ REDIS_NOTUSED @done(21-10-27 22:44)
 
 Function Prototypes (111):
-	☐ addReply
+	✔ addReply @done(21-11-28 23:16)
 	✔ addReplySds @done(21-11-28 22:50)
 	✔ aeCreateEventLoop @done(21-11-07 23:13)
 	✔ aeCreateFileEvent @done(21-11-20 23:16)
