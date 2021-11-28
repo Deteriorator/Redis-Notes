@@ -268,7 +268,7 @@ Functions (188):
 	☐ picolSetVar
 	☐ pingCommand
 	☐ popGenericCommand
-	☐ processCommand
+	✔ processCommand @done(21-11-28 22:35)
 	☐ pushGenericCommand
 	☐ randomkeyCommand
 	✔ readQueryFromClient @done(21-11-26 22:59)
@@ -304,8 +304,8 @@ Functions (188):
 	✔ sdsOomAbort @done(21-10-23 23:24)
 	☐ sdsrange
 	✔ sdssplitlen @done(21-11-13 21:24)
-	☐ sdstolower
-	☐ sdstoupper
+	✔ sdstolower @done(21-11-28 22:40)
+	✔ sdstoupper @done(21-11-28 22:40)
 	✔ sdstrim @done(21-11-09 22:43)
 	☐ sdsupdatelen
 	☐ selectCommand
@@ -451,7 +451,7 @@ Function Prototypes (111):
 	✔ sdsnewlen @done(21-10-22 23:21)
 	☐ sdsrange
 	✔ sdssplitlen @done(21-11-13 21:24)
-	☐ sdstolower
+	✔ sdstolower @done(21-11-28 22:40)
 	✔ sdstrim @done(21-11-09 22:43)
 	☐ sdsupdatelen
 	☐ selectCommand

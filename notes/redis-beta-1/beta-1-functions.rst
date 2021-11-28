@@ -2807,7 +2807,48 @@ ANET_ERR 即 -1
   0， 就是 redis 的 quit 命令
 - STEP-2: 使用 lookupCommand_ 函数查找命令需要执行的函数， 如果函数值 cmd 为假， 则\
   addReplySds_ 函数添加回复字符串， 并使用 resetClient_ 函数重置 client 最后返回 1
+- STEP-3: 如果 cmd 的 arity 属性和 argc 属性不相等， 则同 STEP-2
+- STEP-4: 如果 cmd 的 type 属性为 REDIS_CMD_BULK 即 1 且 c->bulklen 为 -1， TODO \
+  这一段逻辑不太明白， 先放过
+- STEP-5: 执行 cmd 的 proc 函数指针， 执行指向的函数， 然后使用 resetClient_ 函数重\
+  置 client 最终返回 1
 
+.. _`redisCommand`: beta-1-structures.rst#redisCommand-struct
+.. _`sdstolower`: #sdstolower-func
+.. _`lookupCommand`: #lookupCommand-func
+.. _`addReplySds`: #addReplySds-func
+.. _`resetClient`: #resetClient-func
 
+.. _`sdstolower-func`:
+.. `sdstolower-func`
+
+74 sdstolower 函数
+===============================================================================
+
+.. code-block:: C 
+
+    void sdstolower(sds s) {
+        int len = sdslen(s), j;
+
+        for (j = 0; j < len; j++) s[j] = tolower(s[j]);
+    }
+
+使用 for 循环， 将字符串中的每个字符使用 tolower 函数转换为小写字符
+
+.. _`sdstoupper-func`:
+.. `sdstoupper-func`
+
+75 sdstoupper 函数
+===============================================================================
+
+.. code-block:: C 
+
+    void sdstoupper(sds s) {
+        int len = sdslen(s), j;
+
+        for (j = 0; j < len; j++) s[j] = toupper(s[j]);
+    }
+
+同上， 使用 toupper 将字符串中的每个字符转换为大写字符
 
 
