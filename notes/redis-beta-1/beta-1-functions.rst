@@ -45,17 +45,22 @@ static 关键字表示该函数只能在本文件中使用。 ``ResetServerSaveP
         server.saveparamslen++;
     }
 
-该函数用于 redis 的持久化功能。 ``server.saveparamslen`` 初始为 0， \
-initServerConfig_ 函数中连续执行了 3 次 ``appendServerSaveParams`` 函数， 注册了 \
-3 次 redis 持久化检查任务， 分别是一小时内有 1 次改变、 5 分钟内有 100 次改变和 1 \
-分钟内 10000 次改变。 
+该函数用于 redis 的持久化功能。 \
+
+``server.saveparamslen`` 初始为 0， initServerConfig_ 函数中连续执行了 3 次 \
+``appendServerSaveParams`` 函数， 注册了 3 次 redis 持久化检查任务， 分别是一小时内\
+有 1 次改变、 5 分钟内有 100 次改变和 1 分钟内 10000 次改变， 满足这三个中的任意一个\
+都将进行 redis 的持久化操作。 
 
 .. _initServerConfig: beta-1-main-flow.rst#initServerConfig-func
 
-``appendServerSaveParams`` 函数每次执行， 都会先分配内存， 然后将 saveparams 字段\
-填上， 例如 ``appendServerSaveParams(60*60,1);`` 步骤会将 3600 添加到 \
+``appendServerSaveParams`` 函数每次执行， 都会先分配内存， 内存大小是 saveparam_ \
+结构体的大小乘以 saveparamslen 加一的结果， 然后将 saveparams 字段填充， 例如 \
+``appendServerSaveParams(60*60,1);`` 步骤会将 3600 添加到 \
 server.saveparams[0].seconds， 将 1 填到 server.saveparams[0].changes， 同时将 \
 ``server.saveparamslen`` 字段进行自增。
+
+.. _`saveparam`: beta-1-structures.rst#saveparam-struct
 
 这个函数会为后来的数据文件保存做铺垫。
 

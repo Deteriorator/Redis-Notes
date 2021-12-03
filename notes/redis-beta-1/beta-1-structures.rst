@@ -238,7 +238,7 @@ aeTimeEvent 时间事件结构体， 实际上也是一个链表
 .. code-block:: c 
 
     struct saveparam {
-        time_t seconds;  // 变更的时间戳
+        time_t seconds;  // 时间段
         int changes;     // 改变数量
     };
 
