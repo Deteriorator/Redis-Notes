@@ -292,7 +292,7 @@ Functions (188):
 	☐ sdscpylen
 	✔ sdsDictHashFunction @done(21-10-31 22:24)
 	✔ sdsDictKeyCompare @done(21-11-20 22:47)
-	☐ sdsDictKeyDestructor
+	✔ sdsDictKeyDestructor @done(21-12-04 15:27)
 	☐ sdsDictValDestructor
 	☐ sdsdup
 	✔ sdsempty @done(21-11-13 21:46)

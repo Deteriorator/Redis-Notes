@@ -3034,4 +3034,21 @@ reply list 尾节点， 同时使用 incrRefCount_ 函数将引用计数增加 1
 
 直接将 robj 的 refcount 属性自增加 1 即引用计数加 1
 
+.. _`sdsDictKeyDestructor-func`:
+.. `sdsDictKeyDestructor-func`
+
+81 sdsDictKeyDestructor 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static void sdsDictKeyDestructor(void *privdata, void *val)
+    {
+        DICT_NOTUSED(privdata);
+
+        sdsfree(val);
+    }
+
+哈希表中的 key 销毁函数。 首先将没用到的 privdata 使用 DICT_NOTUSED_ 宏定义转换为 \
+void 类型， 然后使用 sdsfree_ 函数将给定的 val 值释放掉
 
