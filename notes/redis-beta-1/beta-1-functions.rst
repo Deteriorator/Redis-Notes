@@ -3052,3 +3052,23 @@ reply list 尾节点， 同时使用 incrRefCount_ 函数将引用计数增加 1
 哈希表中的 key 销毁函数。 首先将没用到的 privdata 使用 DICT_NOTUSED_ 宏定义转换为 \
 void 类型， 然后使用 sdsfree_ 函数将给定的 val 值释放掉
 
+.. _`sdsDictValDestructor-func`:
+.. `sdsDictValDestructor-func`
+
+82 sdsDictValDestructor 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static void sdsDictValDestructor(void *privdata, void *val)
+    {
+        DICT_NOTUSED(privdata);
+
+        decrRefCount(val);
+    }
+
+哈希表中的 val 销毁函数。 首先将没用到的 privdata 使用 DICT_NOTUSED_ 宏定义转换为 \
+void 类型， 然后使用 decrRefCount_ 函数将给定的 val 值的引用计数进行相应的减少并释放\
+对应的对象。
+
+

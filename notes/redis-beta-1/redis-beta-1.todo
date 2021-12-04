@@ -293,7 +293,7 @@ Functions (188):
 	✔ sdsDictHashFunction @done(21-10-31 22:24)
 	✔ sdsDictKeyCompare @done(21-11-20 22:47)
 	✔ sdsDictKeyDestructor @done(21-12-04 15:27)
-	☐ sdsDictValDestructor
+	✔ sdsDictValDestructor @done(21-12-04 15:40)
 	☐ sdsdup
 	✔ sdsempty @done(21-11-13 21:46)
 	✔ sdsfree @done(21-11-01 23:13)
