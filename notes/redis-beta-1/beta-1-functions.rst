@@ -3072,4 +3072,58 @@ void 类型， 然后使用 sdsfree_ 函数将给定的 val 值释放掉
 void 类型， 然后使用 decrRefCount_ 函数将给定的 val 值的引用计数进行相应的减少并释放\
 对应的对象。
 
+.. _`resetClient-func`:
+.. `resetClient-func`
+
+83 resetClient 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static void resetClient(redisClient *c) {
+        freeClientArgv(c);
+        c->bulklen = -1;
+    }
+
+重置 Client， 使用 freeClientArgv_ 函数将 Client 的 argv 属性清除， 并将 bulklen \
+属性置为 -1
+
+.. _`sdsrange-func`:
+.. `sdsrange-func`
+
+84 sdsrange 函数
+===============================================================================
+
+.. code-block:: C 
+
+    sds sdsrange(sds s, long start, long end) {
+        struct sdshdr *sh = (void*) (s-(sizeof(struct sdshdr)));
+        size_t newlen, len = sdslen(s);
+
+        if (len == 0) return s;
+        if (start < 0) {
+            start = len+start;
+            if (start < 0) start = 0;
+        }
+        if (end < 0) {
+            end = len+end;
+            if (end < 0) end = 0;
+        }
+        newlen = (start > end) ? 0 : (end-start)+1;
+        if (newlen != 0) {
+            if (start >= (signed)len) start = len-1;
+            if (end >= (signed)len) end = len-1;
+            newlen = (start > end) ? 0 : (end-start)+1;
+        } else {
+            start = 0;
+        }
+        if (start != 0) memmove(sh->buf, sh->buf+start, newlen);
+        sh->buf[newlen] = 0;
+        sh->free = sh->free+(sh->len-newlen);
+        sh->len = newlen;
+        return s;
+    }
+
+该函数用于截取字符串。 start 是起始索引， end 是终止索引， 获取它们之间的字符串。
+
 
