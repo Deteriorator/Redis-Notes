@@ -2432,7 +2432,8 @@ ANET_ERR 即 -1。 当 cfd 为 AE_ERR 即 -1 时， 记录日志并无值返回�
         return fd;
     }
 
-该函数用于创建套接字连接， 创建成功将返回文件描述符， 失败则记录日志返回 ANET_ERR 即 -1
+该函数用于创建套接字连接， 创建成功将返回文件描述符， 失败则 1. 如果 errno = EINTR， \
+则继续执行； 2. 使用 anetSetError_ 函数打印错误日志并返回 ANET_ERR 即 -1
 
 .. _`createClient-func`:
 .. `createClient-func`
