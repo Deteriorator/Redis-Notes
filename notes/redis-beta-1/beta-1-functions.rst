@@ -3126,4 +3126,35 @@ void 类型， 然后使用 decrRefCount_ 函数将给定的 val 值的引用计
 
 该函数用于截取字符串。 start 是起始索引， end 是终止索引， 获取它们之间的字符串。
 
+.. _`aeSearchNearestTimer-func`:
+.. `aeSearchNearestTimer-func`
+
+85 aeSearchNearestTimer 函数
+===============================================================================
+
+.. code-block:: C 
+
+    static aeTimeEvent *aeSearchNearestTimer(aeEventLoop *eventLoop)
+    {
+        aeTimeEvent *te = eventLoop->timeEventHead;
+        aeTimeEvent *nearest = NULL;
+
+        while(te) {
+            if (!nearest || te->when_sec < nearest->when_sec ||
+                    (te->when_sec == nearest->when_sec &&
+                    te->when_ms < nearest->when_ms))
+                nearest = te;
+            te = te->next;
+        }
+        return nearest;
+    }
+
+在 while 循环中判断最近的一个定时器； aeTimeEvent 是一个链表结构， 判断每个节点的相关\
+的值:
+
+1. te->when_sec 小于最近的点
+2. te->when_sec 相等， te->when_ms 小于最近的点
+
+满足上述任一一个， 就将这个点赋值给 nearest， 直到 while 循环将 aeTimeEvent 循环判断\
+完毕， 最后返回 nearest
 

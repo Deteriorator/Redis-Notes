@@ -142,7 +142,7 @@ Functions (188):
 	✔ aeGetTime @done(21-10-27 22:44)
 	☐ aeMain
 	☐ aeProcessEvents
-	☐ aeSearchNearestTimer
+	✔ aeSearchNearestTimer @done(21-12-07 23:19)
 	☐ aeStop
 	✔ anetAccept @done(21-11-21 22:34)
 	✔ anetNonBlock @done(21-11-22 21:52)
@@ -319,7 +319,7 @@ Functions (188):
 	☐ stringmatchlen
 
 Macros (26):
-	☐ AE_NOTUSED
+	✔ AE_NOTUSED @done(21-12-06 23:04)
 	✔ dictCompareHashKeys @done(21-11-19 23:20)
 	☐ dictFreeEntryKey
 	☐ dictFreeEntryVal
