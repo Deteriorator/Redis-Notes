@@ -3158,3 +3158,23 @@ void 类型， 然后使用 decrRefCount_ 函数将给定的 val 值的引用计
 满足上述任一一个， 就将这个点赋值给 nearest， 直到 while 循环将 aeTimeEvent 循环判断\
 完毕， 最后返回 nearest
 
+.. _`aeMain-func`:
+.. `aeMain-func`
+
+86 aeMain 函数
+===============================================================================
+
+.. code-block:: C 
+
+    void aeMain(aeEventLoop *eventLoop)
+    {
+        eventLoop->stop = 0;
+        while (!eventLoop->stop)
+            aeProcessEvents(eventLoop, AE_ALL_EVENTS);
+    }
+
+一个死循环， 不停的执行 aeProcessEvents_ 函数， 处理事件
+
+.. _`aeProcessEvents`: #aeProcessEvents-func
+
+

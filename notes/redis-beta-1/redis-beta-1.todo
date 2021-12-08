@@ -140,7 +140,7 @@ Functions (188):
 	✔ aeDeleteFileEvent @done(21-11-01 22:57)
 	☐ aeDeleteTimeEvent
 	✔ aeGetTime @done(21-10-27 22:44)
-	☐ aeMain
+	✔ aeMain @done(21-12-08 23:21)
 	☐ aeProcessEvents
 	✔ aeSearchNearestTimer @done(21-12-07 23:19)
 	☐ aeStop
@@ -355,7 +355,7 @@ Function Prototypes (111):
 	☐ aeDeleteEventLoop
 	✔ aeDeleteFileEvent @done(21-11-01 22:58)
 	☐ aeDeleteTimeEvent
-	☐ aeMain
+	✔ aeMain @done(21-12-08 23:21)
 	☐ aeProcessEvents
 	☐ aeStop
 	✔ anetAccept @done(21-11-21 22:34)
